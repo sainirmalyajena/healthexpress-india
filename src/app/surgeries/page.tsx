@@ -5,6 +5,7 @@ import { getCategoryLabel, getCategoryIcon, formatCurrency } from '@/lib/utils';
 import { Category, Prisma } from '@/generated/prisma';
 import { SurgeryCardSkeleton } from '@/components/ui';
 import { expandQuery } from '@/lib/search-utils';
+import { generateCollectionPageSchema } from '@/lib/schema';
 
 interface SearchParams {
     q?: string;
@@ -272,8 +273,20 @@ export default async function SurgeriesPage({
     });
     const uniqueCities = Array.from(new Set(allSurgeriesForCities.flatMap(s => s.availableCities))).sort();
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const collectionSchema = generateCollectionPageSchema(
+        'Surgery Directory - HealthExpress India',
+        'Browse our comprehensive surgery directory. Find detailed information about procedures, costs, and recovery times across India.',
+        `${baseUrl}/surgeries`
+    );
+
     return (
         <div className="min-h-screen bg-slate-50">
+            {/* Schema.org Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+            />
             {/* Header */}
             <div className="bg-white border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

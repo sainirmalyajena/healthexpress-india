@@ -198,3 +198,17 @@ export function generateBreadcrumbSchema(items: { name: string; url: string }[])
         }))
     };
 }
+
+export function generateCollectionPageSchema(name: string, description: string, url: string) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name,
+        description,
+        url,
+        publisher: {
+            '@type': 'MedicalOrganization',
+            name: 'HealthExpress India'
+        }
+    };
+}

@@ -5,64 +5,26 @@ import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
 import { Category } from '@/generated/prisma';
 import { motion } from 'framer-motion';
-import {
-  Search,
-  UserRound,
-  Building2,
-  ShieldCheck,
-  Trophy,
-  CircleDollarSign,
-  Handshake,
-  ArrowRight,
-  Phone,
-  MessageSquare
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import dynamic from 'next/dynamic';
 
 const categories = Object.values(Category);
 
-const steps = [
-  {
-    number: '01',
-    title: 'Find Your Surgery',
-    description: 'Browse our comprehensive directory or search for the specific surgery you need.',
-    icon: Search,
-  },
-  {
-    number: '02',
-    title: 'Get Expert Guidance',
-    description: 'Our team connects you with the right hospital and specialist for your needs.',
-    icon: UserRound,
-  },
-  {
-    number: '03',
-    title: 'Receive Quality Care',
-    description: 'Get treated at partner hospitals with transparent pricing and support.',
-    icon: Building2,
-  },
-];
+// Lazy load non-critical sections to improve initial page load performance
+const DynamicHowItWorks = dynamic(() => import('@/components/home/HowItWorks'), {
+  ssr: true,
+  loading: () => <div className="py-16 bg-white min-h-[400px] animate-pulse"></div>
+});
 
-const trustPoints = [
-  {
-    icon: ShieldCheck,
-    title: 'Privacy Protected',
-    description: 'Strict confidentiality',
-  },
-  {
-    icon: Trophy,
-    title: '500+ Hospitals',
-    description: 'Top providers across India',
-  },
-  {
-    icon: CircleDollarSign,
-    title: 'Transparent Pricing',
-    description: 'No hidden charges',
-  },
-  {
-    icon: Handshake,
-    title: 'End-to-End Support',
-    description: 'Admission to recovery',
-  },
-];
+const DynamicTrustSection = dynamic(() => import('@/components/home/TrustSection'), {
+  ssr: true,
+  loading: () => <div className="py-20 bg-slate-900 rounded-t-[3rem] mt-8 min-h-[200px] animate-pulse"></div>
+});
+
+const DynamicTestimonials = dynamic(() => import('@/components/home/Testimonials'), {
+  ssr: true, // Keeping SSR enabled for SEO while chunking JS
+  loading: () => <div className="py-16 bg-white min-h-[300px] animate-pulse"></div>
+});
 
 export default function HomePage() {
   return (
@@ -162,93 +124,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* How It Works - modern cards */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-bold text-slate-900 mb-4">
-              Your Journey to Recovery
-            </h2>
-            <p className="text-slate-500">Simple steps to get the best care</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {steps.map((step, idx) => (
-              <motion.div
-                key={step.number}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="relative bg-slate-50 rounded-3xl p-8 hover:bg-teal-50/50 transition-colors border border-slate-100"
-              >
-                <div className="bg-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm mb-6 text-teal-600">
-                  <step.icon className="w-7 h-7" />
-                </div>
-                <div className="text-xs font-bold text-teal-600 tracking-wider uppercase mb-2">Step {step.number}</div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base">{step.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats/Trust - Dark Aesthetic */}
-      <section className="py-20 bg-slate-900 text-white rounded-t-[3rem] mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            {trustPoints.map((point, idx) => (
-              <motion.div
-                key={point.title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
-                className="text-center"
-              >
-                <div className="bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-teal-400 mb-4">
-                  <point.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-lg font-bold mb-1">{point.title}</h3>
-                <p className="text-sm text-slate-400">{point.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials - Carousel on mobile (simplified list for MVP) */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
-              Patients Love Us
-            </h2>
-            <div className="w-20 h-1 bg-teal-500 mx-auto rounded-full"></div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              // Placeholder for Testimonials (re-using previous data logic but with better UI)
-              <div key={i} className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                <div className="flex text-yellow-400 mb-3">
-                  {[...Array(5)].map((_, j) => <span key={j}>★</span>)}
-                </div>
-                <p className="text-slate-700 text-sm mb-4 leading-relaxed">&quot;HealthExpress helped me find the best doctor for my knee surgery. The team was supportive and the cost was exactly as estimated.&quot;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center font-bold text-teal-700">R</div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">Rajesh Kumar</p>
-                    <p className="text-xs text-slate-500">Mumbai • Knee Replacement</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Lazy Loaded Sections */}
+      <DynamicHowItWorks />
+      <DynamicTrustSection />
+      <DynamicTestimonials />
 
       {/* CTA Bottom - Enhanced */}
       <section className="py-16 px-4">
@@ -272,4 +151,3 @@ export default function HomePage() {
     </div>
   );
 }
-
