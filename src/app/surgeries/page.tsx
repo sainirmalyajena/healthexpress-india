@@ -55,26 +55,43 @@ async function getSurgeries(searchParams: SearchParams) {
     if (sort === 'cost-asc') orderBy = { costRangeMin: 'asc' };
     if (sort === 'cost-desc') orderBy = { costRangeMin: 'desc' };
 
-    // If search query 'q' exists, we fetch matching candidates and filter in-memory with synonym support
+    // If search query 'q' exists, we fetch matching candidates and filter in-memory with relevance scoring
     if (searchParams.q) {
         const queryTerms = expandQuery(searchParams.q);
+        const searchQuery = searchParams.q.toLowerCase();
 
         const allCandidates = await prisma.surgery.findMany({
             where,
-            orderBy // Apply sorting even with search
+            orderBy // Use as fallback sort
         });
 
-        const filtered = allCandidates.filter(s => {
+        const scored = allCandidates.map(s => {
+            let score = 0;
             const name = s.name.toLowerCase();
+            const category = s.category.toLowerCase();
             const overview = s.overview.toLowerCase();
             const symptoms = s.symptoms.map(sym => sym.toLowerCase());
 
-            return queryTerms.some(term =>
-                name.includes(term) ||
-                overview.includes(term) ||
-                symptoms.some(sym => sym.includes(term))
-            );
+            // Primary match (exact string in name)
+            if (name.includes(searchQuery)) score += 100;
+            if (category.includes(searchQuery)) score += 80;
+
+            // Term-based matching
+            queryTerms.forEach(term => {
+                if (name.includes(term)) score += 50;
+                if (category.includes(term)) score += 30;
+                if (symptoms.some(sym => sym.includes(term))) score += 20;
+                if (overview.includes(term)) score += 10;
+            });
+
+            return { surgery: s, score };
         });
+
+        // Filter out zero matches and sort by score
+        const filtered = scored
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .map(item => item.surgery);
 
         const total = filtered.length;
         const totalPages = Math.ceil(total / ITEMS_PER_PAGE) || 1;
