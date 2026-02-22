@@ -502,7 +502,7 @@ function getCategoryName(category: Category): string {
     return names[category];
 }
 
-async function createDoctors() {
+async function createDoctors(passwordHash: string) {
     console.log('Creating doctors...');
 
     // Get some hospitals
@@ -524,6 +524,8 @@ async function createDoctors() {
             name: "Dr. Amit Sharma",
             qualification: "MBBS, MS - Orthopedics",
             experience: 15,
+            email: "ortho@healthexpress.in",
+            passwordHash,
             about: "Senior Orthopedic Surgeon specializing in joint replacement surgeries. Has performed over 2000 successful knee and hip replacements.",
             hospitalId: hospitals[0].id,
             surgeries: kneeReplacement ? { connect: { id: kneeReplacement.id } } : undefined,
@@ -533,6 +535,8 @@ async function createDoctors() {
             name: "Dr. Priya Desai",
             qualification: "MBBS, MD - Cardiology",
             experience: 18,
+            email: "cardio@healthexpress.in",
+            passwordHash,
             about: "Renowned Cardiologist with expertise in interventional cardiology and bypass surgeries. Dedicated to patient-centric heart care.",
             hospitalId: hospitals[1] ? hospitals[1].id : hospitals[0].id,
             surgeries: cabg ? { connect: { id: cabg.id } } : undefined,
@@ -542,6 +546,8 @@ async function createDoctors() {
             name: "Dr. Rajesh Iyer",
             qualification: "MBBS, MS - Ophthalmology",
             experience: 12,
+            email: "eye@healthexpress.in",
+            passwordHash,
             about: "Expert in refractive surgeries including LASIK and Cataract. Committed to restoring vision with advanced technology.",
             hospitalId: hospitals[2] ? hospitals[2].id : hospitals[0].id,
             surgeries: lasik ? { connect: { id: lasik.id } } : undefined,
@@ -551,6 +557,8 @@ async function createDoctors() {
             name: "Dr. Neha Gupta",
             qualification: "MBBS, MCh - Plastic Surgery",
             experience: 10,
+            email: "cosmetic@healthexpress.in",
+            passwordHash,
             about: "Board-certified Cosmetic Surgeon known for natural-looking results in Rhinoplasty and Liposuction.",
             hospitalId: hospitals[0].id,
             surgeries: rhinoplasty ? { connect: { id: rhinoplasty.id } } : undefined,
@@ -560,6 +568,8 @@ async function createDoctors() {
             name: "Dr. Vikram Singh",
             qualification: "MBBS, MD - Gynecology",
             experience: 20,
+            email: "gyno@healthexpress.in",
+            passwordHash,
             about: "Leading Gynecologist specializing in infertility treatments and high-risk pregnancies.",
             hospitalId: hospitals[1] ? hospitals[1].id : hospitals[0].id,
             surgeries: ivf ? { connect: { id: ivf.id } } : undefined,
@@ -590,11 +600,12 @@ async function main() {
 
     // Create admin user
     console.log('Creating admin user...');
-    const hashedPassword = await bcrypt.hash('admin123', 10);
+    const passwordHash = await bcrypt.hash('password123', 10);
+    const adminHashedPassword = await bcrypt.hash('admin123', 10);
     await prisma.user.create({
         data: {
             email: 'admin@healthexpress.in',
-            passwordHash: hashedPassword,
+            passwordHash: adminHashedPassword,
             name: 'Admin User',
             role: 'admin',
         },
@@ -603,11 +614,11 @@ async function main() {
     // Create hospitals
     console.log('Creating hospitals...');
     const hospitals = [
-        { name: 'Apollo Hospital', city: 'Mumbai', specialties: ['Cardiac', 'Orthopedics', 'General Surgery'], discountPercent: 15 },
-        { name: 'Fortis Healthcare', city: 'Delhi', specialties: ['Neuro', 'Gastro', 'Oncology'], discountPercent: 10 },
-        { name: 'Max Super Speciality', city: 'Bangalore', specialties: ['Opthalmology', 'Dental', 'Cosmetic'], discountPercent: 20 },
-        { name: 'Manipal Hospital', city: 'Pune', specialties: ['Pediatric', 'Gynecology', 'Urology'], discountPercent: 12 },
-        { name: 'Medanta - The Medicity', city: 'Gurgaon', specialties: ['Cardiac', 'Neuro', 'Orthopedics'], discountPercent: 18 },
+        { name: 'Apollo Hospital', city: 'Mumbai', email: 'apollo@healthexpress.in', passwordHash, specialties: ['Cardiac', 'Orthopedics', 'General Surgery'], discountPercent: 15 },
+        { name: 'Fortis Healthcare', city: 'Delhi', email: 'fortis@healthexpress.in', passwordHash, specialties: ['Neuro', 'Gastro', 'Oncology'], discountPercent: 10 },
+        { name: 'Max Super Speciality', city: 'Bangalore', email: 'max@healthexpress.in', passwordHash, specialties: ['Opthalmology', 'Dental', 'Cosmetic'], discountPercent: 20 },
+        { name: 'Manipal Hospital', city: 'Pune', email: 'manipal@healthexpress.in', passwordHash, specialties: ['Pediatric', 'Gynecology', 'Urology'], discountPercent: 12 },
+        { name: 'Medanta - The Medicity', city: 'Gurgaon', email: 'medanta@healthexpress.in', passwordHash, specialties: ['Cardiac', 'Neuro', 'Orthopedics'], discountPercent: 18 },
     ];
 
     const createdHospitals = [];
@@ -630,7 +641,7 @@ async function main() {
     }
 
     // Create Doctors
-    await createDoctors();
+    await createDoctors(passwordHash);
 
     // Create sample leads (Cases)
     console.log('Creating sample cases...');

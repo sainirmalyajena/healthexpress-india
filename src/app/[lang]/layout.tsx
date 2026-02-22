@@ -4,10 +4,11 @@ import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Inter } from 'next/font/google';
-import "./globals.css";
+import "@/app/globals.css";
 import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { GoogleTagManager } from '@next/third-parties/google';
+import { MedBot } from "@/components/ui/MedBot";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -95,6 +96,7 @@ export default async function RootLayout({
         <Header lang={lang} dict={dictionary.navigation} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} dict={dictionary.footer} />
+        <MedBot lang={lang} />
         <WhatsAppButton />
         <StickyMobileCTA lang={lang} dict={dictionary.sticky_cta} />
       </body>

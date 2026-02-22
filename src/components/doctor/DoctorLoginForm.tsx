@@ -16,7 +16,7 @@ export default function DoctorLoginForm() {
         setError('');
 
         try {
-            const res = await fetch('/api/auth/doctor', {
+            const res = await fetch('/api/doctor/auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),

@@ -9,6 +9,7 @@ import { expandQuery } from '@/lib/search-utils';
 import { generateCollectionPageSchema } from '@/lib/schema';
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
+import { getAISuggestedTerms, isLikelySymptomatic } from '@/lib/ai-search';
 
 interface SearchParams {
     q?: string;
@@ -58,8 +59,18 @@ async function getSurgeries(searchParams: SearchParams) {
 
     // If search query 'q' exists, we fetch matching candidates and filter in-memory with relevance scoring
     if (searchParams.q) {
-        const queryTerms = expandQuery(searchParams.q);
+        let queryTerms = expandQuery(searchParams.q);
         const searchQuery = searchParams.q.toLowerCase();
+
+        // AI-Powered Symptom Search
+        let isAIInterpreted = false;
+        if (isLikelySymptomatic(searchParams.q)) {
+            const aiTerms = await getAISuggestedTerms(searchParams.q);
+            if (aiTerms.length > 0) {
+                queryTerms = [...new Set([...queryTerms, ...aiTerms])];
+                isAIInterpreted = true;
+            }
+        }
 
         const allCandidates = await prisma.surgery.findMany({
             where,
@@ -100,7 +111,7 @@ async function getSurgeries(searchParams: SearchParams) {
         const end = start + ITEMS_PER_PAGE;
         const surgeries = filtered.slice(start, end);
 
-        return { surgeries, total, page, totalPages, uniqueCities };
+        return { surgeries, total, page, totalPages, uniqueCities, isAIInterpreted };
     }
 
     const [surgeries, total] = await Promise.all([
@@ -118,7 +129,8 @@ async function getSurgeries(searchParams: SearchParams) {
         total,
         page,
         totalPages: Math.ceil(total / ITEMS_PER_PAGE) || 1,
-        uniqueCities
+        uniqueCities,
+        isAIInterpreted: false
     };
 }
 
@@ -234,35 +246,44 @@ function Pagination({ page, totalPages, searchParams, lang, dict }: { page: numb
 }
 
 async function SurgeryList({ searchParams, lang, dict }: { searchParams: SearchParams; lang: string; dict: any }) {
-    const { surgeries, total, page, totalPages } = await getSurgeries(searchParams);
-
-    if (surgeries.length === 0) {
-        return (
-            <div className="text-center py-12">
-                <div className="text-5xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">{dict.no_surgeries_found}</h3>
-                <p className="text-slate-600 mb-6">{dict.try_adjusting}</p>
-                <Link
-                    href={`/${lang}/surgeries`}
-                    className="inline-flex px-4 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors"
-                >
-                    {dict.clear_filters}
-                </Link>
-            </div>
-        );
-    }
+    const { surgeries, total, page, totalPages, isAIInterpreted } = await getSurgeries(searchParams);
 
     return (
         <>
-            <p className="text-sm text-slate-600 mb-6">
-                {dict.showing} {surgeries.length} {dict.of} {total} {lang === 'hi' ? 'सर्जरी' : 'surgeries'}
-            </p>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {surgeries.map((surgery) => (
-                    <SurgeryCard key={surgery.id} surgery={surgery} lang={lang} dict={dict} />
-                ))}
+            <div className="flex items-center justify-between mb-6">
+                <p className="text-sm text-slate-600">
+                    {dict.showing} {surgeries.length} {dict.of} {total} {lang === 'hi' ? 'सर्जरी' : 'surgeries'}
+                </p>
+                {isAIInterpreted && (
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full border border-teal-100 animate-fade-in shadow-sm">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                        </span>
+                        AI Interpreted
+                    </div>
+                )}
             </div>
+
+            {surgeries.length === 0 ? (
+                <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <div className="text-5xl mb-4">🔍</div>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{dict.no_surgeries_found}</h3>
+                    <p className="text-slate-600 mb-6">{dict.try_adjusting}</p>
+                    <Link
+                        href={`/${lang}/surgeries`}
+                        className="inline-flex px-4 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors"
+                    >
+                        {dict.clear_filters}
+                    </Link>
+                </div>
+            ) : (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {surgeries.map((surgery) => (
+                        <SurgeryCard key={surgery.id} surgery={surgery} lang={lang} dict={dict} />
+                    ))}
+                </div>
+            )}
 
             <Pagination page={page} totalPages={totalPages} searchParams={searchParams} lang={lang} dict={dict} />
         </>
@@ -469,7 +490,3 @@ export default async function SurgeriesPage({
     );
 }
 
-export const metadata = {
-    title: 'Surgery Directory',
-    description: 'Browse our comprehensive surgery directory. Find detailed information about procedures, costs, and recovery times across India.',
-};
