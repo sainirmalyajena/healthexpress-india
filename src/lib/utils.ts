@@ -46,7 +46,9 @@ export function slugify(text: string): string {
         .trim();
 }
 
-export function getCategoryLabel(category: string): string {
+export function getCategoryLabel(category: string, dict?: any): string {
+    if (dict && dict[category]) return dict[category];
+
     const labels: Record<string, string> = {
         GENERAL_SURGERY: 'General Surgery',
         ORTHOPEDICS: 'Orthopedics',

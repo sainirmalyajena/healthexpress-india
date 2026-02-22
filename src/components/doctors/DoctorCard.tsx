@@ -14,7 +14,7 @@ interface DoctorProps {
     specialties?: string[];
 }
 
-export function DoctorCard({ doctor }: { doctor: DoctorProps }) {
+export function DoctorCard({ doctor, lang, dict }: { doctor: DoctorProps; lang: string; dict: any }) {
     return (
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow">
             <div className="flex flex-col sm:flex-row">
@@ -33,7 +33,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorProps }) {
                             <p className="text-sm text-teal-600 font-medium">{doctor.qualification}</p>
                         </div>
                         <span className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full font-medium">
-                            {doctor.experience}+ Years Exp
+                            {doctor.experience}+ {dict.years_exp}
                         </span>
                     </div>
 
@@ -47,10 +47,10 @@ export function DoctorCard({ doctor }: { doctor: DoctorProps }) {
                             <p>{doctor.hospital.city}</p>
                         </div>
                         <Link
-                            href={`/doctors/${doctor.id}`}
+                            href={`/${lang}/doctors/${doctor.id}`}
                             className="text-sm font-medium text-white bg-teal-600 px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors"
                         >
-                            View Profile
+                            {dict.view_profile}
                         </Link>
                     </div>
                 </div>

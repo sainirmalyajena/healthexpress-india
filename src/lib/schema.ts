@@ -38,9 +38,10 @@ export function generateOrganizationSchema(options?: OrganizationSchemaOptions) 
         address: {
             '@type': 'PostalAddress',
             addressCountry: 'IN',
-            addressLocality: 'Mumbai',
-            addressRegion: 'Maharashtra',
-            streetAddress: options?.address || process.env.NEXT_PUBLIC_ADDRESS || 'Mumbai, India'
+            addressLocality: 'New Delhi',
+            addressRegion: 'Delhi',
+            postalCode: '110024',
+            streetAddress: options?.address || process.env.NEXT_PUBLIC_ADDRESS || 'C-120, 2nd Floor, Lajpat Nagar 1'
         },
         sameAs: [
             // Add social media profiles when available
@@ -163,9 +164,10 @@ export function generateLocalBusinessSchema(options?: LocalBusinessSchemaOptions
         address: {
             '@type': 'PostalAddress',
             addressCountry: 'IN',
-            addressLocality: options?.city || 'Mumbai',
-            addressRegion: 'Maharashtra',
-            streetAddress: options?.address || process.env.NEXT_PUBLIC_ADDRESS || 'Mumbai, India'
+            addressLocality: options?.city || 'New Delhi',
+            addressRegion: 'Delhi',
+            postalCode: '110024',
+            streetAddress: options?.address || process.env.NEXT_PUBLIC_ADDRESS || 'C-120, 2nd Floor, Lajpat Nagar 1'
         },
         geo: options?.latitude && options?.longitude ? {
             '@type': 'GeoCoordinates',

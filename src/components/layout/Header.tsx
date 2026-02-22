@@ -15,7 +15,7 @@ import {
     ArrowUpRight
 } from 'lucide-react';
 
-export function Header() {
+export function Header({ lang, dict }: { lang: string; dict: any }) {
     const pathname = usePathname();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
@@ -28,17 +28,24 @@ export function Header() {
     }, []);
 
     const navLinks = [
-        { href: '/', label: 'Home' },
-        { href: '/surgeries', label: 'Surgeries' },
-        { href: '/doctors', label: 'Our Doctors' },
-        { href: '/blog', label: 'Medical Blog' },
-        { href: '/partners', label: 'Partner with Us' },
-        { href: '/contact', label: 'Contact' },
+        { href: `/${lang}`, label: dict.home },
+        { href: `/${lang}/surgeries`, label: dict.surgeries },
+        { href: `/${lang}/doctors`, label: dict.doctors },
+        { href: `/${lang}/blog`, label: dict.blog },
+        { href: `/${lang}/partners`, label: dict.partners },
+        { href: `/${lang}/contact`, label: dict.contact },
     ];
 
     const isActive = (href: string) => {
-        if (href === '/') return pathname === '/';
+        if (href === `/${lang}`) return pathname === `/${lang}`;
         return pathname.startsWith(href);
+    };
+
+    const redirectedPathname = (locale: string) => {
+        if (!pathname) return '/';
+        const segments = pathname.split('/');
+        segments[1] = locale;
+        return segments.join('/');
     };
 
     return (
@@ -53,7 +60,7 @@ export function Header() {
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 md:h-20">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-3 group">
+                    <Link href={`/${lang}`} className="flex items-center gap-3 group">
                         <div className="relative w-10 h-10 transition-transform group-hover:scale-105">
                             <Image
                                 src="/logo.png"
@@ -71,7 +78,7 @@ export function Header() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-8">
+                    <div className="hidden lg:flex items-center gap-6">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
@@ -91,8 +98,30 @@ export function Header() {
                         ))}
                     </div>
 
-                    {/* CTA Button */}
+                    {/* Language Switcher & CTA */}
                     <div className="hidden md:flex items-center gap-4">
+                        {/* Language Toggle */}
+                        <div className="flex items-center bg-slate-100 rounded-full p-1 mr-2">
+                            <Link
+                                href={redirectedPathname('en')}
+                                className={cn(
+                                    "px-3 py-1 text-xs font-bold rounded-full transition-all",
+                                    lang === 'en' ? "bg-white text-teal-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                                )}
+                            >
+                                EN
+                            </Link>
+                            <Link
+                                href={redirectedPathname('hi')}
+                                className={cn(
+                                    "px-3 py-1 text-xs font-bold rounded-full transition-all",
+                                    lang === 'hi' ? "bg-white text-teal-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                                )}
+                            >
+                                HI
+                            </Link>
+                        </div>
+
                         <Link
                             href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
                             className="text-sm font-semibold text-slate-600 hover:text-teal-600 mr-2 flex items-center gap-2"
@@ -101,23 +130,46 @@ export function Header() {
                             {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
                         </Link>
                         <Link
-                            href="/surgeries"
+                            href={`/${lang}/surgeries`}
                             className="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
                         >
-                            Find Surgery
+                            {dict.surgeries}
                             <ArrowUpRight className="w-4 h-4" />
                         </Link>
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <button
-                        type="button"
-                        className="md:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
-                        onClick={() => setMobileMenuOpen(true)}
-                        aria-label="Open menu"
-                    >
-                        <Menu className="w-6 h-6" />
-                    </button>
+                    <div className="flex items-center gap-3 md:hidden">
+                        {/* Mobile Language Toggle */}
+                        <div className="flex items-center bg-slate-100 rounded-full p-1">
+                            <Link
+                                href={redirectedPathname('en')}
+                                className={cn(
+                                    "px-2 py-1 text-[10px] font-bold rounded-full transition-all",
+                                    lang === 'en' ? "bg-white text-teal-600 shadow-sm" : "text-slate-500"
+                                )}
+                            >
+                                EN
+                            </Link>
+                            <Link
+                                href={redirectedPathname('hi')}
+                                className={cn(
+                                    "px-2 py-1 text-[10px] font-bold rounded-full transition-all",
+                                    lang === 'hi' ? "bg-white text-teal-600 shadow-sm" : "text-slate-500"
+                                )}
+                            >
+                                HI
+                            </Link>
+                        </div>
+                        <button
+                            type="button"
+                            className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                            onClick={() => setMobileMenuOpen(true)}
+                            aria-label="Open menu"
+                        >
+                            <Menu className="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
             </nav>
 
@@ -172,17 +224,17 @@ export function Header() {
 
                             <div className="p-4 border-t border-slate-100 space-y-4 pb-8">
                                 <Link
-                                    href="/surgeries"
+                                    href={`/${lang}/surgeries`}
                                     className="block w-full py-3 px-4 bg-teal-600 text-white text-center font-semibold rounded-xl shadow-md active:scale-95 transition-transform"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    Find Surgery
+                                    {dict.surgeries}
                                 </Link>
                                 <a
                                     href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
                                     className="block w-full py-3 px-4 bg-slate-50 text-slate-700 text-center font-semibold rounded-xl border border-slate-200"
                                 >
-                                    Call Support
+                                    {dict.call_support}
                                 </a>
                             </div>
                         </motion.div>

@@ -3,30 +3,35 @@
 import { motion } from 'framer-motion';
 import { ShieldCheck, Trophy, CircleDollarSign, Handshake } from 'lucide-react';
 
-const trustPoints = [
-    {
-        icon: ShieldCheck,
-        title: 'Privacy Protected',
-        description: 'Strict confidentiality',
-    },
-    {
-        icon: Trophy,
-        title: '500+ Hospitals',
-        description: 'Top providers across India',
-    },
-    {
-        icon: CircleDollarSign,
-        title: 'Transparent Pricing',
-        description: 'No hidden charges',
-    },
-    {
-        icon: Handshake,
-        title: 'End-to-End Support',
-        description: 'Admission to recovery',
-    },
-];
+interface TrustSectionProps {
+    lang: string;
+    dict: any;
+}
 
-export default function TrustSection() {
+export default function TrustSection({ lang, dict }: TrustSectionProps) {
+    const trustPoints = [
+        {
+            icon: ShieldCheck,
+            title: dict.point1_title,
+            description: dict.point1_desc,
+        },
+        {
+            icon: Trophy,
+            title: dict.point2_title,
+            description: dict.point2_desc,
+        },
+        {
+            icon: CircleDollarSign,
+            title: dict.point3_title,
+            description: dict.point3_desc,
+        },
+        {
+            icon: Handshake,
+            title: dict.point4_title,
+            description: dict.point4_desc,
+        },
+    ];
+
     return (
         <section className="py-20 bg-slate-900 text-white rounded-t-[3rem] mt-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

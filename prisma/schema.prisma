@@ -109,7 +109,7 @@ model Document {
   id        String   @id @default(cuid())
   name      String
   type      String   // e.g., 'PDF', 'IMAGE'
-  data      String   // Base64 data
+  url       String   // Supabase Storage URL
   leadId    String
   lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

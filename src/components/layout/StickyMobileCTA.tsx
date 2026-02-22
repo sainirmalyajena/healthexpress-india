@@ -5,7 +5,12 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Phone, CalendarCheck } from 'lucide-react';
 
-export default function StickyMobileCTA() {
+interface StickyMobileCTAProps {
+    lang: string;
+    dict: any;
+}
+
+export default function StickyMobileCTA({ lang, dict }: StickyMobileCTAProps) {
     return (
         <motion.div
             initial={{ y: 100 }}
@@ -19,18 +24,18 @@ export default function StickyMobileCTA() {
                 className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl active:bg-slate-50 transition-colors shadow-sm"
             >
                 <Phone className="w-4 h-4" />
-                <span>Call Now</span>
+                <span>{dict.call}</span>
             </motion.a>
             <motion.div
                 whileTap={{ scale: 0.96 }}
                 className="flex-1"
             >
                 <Link
-                    href="/contact"
+                    href={`/${lang}/contact`}
                     className="flex w-full items-center justify-center gap-2 bg-teal-600 text-white font-bold py-3.5 rounded-xl active:bg-teal-700 transition-colors shadow-lg shadow-teal-100"
                 >
                     <CalendarCheck className="w-4 h-4" />
-                    <span>Book Now</span>
+                    <span>{dict.book}</span>
                 </Link>
             </motion.div>
         </motion.div>

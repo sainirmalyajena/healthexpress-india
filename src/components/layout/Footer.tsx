@@ -1,28 +1,28 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-export function Footer() {
+export function Footer({ lang, dict }: { lang: string; dict: any }) {
     const currentYear = new Date().getFullYear();
 
     const footerLinks = {
         services: [
-            { href: '/surgeries', label: 'All Surgeries' },
-            { href: '/surgeries?category=GENERAL_SURGERY', label: 'General Surgery' },
-            { href: '/surgeries?category=ORTHOPEDICS', label: 'Orthopedics' },
-            { href: '/surgeries?category=CARDIAC', label: 'Cardiac Surgery' },
+            { href: `/${lang}/surgeries`, label: 'All Surgeries' },
+            { href: `/${lang}/surgeries?category=GENERAL_SURGERY`, label: 'General Surgery' },
+            { href: `/${lang}/surgeries?category=ORTHOPEDICS`, label: 'Orthopedics' },
+            { href: `/${lang}/surgeries?category=CARDIAC`, label: 'Cardiac Surgery' },
         ],
         company: [
-            { href: '/blog', label: 'Medical Blog' },
-            { href: '/partners', label: 'Hospital Partners' },
-            { href: '/contact', label: 'Contact Us' },
-            { href: '/privacy', label: 'Privacy Policy' },
-            { href: '/terms', label: 'Terms of Service' },
+            { href: `/${lang}/blog`, label: dict.blog || 'Medical Blog' },
+            { href: `/${lang}/partners`, label: dict.partners || 'Hospital Partners' },
+            { href: `/${lang}/contact`, label: dict.contact || 'Contact Us' },
+            { href: `/${lang}/privacy`, label: 'Privacy Policy' },
+            { href: `/${lang}/terms`, label: 'Terms of Service' },
         ],
         cities: [
-            { href: '/surgeries?city=Mumbai', label: 'Mumbai' },
-            { href: '/surgeries?city=Delhi', label: 'Delhi' },
-            { href: '/surgeries?city=Bangalore', label: 'Bangalore' },
-            { href: '/surgeries?city=Chennai', label: 'Chennai' },
+            { href: `/${lang}/surgeries?city=Mumbai`, label: 'Mumbai' },
+            { href: `/${lang}/surgeries?city=Delhi`, label: 'Delhi' },
+            { href: `/${lang}/surgeries?city=Bangalore`, label: 'Bangalore' },
+            { href: `/${lang}/surgeries?city=Chennai`, label: 'Chennai' },
         ],
     };
 
@@ -33,7 +33,7 @@ export function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand */}
                     <div className="lg:col-span-1">
-                        <Link href="/" className="flex items-center gap-2 mb-4">
+                        <Link href={`/${lang}`} className="flex items-center gap-2 mb-4">
                             <Image
                                 src="/logo.png"
                                 alt="HealthExpress Logo"
@@ -117,19 +117,19 @@ export function Footer() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                     <div className="bg-slate-800/50 rounded-lg p-4 mb-6">
                         <p className="text-xs text-slate-400 leading-relaxed">
-                            <strong className="text-slate-300">Medical Disclaimer:</strong> Information provided on this website is for general awareness only and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on this website. Cost estimates are indicative and vary by city, hospital, and individual case.
+                            <strong className="text-slate-300">Medical Disclaimer:</strong> {dict.disclaimer}
                         </p>
                     </div>
 
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <p className="text-sm text-slate-400">
-                            © {currentYear} HealthExpress India. All rights reserved.
+                            © {currentYear} HealthExpress India. {dict.rights}
                         </p>
                         <div className="flex gap-4 text-sm">
-                            <Link href="/privacy" className="hover:text-teal-400 transition-colors">
+                            <Link href={`/${lang}/privacy`} className="hover:text-teal-400 transition-colors">
                                 Privacy
                             </Link>
-                            <Link href="/terms" className="hover:text-teal-400 transition-colors">
+                            <Link href={`/${lang}/terms`} className="hover:text-teal-400 transition-colors">
                                 Terms
                             </Link>
                         </div>

@@ -82,7 +82,15 @@ export async function POST(
             return NextResponse.json({ error: 'Forbidden: Lead not assigned to this hospital' }, { status: 403 });
         }
 
-        const document = await prisma.document.create({ data: { name, type, data, leadId: id } });
+        // Upload to Supabase
+        const { uploadDocument } = await import('@/lib/supabase');
+        const url = await uploadDocument(data, name, type);
+
+        if (!url) {
+            return NextResponse.json({ error: 'Failed to upload document to cloud storage' }, { status: 500 });
+        }
+
+        const document = await prisma.document.create({ data: { name, type, url, leadId: id } });
         return NextResponse.json(document);
     } catch (error) {
         console.error('Partner Document upload error:', error);

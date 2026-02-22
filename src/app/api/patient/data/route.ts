@@ -17,8 +17,17 @@ export async function POST(request: NextRequest) {
             if (!name || !type || !data) {
                 return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
             }
+
+            // Upload to Supabase
+            const { uploadDocument } = await import('@/lib/supabase');
+            const url = await uploadDocument(data, name, type);
+
+            if (!url) {
+                return NextResponse.json({ error: 'Failed to upload document to cloud storage' }, { status: 500 });
+            }
+
             const document = await prisma.document.create({
-                data: { name, type, data, leadId: session.leadId },
+                data: { name, type, url, leadId: session.leadId },
             });
             return NextResponse.json(document);
         }
