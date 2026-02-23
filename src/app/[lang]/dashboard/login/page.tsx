@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, LoginFormData } from '@/lib/validations';
@@ -51,8 +52,13 @@ export default function AdminLoginPage() {
             <div className="w-full max-w-md">
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     <div className="text-center mb-8">
-                        <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-teal-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <span className="text-white font-bold text-2xl">H</span>
+                        <div className="relative w-16 h-16 transition-transform hover:scale-105 mx-auto mb-4">
+                            <Image
+                                src="/logo.png"
+                                alt="HealthExpress Logo"
+                                fill
+                                className="object-contain"
+                            />
                         </div>
                         <h1 className="text-2xl font-bold text-slate-900">Admin Login</h1>
                         <p className="text-slate-600 mt-2">Sign in to access the dashboard</p>
