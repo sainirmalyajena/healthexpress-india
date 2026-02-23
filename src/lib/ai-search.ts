@@ -12,7 +12,7 @@ export async function getAISuggestedTerms(query: string): Promise<string[]> {
 
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
         const prompt = `
 Given a user query from a patient looking for medical surgery, extract or suggest 3-5 relevant medical terms, surgery names, or procedure names that match the intent or symptoms.
