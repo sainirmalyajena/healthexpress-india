@@ -21,7 +21,7 @@ async function listModels() {
                 console.log(`- ${m.name} (${m.supportedGenerationMethods.join(', ')})`);
             });
         }
-    } catch (e) {
+    } catch (e: any) {
         console.error("Failed to list models:", e.message);
     }
 }
