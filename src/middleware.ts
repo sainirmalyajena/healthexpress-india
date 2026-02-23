@@ -21,7 +21,7 @@ function getLocale(request: NextRequest): string | undefined {
     return locale
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname
 
     // Skip API, static assets, and favicon
