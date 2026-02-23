@@ -18,18 +18,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) return null;
 
+                const email = (credentials.email as string).toLowerCase().trim();
+                const password = (credentials.password as string).trim();
+
                 const user = await prisma.user.findUnique({
-                    where: { email: (credentials.email as string).toLowerCase() },
+                    where: { email },
                 });
 
-                if (!user || !user.passwordHash) return null;
+                if (!user || !user.passwordHash) {
+                    console.warn(`Auth Failed: User not found or no password hash for ${email}`);
+                    return null;
+                }
 
                 const isValid = await bcrypt.compare(
-                    credentials.password as string,
+                    password,
                     user.passwordHash
                 );
 
-                if (!isValid) return null;
+                if (!isValid) {
+                    console.warn(`Auth Failed: Invalid password for ${email}`);
+                    return null;
+                }
+
+                console.info(`Auth Success: Admin ${email} logged in`);
 
                 return {
                     id: user.id,
@@ -49,18 +60,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) return null;
 
+                const email = (credentials.email as string).toLowerCase().trim();
+                const password = (credentials.password as string).trim();
+
                 const doctor = await prisma.doctor.findUnique({
-                    where: { email: (credentials.email as string).toLowerCase() },
+                    where: { email },
                 });
 
-                if (!doctor || !doctor.passwordHash) return null;
+                if (!doctor || !doctor.passwordHash) {
+                    console.warn(`Auth Failed: Doctor not found or no password hash for ${email}`);
+                    return null;
+                }
 
                 const isValid = await bcrypt.compare(
-                    credentials.password as string,
+                    password,
                     doctor.passwordHash
                 );
 
-                if (!isValid) return null;
+                if (!isValid) {
+                    console.warn(`Auth Failed: Invalid password for doctor ${email}`);
+                    return null;
+                }
+
+                console.info(`Auth Success: Doctor ${email} logged in`);
 
                 return {
                     id: doctor.id,
@@ -80,18 +102,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) return null;
 
+                const email = (credentials.email as string).toLowerCase().trim();
+                const password = (credentials.password as string).trim();
+
                 const hospital = await prisma.hospital.findUnique({
-                    where: { email: (credentials.email as string).toLowerCase() },
+                    where: { email },
                 });
 
-                if (!hospital || !hospital.passwordHash) return null;
+                if (!hospital || !hospital.passwordHash) {
+                    console.warn(`Auth Failed: Hospital not found or no password hash for ${email}`);
+                    return null;
+                }
 
                 const isValid = await bcrypt.compare(
-                    credentials.password as string,
+                    password,
                     hospital.passwordHash
                 );
 
-                if (!isValid) return null;
+                if (!isValid) {
+                    console.warn(`Auth Failed: Invalid password for hospital ${email}`);
+                    return null;
+                }
+
+                console.info(`Auth Success: Hospital ${email} logged in`);
 
                 return {
                     id: hospital.id,

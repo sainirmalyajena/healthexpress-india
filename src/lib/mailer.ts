@@ -1,7 +1,19 @@
-import { resend } from './resend';
+import nodemailer from 'nodemailer';
+import { render } from '@react-email/components';
 import LeadConfirmationEmail from '@/emails/LeadConfirmation';
 import AdminNotificationEmail from '@/emails/AdminNotification';
 import * as React from 'react';
+
+// Configure Zoho SMTP transporter
+const transporter = nodemailer.createTransport({
+    host: process.env.ZOHO_SERVER || 'smtp.zoho.in',
+    port: Number(process.env.ZOHO_PORT) || 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: process.env.ZOHO_USER,
+        pass: process.env.ZOHO_PASS,
+    },
+});
 
 export async function sendEmail({
     to,
@@ -14,26 +26,31 @@ export async function sendEmail({
     react: React.ReactElement;
     text: string;
 }) {
-    if (!process.env.RESEND_API_KEY) {
-        console.log('--- MOCK EMAIL (Resend Key Missing) ---');
+    // Fallback if SMTP not configured
+    if (!process.env.ZOHO_PASS) {
+        console.log('--- MOCK EMAIL (Zoho Credentials Missing) ---');
         console.log(`To: ${to}`);
         console.log(`Subject: ${subject}`);
         console.log(`Body: ${text}`);
-        console.log('---------------------------------------');
+        console.log('-------------------------------------------');
         return { id: 'mock-id' };
     }
 
     try {
-        const data = await resend.emails.send({
-            from: 'HealthExpress India <hello@healthexpressindia.com>',
+        const html = await render(react);
+
+        const info = await transporter.sendMail({
+            from: process.env.ZOHO_SENDER || 'HealthExpress India <healthexpressindia@healthexpressindia.com>',
             to,
             subject,
-            react,
             text,
+            html,
         });
-        return data;
+
+        console.log('Email sent: %s', info.messageId);
+        return info;
     } catch (error) {
-        console.error('Error sending email via Resend:', error);
+        console.error('Error sending email via Zoho SMTP:', error);
         throw error;
     }
 }

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/auth';
+import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import { PartnerStatus } from '@/generated/prisma';
@@ -13,7 +13,7 @@ async function getPartnerRequests() {
 }
 
 export default async function PartnerModerationPage() {
-    const session = await getSession();
+    const session = await getAdminSession();
     if (!session) redirect('/dashboard/login');
 
     const requests = await getPartnerRequests();

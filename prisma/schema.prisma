@@ -103,6 +103,10 @@ model Lead {
   documents      Document[]
   rating         Int?            // Patient satisfaction rating (1-5)
   feedback       String?         // Detailed patient feedback
+  
+  @@index([status])
+  @@index([createdAt])
+  @@index([city])
 }
 
 model Document {

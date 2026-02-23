@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/auth';
+import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import SetHospitalPasswordButton from '@/components/dashboard/SetHospitalPasswordButton';
@@ -17,8 +17,8 @@ async function getHospitals() {
 }
 
 export default async function HospitalsManagementPage() {
-    const session = await getSession();
-    if (!session || session.role !== 'admin') redirect('/dashboard/login');
+    const session = await getAdminSession();
+    if (!session) redirect('/dashboard/login');
 
     const hospitals = await getHospitals();
 

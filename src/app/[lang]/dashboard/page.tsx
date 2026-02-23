@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { getSession } from '@/lib/auth';
+import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
 import DateRangeFilter from '@/components/dashboard/DateRangeFilter';
@@ -153,7 +153,7 @@ export default async function AdminDashboard({
     params: Promise<{ lang: string }>;
     searchParams: Promise<{ range?: string }>;
 }) {
-    const session = await getSession();
+    const session = await getAdminSession();
     const { lang } = await params;
 
     if (!session) {

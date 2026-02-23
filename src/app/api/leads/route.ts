@@ -112,36 +112,33 @@ export async function POST(request: NextRequest) {
             }
         });
 
-        // Send emails
+        // Send emails via centralized mailer
         try {
+            const { sendEmail, emailTemplates } = await import('@/lib/mailer');
+
             // 1. Send confirmation to Patient if email provided
             if (data.email) {
-                await resend.emails.send({
-                    from: 'HealthExpress India <onboarding@resend.dev>', // Update to verified domain
+                const template = emailTemplates.leadConfirmation(data.fullName, referenceId, surgery.name);
+                await sendEmail({
                     to: data.email,
-                    subject: 'HealthExpress India - We received your request',
-                    react: LeadConfirmation({
-                        patientName: data.fullName,
-                        referenceId: referenceId,
-                        surgeryName: surgery.name
-                    })
+                    ...template
                 });
             }
 
             // 2. Notify Ops Team (Admin)
-            await resend.emails.send({
-                from: 'HealthExpress India <onboarding@resend.dev>', // Update to verified domain
-                to: process.env.OPS_EMAIL || 'ops@healthexpressindia.com',
-                subject: `New Lead: ${surgery.name} - ${data.fullName}`,
-                react: AdminNotification({
-                    referenceId: referenceId,
-                    fullName: data.fullName,
-                    phone: data.phone,
-                    email: data.email || undefined,
-                    city: data.city,
-                    surgeryName: surgery.name,
-                    sourcePage: body.sourcePage || '/'
-                })
+            const adminTemplate = emailTemplates.adminInquiry({
+                referenceId,
+                fullName: data.fullName,
+                phone: data.phone,
+                email: data.email || undefined,
+                city: data.city,
+                surgeryName: surgery.name,
+                sourcePage: body.sourcePage || '/'
+            });
+
+            await sendEmail({
+                to: process.env.OPS_EMAIL || 'healthexpressindia@healthexpressindia.com',
+                ...adminTemplate
             });
 
         } catch (emailErr) {

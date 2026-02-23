@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getSession } from '@/lib/auth';
+import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus, Prisma } from '@/generated/prisma';
 import LeadsTable from '@/components/dashboard/LeadsTable';
@@ -80,7 +80,7 @@ export default async function AdminLeadsPage({
 }: {
     searchParams: Promise<SearchParams>;
 }) {
-    const session = await getSession();
+    const session = await getAdminSession();
 
     if (!session) {
         redirect('/dashboard/login');

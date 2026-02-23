@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -25,13 +26,20 @@ export default function DashboardShell({ children, userName }: DashboardShellPro
             {/* Sidebar */}
             <aside className="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen">
                 <div className="p-6 border-b border-slate-100">
-                    <Link href="/" className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">H</span>
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <div className="relative w-8 h-8 transition-transform group-hover:scale-105">
+                            <Image
+                                src="/logo.png"
+                                alt="HealthExpress Logo"
+                                fill
+                                className="object-contain"
+                            />
                         </div>
-                        <span className="font-bold text-slate-900">HealthExpress</span>
+                        <div className="flex flex-col">
+                            <span className="font-bold text-slate-900 leading-tight">HealthExpress</span>
+                            <span className="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Command Center</span>
+                        </div>
                     </Link>
-                    <p className="text-[10px] text-teal-600 font-bold uppercase tracking-widest mt-1">Command Center</p>
                 </div>
 
                 <nav className="flex-1 p-4 space-y-1">
@@ -81,11 +89,16 @@ export default function DashboardShell({ children, userName }: DashboardShellPro
                 {/* Mobile Header */}
                 <header className="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-30">
                     <div className="flex items-center justify-between">
-                        <Link href="/" className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">H</span>
+                        <Link href="/" className="flex items-center gap-2 group">
+                            <div className="relative w-8 h-8 transition-transform group-hover:scale-105">
+                                <Image
+                                    src="/logo.png"
+                                    alt="HealthExpress Logo"
+                                    fill
+                                    className="object-contain"
+                                />
                             </div>
-                            <span className="font-bold text-slate-900">HealthExpress</span>
+                            <span className="font-bold text-slate-900 italic">HealthExpress</span>
                         </Link>
                         {/* Mobile menu toggle would go here */}
                     </div>
