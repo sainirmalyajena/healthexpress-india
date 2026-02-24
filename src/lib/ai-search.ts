@@ -12,7 +12,13 @@ export async function getAISuggestedTerms(query: string): Promise<string[]> {
 
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        let model;
+        try {
+            model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        } catch (e) {
+            console.warn('AI Search: Failed to initialize 2.0-flash, trying 1.5-flash');
+            model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        }
 
         const prompt = `
 Given a user query from a patient looking for medical surgery, extract or suggest 3-5 relevant medical terms, surgery names, or procedure names that match the intent or symptoms.
@@ -21,7 +27,15 @@ Return only the terms as a comma-separated list, nothing else.
 Query: "${query}"
 `;
 
-        const result = await model.generateContent(prompt);
+        let result;
+        try {
+            result = await model.generateContent(prompt);
+        } catch (e: any) {
+            console.error('AI Search: Gemini 2.0-flash fail, trying 1.5-flash fallback:', e.message);
+            const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+            result = await fallbackModel.generateContent(prompt);
+        }
+
         const response = await result.response;
         const text = response.text().trim();
 
@@ -29,8 +43,11 @@ Query: "${query}"
         return text.split(',')
             .map(t => t.trim())
             .filter(t => t.length > 0);
-    } catch (error) {
-        console.error('AI Search Expansion Error:', error);
+    } catch (error: any) {
+        console.error('AI Search Expansion Critical Error:', {
+            errorMessage: error.message,
+            stack: error.stack
+        });
         return [];
     }
 }

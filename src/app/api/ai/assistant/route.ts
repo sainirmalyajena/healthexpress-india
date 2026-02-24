@@ -11,7 +11,14 @@ export async function POST(req: NextRequest) {
         }
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+        let model;
+        try {
+            model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        } catch (e) {
+            console.warn('Failed to initialize gemini-2.0-flash, falling back to 1.5-flash');
+            model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        }
 
         // Fetch surgeries for context
         const surgeries = await prisma.surgery.findMany({
@@ -59,13 +66,38 @@ If a user asks about a surgery not in the list, tell them you are not sure if we
             ],
         });
 
-        const result = await chat.sendMessage(message);
+        let result;
+        try {
+            result = await chat.sendMessage(message);
+        } catch (e: any) {
+            console.error('Gemini 2.0-flash failed, attempting fallback to 1.5-flash...', e.message);
+            const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+            const fallbackChat = fallbackModel.startChat({
+                history: [
+                    { role: 'user', parts: [{ text: systemPrompt }] },
+                    { role: 'model', parts: [{ text: 'Understood. I am MedBot.' }] },
+                    ...(history || []).map((h: any) => ({
+                        role: h.role === 'user' ? 'user' : 'model',
+                        parts: [{ text: h.content }],
+                    })),
+                ]
+            });
+            result = await fallbackChat.sendMessage(message);
+        }
+
         const response = await result.response;
         const text = response.text();
 
         return NextResponse.json({ text });
     } catch (error: any) {
-        console.error('AI Assistant Error:', error);
-        return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
+        console.error('AI Assistant Critical Error:', {
+            errorMessage: error.message,
+            stack: error.stack,
+            cause: error.cause,
+        });
+        return NextResponse.json({
+            error: 'Failed to process request',
+            debug: process.env.NODE_ENV === 'development' ? error.message : undefined
+        }, { status: 500 });
     }
 }
