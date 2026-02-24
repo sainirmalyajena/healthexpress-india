@@ -9,6 +9,7 @@ import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { GoogleTagManager } from '@next/third-parties/google';
 import { MedBot } from "@/components/ui/MedBot";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -99,6 +100,7 @@ export default async function RootLayout({
         <MedBot lang={lang} />
         <WhatsAppButton />
         <StickyMobileCTA lang={lang} dict={dictionary.sticky_cta} />
+        <SpeedInsights />
       </body>
     </html>
   );
