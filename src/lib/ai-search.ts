@@ -6,9 +6,11 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 export async function getAISuggestedTerms(query: string): Promise<string[]> {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.warn('GEMINI_API_KEY is not configured for AI Search');
+        console.error('AI Search: Missing API Key');
         return [];
     }
+
+    console.log('AI Search: Triggered for query:', query);
 
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
@@ -38,6 +40,7 @@ Query: "${query}"
 
         const response = await result.response;
         const text = response.text().trim();
+        console.log('AI Search suggested terms:', text);
 
         // Split by comma and clean up
         return text.split(',')

@@ -97,7 +97,8 @@ If a user asks about a surgery not in the list, tell them you are not sure if we
         });
         return NextResponse.json({
             error: 'Failed to process request',
-            debug: process.env.NODE_ENV === 'development' ? error.message : undefined
+            debug: error.message, // Temporarily expose for live debugging
+            stack: error.stack
         }, { status: 500 });
     }
 }
