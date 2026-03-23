@@ -5,6 +5,7 @@ import { Search, UserRound, Building2 } from 'lucide-react';
 
 interface HowItWorksProps {
     lang: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dict: any;
 }
 

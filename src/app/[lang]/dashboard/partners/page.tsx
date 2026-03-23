@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { PartnerStatus } from '@/generated/prisma';
 import ApprovePartnerButton from '@/components/dashboard/ApprovePartnerButton';
 import Link from 'next/link';

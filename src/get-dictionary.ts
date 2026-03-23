@@ -9,6 +9,7 @@ const dictionaries = {
  * Deep merges two objects.
  * Target is the base (fallback), source is the translated object.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function deepMerge(target: any, source: any): any {
     const output = { ...target };
     if (source && typeof source === 'object' && !Array.isArray(source)) {

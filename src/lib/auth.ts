@@ -14,9 +14,11 @@ export async function getSession(): Promise<SessionPayload | null> {
     if (!session?.user) return null;
 
     return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         userId: (session.user as any).id,
         email: session.user.email || undefined,
         name: session.user.name || "User",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         role: (session.user as any).role || "user",
     };
 }

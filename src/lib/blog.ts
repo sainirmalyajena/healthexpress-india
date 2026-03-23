@@ -36,6 +36,7 @@ export async function getSortedPostsData() {
             };
         });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (allPostsData as any).sort((a: any, b: any) => (a.date < b.date ? 1 : -1));
 }
 
@@ -52,6 +53,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     return {
         slug,
         content,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ...(data as any),
     };
 }

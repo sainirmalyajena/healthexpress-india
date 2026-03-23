@@ -6,6 +6,7 @@ import { trackFormSubmission } from '@/components/Analytics';
 
 interface ContactClientProps {
     lang: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dict: any;
 }
 

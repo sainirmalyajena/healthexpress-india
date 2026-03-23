@@ -29,70 +29,61 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Focus styles for accessibility */
 *:focus-visible {
   outline: 2px solid #0d9488;
   outline-offset: 2px;
 }
 
-/* Custom scrollbar */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
-
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 
-/* Animation utilities */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
+/* Hide scrollbar utility (used in category pills) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
 
 @keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0);     }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+@keyframes bounceSlight {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-6px); }
 }
 
-.animate-slide-in {
-  animation: slideIn 0.3s ease-out forwards;
-}
+.animate-fade-in       { animation: fadeIn       0.5s ease-out  forwards; }
+.animate-slide-in      { animation: slideIn      0.3s ease-out  forwards; }
+.animate-bounce-subtle { animation: bounceSlight 2.5s ease-in-out infinite; }
 
-/* Gradient text */
+/* ── Gradient text ── */
 .gradient-text {
   background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);
   -webkit-background-clip: text;
@@ -100,14 +91,14 @@ html {
   background-clip: text;
 }
 
-/* Glass effect */
+/* ── Glass ── */
 .glass {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* Prose for surgery content */
+/* ── Surgery detail prose ── */
 .prose-surgery h2 {
   font-size: 1.25rem;
   font-weight: 600;
@@ -115,19 +106,16 @@ html {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
-
 .prose-surgery p {
   color: #475569;
   line-height: 1.7;
   margin-bottom: 1rem;
 }
-
 .prose-surgery ul {
   list-style-type: disc;
   padding-left: 1.5rem;
   margin-bottom: 1rem;
 }
-
 .prose-surgery li {
   color: #475569;
   line-height: 1.7;

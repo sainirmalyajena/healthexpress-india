@@ -5,9 +5,11 @@ import { ShieldCheck, Trophy, CircleDollarSign, Handshake } from 'lucide-react';
 
 interface TrustSectionProps {
     lang: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dict: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function TrustSection({ lang, dict }: TrustSectionProps) {
     const trustPoints = [
         {

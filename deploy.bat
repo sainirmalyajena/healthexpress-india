@@ -1,10 +1,13 @@
 @echo off
-echo Deploying to GitHub...
-git add .
-set "timestamp=%date% %time%"
-git commit -m "feat: Project Update - %timestamp%"
-git push origin main
-git push origin2 main
 echo.
-echo Deployment triggered! Vercel will now update automatically.
+echo ==========================================
+echo  HealthExpress Deploy
+echo ==========================================
+git add .
+set "timestamp=%date:~-4%-%date:~3,2%-%date:~0,2% %time:~0,5%"
+git commit -m "feat: Rebuild surgery pages + hero fix + css utils [%timestamp%]"
+git push origin main
+echo.
+echo Done. Vercel will pick this up automatically.
+echo Check: https://vercel.com/health-express/healthexpress-india
 pause

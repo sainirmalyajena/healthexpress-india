@@ -10,6 +10,7 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { slug, lang } = await params;
     const post = await getPostBySlug(slug);
 

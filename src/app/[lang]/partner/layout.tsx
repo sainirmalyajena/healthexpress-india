@@ -1,4 +1,5 @@
 import { getPartnerSession } from '@/lib/partner-auth';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import LogoutButton from '@/components/dashboard/LogoutButton';

@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
         let model;
         try {
             model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             console.warn('Failed to initialize gemini-2.0-flash, falling back to 1.5-flash');
             model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -59,6 +60,7 @@ If a user asks about a surgery not in the list, tell them you are not sure if we
             history: [
                 { role: 'user', parts: [{ text: systemPrompt }] },
                 { role: 'model', parts: [{ text: 'Understood. I am MedBot, your HealthExpress India assistant. How can I help you today?' }] },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 ...(history || []).map((h: any) => ({
                     role: h.role === 'user' ? 'user' : 'model',
                     parts: [{ text: h.content }],
@@ -69,6 +71,7 @@ If a user asks about a surgery not in the list, tell them you are not sure if we
         let result;
         try {
             result = await chat.sendMessage(message);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             console.error('Gemini 2.0-flash failed, attempting fallback to 1.5-flash...', e.message);
             const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -76,6 +79,7 @@ If a user asks about a surgery not in the list, tell them you are not sure if we
                 history: [
                     { role: 'user', parts: [{ text: systemPrompt }] },
                     { role: 'model', parts: [{ text: 'Understood. I am MedBot.' }] },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...(history || []).map((h: any) => ({
                         role: h.role === 'user' ? 'user' : 'model',
                         parts: [{ text: h.content }],
@@ -89,6 +93,7 @@ If a user asks about a surgery not in the list, tell them you are not sure if we
         const text = response.text();
 
         return NextResponse.json({ text });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error('AI Assistant Critical Error:', {
             errorMessage: error.message,

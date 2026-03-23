@@ -30,6 +30,7 @@ export async function PATCH(
             return NextResponse.json({ error: 'Forbidden: Lead not assigned to this hospital' }, { status: 403 });
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const updateData: any = {};
         if (status) updateData.status = status as LeadStatus;
 

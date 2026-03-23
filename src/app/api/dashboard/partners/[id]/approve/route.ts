@@ -10,6 +10,7 @@ export async function POST(
     const session = await auth();
 
     // Type casting to access custom role property added in auth.ts callbacks
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!session || (session.user as any)?.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

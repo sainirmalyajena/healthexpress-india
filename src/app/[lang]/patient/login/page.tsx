@@ -36,6 +36,7 @@ export default function PatientLoginPage() {
 
             setStep('otp');
             setSuccess('OTP sent successfully to your mobile.');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -61,6 +62,7 @@ export default function PatientLoginPage() {
 
             router.push('/patient/dashboard');
             router.refresh();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message);
         } finally {

@@ -94,7 +94,7 @@ export default async function PartnerLeadDetailPage({
                             <div className="mt-8 pt-6 border-t border-slate-50">
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Clinical Details / Symptoms</p>
                                 <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100 italic text-slate-700 text-sm">
-                                    "{lead.description}"
+                                    &quot;{lead.description}&quot;
                                 </div>
                             </div>
                         )}

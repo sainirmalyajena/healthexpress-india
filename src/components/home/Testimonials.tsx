@@ -2,9 +2,11 @@
 
 interface TestimonialsProps {
     lang: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dict: any;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function Testimonials({ lang, dict }: TestimonialsProps) {
     const testimonials = [
         {

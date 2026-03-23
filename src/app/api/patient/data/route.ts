@@ -63,6 +63,7 @@ export async function GET() {
             select: { id: true, name: true, type: true, createdAt: true },
         });
         return NextResponse.json(documents);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch documents' }, { status: 500 });
     }

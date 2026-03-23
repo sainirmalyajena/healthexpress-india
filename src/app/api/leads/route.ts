@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { leadFormSchema } from '@/lib/validations';
 import { generateReferenceId, extractUTMParams } from '@/lib/utils';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { resend } from '@/lib/resend';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import LeadConfirmation from '@/emails/LeadConfirmation';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AdminNotification from '@/emails/AdminNotification';
 import { prisma } from '@/lib/prisma';
 

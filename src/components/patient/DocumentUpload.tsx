@@ -49,6 +49,7 @@ export default function DocumentUpload() {
                 if (fileInputRef.current) fileInputRef.current.value = '';
                 router.refresh();
             };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message || 'Pick a smaller file or try again.');
         } finally {

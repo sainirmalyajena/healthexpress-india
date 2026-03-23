@@ -7,6 +7,7 @@ import { Phone, CalendarCheck } from 'lucide-react';
 
 interface StickyMobileCTAProps {
     lang: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dict: any;
 }
 

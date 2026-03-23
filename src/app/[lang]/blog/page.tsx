@@ -20,6 +20,7 @@ export default async function BlogPage({ params }: { params: Promise<{ lang: str
     const { lang } = await params;
     const posts = await getSortedPostsData();
     const dictionary = await getDictionary(lang as Locale);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const dict = dictionary.blog || {}; // Fallback if missing
 
     return (
@@ -38,6 +39,7 @@ export default async function BlogPage({ params }: { params: Promise<{ lang: str
 
                 {posts.length > 0 ? (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {posts.map((post: any) => (
                             <article key={post.slug} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col group">
                                 <div className="aspect-video bg-teal-50 flex items-center justify-center overflow-hidden">

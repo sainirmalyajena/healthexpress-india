@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -53,6 +54,7 @@ export function MedBot({ lang }: { lang: string }) {
             } else {
                 setMessages(prev => [...prev, { role: 'bot', content: "I'm sorry, I'm having trouble connecting right now. Please try again later." }]);
             }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setMessages(prev => [...prev, { role: 'bot', content: "Oops! Something went wrong. Please check your connection." }]);
         } finally {

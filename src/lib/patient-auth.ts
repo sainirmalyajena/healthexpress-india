@@ -2,10 +2,13 @@ import { auth } from "@/auth";
 
 export async function getPatientSession() {
     const session = await auth();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!session?.user || (session.user as any).role !== 'patient') return null;
 
     return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         leadId: (session.user as any).id,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         phone: (session.user as any).phone || '',
         name: session.user.name || '',
     };

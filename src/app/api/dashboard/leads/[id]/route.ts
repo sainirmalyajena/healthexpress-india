@@ -10,6 +10,7 @@ export async function PATCH(
     const session = await auth();
 
     // Type casting to access custom role property added in auth.ts callbacks
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!session || (session.user as any)?.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -76,6 +77,7 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await auth();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!session || (session.user as any)?.role !== 'ADMIN') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await params;

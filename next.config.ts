@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  experimental: {
+    workerThreads: false,
+    cpus: 1
+  }
 };
 
 export default withSentryConfig(nextConfig, {

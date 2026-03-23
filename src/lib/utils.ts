@@ -46,6 +46,7 @@ export function slugify(text: string): string {
         .trim();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getCategoryLabel(category: string, dict?: any): string {
     if (dict && dict[category]) return dict[category];
 

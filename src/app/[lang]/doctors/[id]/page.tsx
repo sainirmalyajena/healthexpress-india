@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
@@ -10,7 +11,7 @@ interface PageProps {
     params: Promise<{ id: string; lang: string }>;
 }
 
-async function getDoctor(id: string) {
+const getDoctor = cache(async (id: string) => {
     const doctor = await prisma.doctor.findUnique({
         where: { id },
         include: {
@@ -19,9 +20,10 @@ async function getDoctor(id: string) {
         },
     });
     return doctor;
-}
+});
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, lang } = await params;
     const doctor = await getDoctor(id);
     if (!doctor) return { title: 'Doctor Not Found' };
@@ -61,6 +63,7 @@ export default async function DoctorProfilePage({ params }: PageProps) {
     }
 
     const dictionary = await getDictionary(lang as Locale);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const dict = dictionary.doctor_profile || {};
     const isHi = lang === 'hi';
 

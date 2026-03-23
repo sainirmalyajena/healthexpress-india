@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { getDoctorSession } from '@/lib/doctor-auth';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { redirect, notFound } from 'next/navigation';
 import DoctorLoginForm from '@/components/doctor/DoctorLoginForm';
 

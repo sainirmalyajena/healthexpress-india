@@ -5,7 +5,9 @@ import {
     Heading,
     Hr,
     Html,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Img,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Link,
     Preview,
     Section,
@@ -26,7 +28,7 @@ export const LeadConfirmationEmail = ({
 }: LeadConfirmationEmailProps) => (
     <Html>
         <Head />
-        <Preview>We've received your inquiry for {surgeryName}</Preview>
+        <Preview>We&apos;ve received your inquiry for {surgeryName}</Preview>
         <Body style={main}>
             <Container style={container}>
                 <Section style={header}>

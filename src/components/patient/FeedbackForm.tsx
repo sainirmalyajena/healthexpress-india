@@ -36,8 +36,8 @@ export default function FeedbackForm() {
 
             setIsSubmitted(true);
             router.refresh();
-        } catch (err: any) {
-            setError(err.message || 'Something went wrong. Please try again.');
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -48,7 +48,7 @@ export default function FeedbackForm() {
             <div className="bg-green-50 border border-green-100 p-6 rounded-2xl text-center animate-fade-in">
                 <div className="text-3xl mb-2">🎉</div>
                 <h3 className="text-green-900 font-bold">Thank you for your feedback!</h3>
-                <p className="text-green-700 text-sm">We're glad to have been part of your journey.</p>
+                <p className="text-green-700 text-sm">We&apos;re glad to have been part of your journey.</p>
             </div>
         );
     }

@@ -17,6 +17,7 @@ export async function getAISuggestedTerms(query: string): Promise<string[]> {
         let model;
         try {
             model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             console.warn('AI Search: Failed to initialize 2.0-flash, trying 1.5-flash');
             model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -32,6 +33,7 @@ Query: "${query}"
         let result;
         try {
             result = await model.generateContent(prompt);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
             console.error('AI Search: Gemini 2.0-flash fail, trying 1.5-flash fallback:', e.message);
             const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -46,6 +48,7 @@ Query: "${query}"
         return text.split(',')
             .map(t => t.trim())
             .filter(t => t.length > 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error('AI Search Expansion Critical Error:', {
             errorMessage: error.message,

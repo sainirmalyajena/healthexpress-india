@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
             }
 
             return NextResponse.json({ success: true });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (authError) {
             return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
         }

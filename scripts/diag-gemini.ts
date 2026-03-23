@@ -8,6 +8,7 @@ async function listModels() {
         console.error("GEMINI_API_KEY not found in .env");
         return;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const genAI = new GoogleGenerativeAI(apiKey);
 
     try {
@@ -17,10 +18,12 @@ async function listModels() {
             console.error("API Error:", JSON.stringify(data.error, null, 2));
         } else {
             console.log("Found", data.models?.length, "models:");
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             data.models?.forEach((m: any) => {
                 console.log(`- ${m.name} (${m.supportedGenerationMethods.join(', ')})`);
             });
         }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
         console.error("Failed to list models:", e.message);
     }
