@@ -181,35 +181,28 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                     </div>
                                 </div>
                             </motion.div>
-                        </motion.div>
-
-                        {/* Trust Badges */}
-                        <motion.div 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden"
-                        >
-                            <div className="absolute top-0 right-0 p-16 bg-teal-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-                            <h3 className="text-xl font-bold mb-6 relative z-10">{lang === 'hi' ? 'हमारा वादा' : 'Our Commitment'}</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
-                                <div className="flex items-center gap-3">
-                                    <ShieldCheck className="w-6 h-6 text-teal-400" />
-                                    <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">100% Privacy</span>
+                            <motion.div variants={fadeInUp} className="bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden !mt-8">
+                                <div className="absolute top-0 right-0 p-16 bg-teal-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+                                <h3 className="text-xl font-bold mb-6 relative z-10">{lang === 'hi' ? 'हमारा वादा' : 'Our Commitment'}</h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
+                                    <div className="flex items-center gap-3">
+                                        <ShieldCheck className="w-6 h-6 text-teal-400" />
+                                        <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">100% Privacy</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <Building2 className="w-6 h-6 text-teal-400" />
+                                        <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">500+ Hospitals</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <Clock className="w-6 h-6 text-teal-400" />
+                                        <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">24/7 Support</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle2 className="w-6 h-6 text-teal-400" />
+                                        <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">Expert Guidance</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <Building2 className="w-6 h-6 text-teal-400" />
-                                    <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">500+ Hospitals</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Clock className="w-6 h-6 text-teal-400" />
-                                    <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">24/7 Support</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <CheckCircle2 className="w-6 h-6 text-teal-400" />
-                                    <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">Expert Guidance</span>
-                                </div>
-                            </div>
+                            </motion.div>
                         </motion.div>
                     </div>
 
