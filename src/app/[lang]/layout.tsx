@@ -7,7 +7,6 @@ import { Inter } from 'next/font/google';
 import "@/app/globals.css";
 import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
-import { GoogleTagManager } from '@next/third-parties/google';
 import { MedBot } from "@/components/ui/MedBot";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -78,12 +77,10 @@ export default async function RootLayout({
   const { lang } = await params;
   const dictionary = await getDictionary(lang as Locale);
   const organizationSchema = generateOrganizationSchema();
-  const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
-
   return (
     <html lang={lang}>
       <head>
-        {GTM_ID && <GoogleTagManager gtmId={GTM_ID} />}
+        <Analytics />
         {/* Organization Schema */}
         <script
           type="application/ld+json"
@@ -93,7 +90,6 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${inter.variable} min-h-screen flex flex-col pb-[80px] md:pb-0 overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-100 selection:text-teal-900`}>
-        <Analytics />
         <Header lang={lang} dict={dictionary.navigation} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} dict={dictionary.footer} />

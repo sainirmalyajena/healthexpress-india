@@ -4,12 +4,28 @@ import { GoogleAnalytics, sendGAEvent } from '@next/third-parties/google';
 
 export default function Analytics() {
     const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+    const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID; // This is the AW- ID
 
     if (!GA_ID) {
         return null;
     }
 
-    return <GoogleAnalytics gaId={GA_ID} />;
+    return (
+        <>
+            <GoogleAnalytics gaId={GA_ID} />
+            {GTM_ID && (
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('config', '${GTM_ID}');
+                        `,
+                    }}
+                />
+            )}
+        </>
+    );
 }
 
 // Helper function to track events
