@@ -1,10 +1,17 @@
 'use client';
 
-import { GoogleAnalytics, sendGAEvent } from '@next/third-parties/google';
+import Script from 'next/script';
+
+declare global {
+    interface Window {
+        dataLayer: any[];
+        gtag: (...args: any[]) => void;
+    }
+}
 
 export default function Analytics() {
     const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-    const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID; // This is the AW- ID
+    const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
     if (!GA_ID) {
         return null;
@@ -12,49 +19,52 @@ export default function Analytics() {
 
     return (
         <>
-            <GoogleAnalytics gaId={GA_ID} />
-            {GTM_ID && (
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-                            window.dataLayer = window.dataLayer || [];
-                            function gtag(){dataLayer.push(arguments);}
-                            gtag('config', '${GTM_ID}');
-                        `,
-                    }}
-                />
-            )}
+            <Script
+                strategy="afterInteractive"
+                src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            />
+            <Script
+                id="gtag-init"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', '${GA_ID}', {
+                            page_path: window.location.pathname,
+                        });
+                        ${GTM_ID ? `gtag('config', '${GTM_ID}');` : ''}
+                    `,
+                }}
+            />
         </>
     );
 }
 
 // Helper function to track events
 export const trackEvent = (eventName: string, eventParams?: Record<string, unknown>) => {
-    sendGAEvent({ event: eventName, value: eventParams });
+    if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', eventName, eventParams);
+    }
 };
 
 // Track form submissions
 export const trackFormSubmission = (formName: string, surgeryName?: string) => {
-    sendGAEvent({
-        event: 'form_submission',
-        value: {
-            form_name: formName,
-            surgery_name: surgeryName,
-        }
+    trackEvent('form_submission', {
+        form_name: formName,
+        surgery_name: surgeryName,
     });
 };
 
 // Track phone clicks
 export const trackPhoneClick = (phoneNumber: string) => {
-    sendGAEvent({
-        event: 'phone_click',
-        value: {
-            phone_number: phoneNumber
-        }
+    trackEvent('phone_click', {
+        phone_number: phoneNumber
     });
 };
 
 // Track WhatsApp clicks
 export const trackWhatsAppClick = () => {
-    sendGAEvent({ event: 'whatsapp_click' });
+    trackEvent('whatsapp_click');
 };

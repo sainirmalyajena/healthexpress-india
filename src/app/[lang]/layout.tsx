@@ -80,7 +80,6 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        <Analytics />
         {/* Organization Schema */}
         <script
           type="application/ld+json"
@@ -90,6 +89,7 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${inter.variable} min-h-screen flex flex-col pb-[80px] md:pb-0 overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-100 selection:text-teal-900`}>
+        <Analytics />
         <Header lang={lang} dict={dictionary.navigation} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} dict={dictionary.footer} />
