@@ -32,17 +32,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-    const posts = await getSortedPostsData();
-    const locales = ['en', 'hi'];
-    const params: { slug: string; lang: string }[] = [];
+    try {
+        const posts = await getSortedPostsData();
+        const locales = ['en', 'hi'];
+        const params: { slug: string; lang: string }[] = [];
 
-    posts.forEach((post: { slug: string }) => {
-        locales.forEach(lang => {
-            params.push({ slug: post.slug, lang });
+        posts.forEach((post: { slug: string }) => {
+            locales.forEach(lang => {
+                params.push({ slug: post.slug, lang });
+            });
         });
-    });
 
-    return params;
+        return params;
+    } catch (error) {
+        console.warn('Failed to fetch blog posts for static params, falling back to dynamic generation:', error);
+        return [];
+    }
 }
 
 export default async function BlogPostPage({ params }: Props) {

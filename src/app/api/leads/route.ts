@@ -1,24 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { leadFormSchema } from '@/lib/validations';
 import { generateReferenceId, extractUTMParams } from '@/lib/utils';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { resend } from '@/lib/resend';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import LeadConfirmation from '@/emails/LeadConfirmation';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import AdminNotification from '@/emails/AdminNotification';
 import { prisma } from '@/lib/prisma';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export const dynamic = 'force-dynamic';
 
-// Rate limiting disabled for Demo Mode
 async function checkRateLimit(): Promise<boolean> {
     return true;
 }
 
+// Uses Gemini to classify lead urgency and extract intent from the description
+async function classifyLead(description: string, surgeryName: string): Promise<{
+    urgency: 'EMERGENCY' | 'URGENT' | 'ELECTIVE';
+    intent: string;
+    suggestedNotes: string;
+}> {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return { urgency: 'ELECTIVE', intent: surgeryName, suggestedNotes: '' };
+
+    try {
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+        const prompt = `
+You are a medical triage assistant for HealthExpress India. Classify this patient inquiry.
+
+Surgery: ${surgeryName}
+Patient message: "${description}"
+
+Respond ONLY with a JSON object (no markdown, no explanation):
+{
+  "urgency": "EMERGENCY" | "URGENT" | "ELECTIVE",
+  "intent": "one line describing what patient needs",
+  "suggestedNotes": "brief ops team note (max 20 words)"
+}
+
+EMERGENCY = chest pain, stroke, broken bone, can't breathe, severe bleeding
+URGENT = significant pain, infection, condition worsening, need surgery within weeks
+ELECTIVE = routine procedure, researching options, cost inquiry, no time pressure
+`;
+
+        const result = await model.generateContent(prompt);
+        const text = result.response.text().trim();
+        const cleaned = text.replace(/```json|```/g, '').trim();
+        return JSON.parse(cleaned);
+    } catch {
+        return { urgency: 'ELECTIVE', intent: surgeryName, suggestedNotes: '' };
+    }
+}
+
 export async function POST(request: NextRequest) {
     try {
-        // Check rate limit
         const allowed = await checkRateLimit();
         if (!allowed) {
             return NextResponse.json(
@@ -29,7 +62,6 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        // Validate input
         const parsed = leadFormSchema.safeParse(body);
         if (!parsed.success) {
             return NextResponse.json(
@@ -40,13 +72,9 @@ export async function POST(request: NextRequest) {
 
         const data = parsed.data;
 
-        // Check honeypot (spam protection)
+        // Honeypot
         if (data.website && data.website.length > 0) {
-            // Silently reject but return success to confuse bots
-            return NextResponse.json({
-                success: true,
-                referenceId: generateReferenceId()
-            });
+            return NextResponse.json({ success: true, referenceId: generateReferenceId() });
         }
 
         // Verify surgery exists
@@ -55,53 +83,60 @@ export async function POST(request: NextRequest) {
                 OR: [
                     { id: data.surgeryId },
                     { name: { equals: data.surgeryId, mode: 'insensitive' } },
-                    { slug: { equals: data.surgeryId, mode: 'insensitive' } }
-                ]
-            }
+                    { slug: { equals: data.surgeryId, mode: 'insensitive' } },
+                ],
+            },
         });
 
-        // Fallback for custom surgery names
         if (!surgery) {
-            // Check for a default "Other" surgery OR create one
             surgery = await prisma.surgery.findFirst({
-                where: { OR: [{ name: 'General Consultation' }, { name: 'Other' }] }
+                where: { OR: [{ name: 'General Consultation' }, { name: 'Other' }] },
             });
-
-            if (!surgery) {
-                // Last resort: find any surgery to keep schema happy (shouldn't really happen in production if seed runs)
-                surgery = await prisma.surgery.findFirst();
-            }
         }
-
+        if (!surgery) surgery = await prisma.surgery.findFirst();
         if (!surgery) {
             return NextResponse.json({ error: 'No surgery options available' }, { status: 400 });
         }
 
-        // Parse UTM parameters from source page
+        // UTM parsing
         let utmSource, utmCampaign, utmMedium, utmTerm, utmContent;
         try {
-            const utmParams = extractUTMParams(body.sourcePage || 'https://healthexpress.in');
+            const utmParams = extractUTMParams(body.sourcePage || 'https://healthexpressindia.com');
             utmSource = utmParams.source;
             utmCampaign = utmParams.campaign;
             utmMedium = utmParams.medium;
             utmTerm = utmParams.term;
             utmContent = utmParams.content;
-        } catch {
-            // Invalid URL, ignore
-        }
+        } catch { /* ignore */ }
 
-        // Generate reference ID
         const referenceId = generateReferenceId();
 
-        // Save to Database
+        // AI lead classification (runs in parallel with DB save)
+        const [classification] = await Promise.allSettled([
+            classifyLead(data.description || '', surgery.name),
+        ]);
+
+        const aiResult = classification.status === 'fulfilled'
+            ? classification.value
+            : { urgency: 'ELECTIVE' as const, intent: surgery.name, suggestedNotes: '' };
+
+        // Auto-escalate emergency leads
+        const initialStatus = aiResult.urgency === 'EMERGENCY' ? 'CONTACTED' : 'NEW';
+
+        const notesContent = [
+            aiResult.urgency !== 'ELECTIVE' ? `[${aiResult.urgency}]` : '',
+            aiResult.suggestedNotes,
+        ].filter(Boolean).join(' ');
+
+        // Save to DB
         await prisma.lead.create({
             data: {
                 fullName: data.fullName,
                 phone: data.phone,
                 email: data.email || null,
                 city: data.city,
-                surgeryId: data.surgeryId,
-                description: `Inquiry for ${surgery.name}`,
+                surgeryId: surgery.id,
+                description: data.description || `Inquiry for ${surgery.name}`,
                 insurance: data.insurance,
                 callbackTime: data.callbackTime,
                 sourcePage: body.sourcePage || '/',
@@ -111,52 +146,46 @@ export async function POST(request: NextRequest) {
                 utmTerm,
                 utmContent,
                 referenceId,
-                status: 'NEW'
-            }
+                status: initialStatus,
+                notes: notesContent || null,
+            },
         });
 
-        // Send emails via centralized mailer
+        // Emails
         try {
             const { sendEmail, emailTemplates } = await import('@/lib/mailer');
 
-            // 1. Send confirmation to Patient if email provided
             if (data.email) {
                 const template = emailTemplates.leadConfirmation(data.fullName, referenceId, surgery.name);
-                await sendEmail({
-                    to: data.email,
-                    ...template
-                });
+                await sendEmail({ to: data.email, ...template });
             }
 
-            // 2. Notify Ops Team (Admin)
+            const urgencyPrefix = aiResult.urgency !== 'ELECTIVE'
+                ? `🚨 ${aiResult.urgency}: `
+                : '';
+
             const adminTemplate = emailTemplates.adminInquiry({
                 referenceId,
                 fullName: data.fullName,
                 phone: data.phone,
                 email: data.email || undefined,
                 city: data.city,
-                surgeryName: surgery.name,
-                sourcePage: body.sourcePage || '/'
+                surgeryName: `${urgencyPrefix}${surgery.name}`,
+                sourcePage: body.sourcePage || '/',
             });
 
             await sendEmail({
                 to: process.env.OPS_EMAIL || 'healthexpressindia@healthexpressindia.com',
-                ...adminTemplate
+                ...adminTemplate,
             });
-
         } catch (emailErr) {
-            console.error('Email preparation error:', emailErr);
+            console.error('Email error:', emailErr);
         }
 
-        return NextResponse.json({
-            success: true,
-            referenceId,
-        });
+        return NextResponse.json({ success: true, referenceId });
+
     } catch (error) {
         console.error('Lead creation error:', error);
-        return NextResponse.json(
-            { error: 'An error occurred. Please try again.' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'An error occurred. Please try again.' }, { status: 500 });
     }
 }

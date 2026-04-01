@@ -41,17 +41,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-    const doctors = await prisma.doctor.findMany({ select: { id: true } });
-    const locales = ['en', 'hi'];
-    const params: { id: string; lang: string }[] = [];
+    try {
+        const doctors = await prisma.doctor.findMany({ select: { id: true } });
+        const locales = ['en', 'hi'];
+        const params: { id: string; lang: string }[] = [];
 
-    doctors.forEach(doc => {
-        locales.forEach(lang => {
-            params.push({ id: doc.id, lang });
+        doctors.forEach(doc => {
+            locales.forEach(lang => {
+                params.push({ id: doc.id, lang });
+            });
         });
-    });
 
-    return params;
+        return params;
+    } catch (error) {
+        console.warn('Failed to fetch doctors for static params, falling back to dynamic generation:', error);
+        return [];
+    }
 }
 
 export default async function DoctorProfilePage({ params }: PageProps) {

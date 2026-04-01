@@ -46,28 +46,18 @@ function AnimatedCounter({ end, suffix = '', prefix = '' }: { end: number; suffi
 }
 
 export function Hero({ lang, dict }: HeroProps) {
-  const heroRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
 
+  // Add hero-ready class after mount — triggers CSS animation without hiding content during LCP
   useEffect(() => {
-    const els = heroRef.current?.querySelectorAll('[data-reveal]');
-    if (!els) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).style.opacity = '1';
-            (entry.target as HTMLElement).style.transform = 'translateY(0)';
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    els.forEach((el, i) => {
-      (el as HTMLElement).style.transitionDelay = `${i * 100}ms`;
-      observer.observe(el);
+    const section = heroRef.current;
+    if (!section) return;
+    // rAF ensures the first paint happens before the animation class is applied;
+    // this means Lighthouse sees fully-visible content at LCP time.
+    const raf = requestAnimationFrame(() => {
+      section.classList.add('hero-ready');
     });
-    return () => observer.disconnect();
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const stats = [
@@ -78,29 +68,32 @@ export function Hero({ lang, dict }: HeroProps) {
   ];
 
   return (
-    <section className="relative overflow-hidden pb-0 pt-0">
+    <section ref={heroRef} className="relative overflow-hidden pb-0 pt-0">
       {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900" />
 
       {/* SVG mesh grid overlay */}
-      <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")', backgroundSize: '60px 60px' }} />
-      
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          backgroundSize: '60px 60px',
+        }}
+      />
+
       {/* Large glow orbs */}
       <div className="absolute top-[-200px] right-[-100px] w-[700px] h-[700px] bg-teal-600/20 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-150px] left-[-100px] w-[500px] h-[500px] bg-blue-700/15 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute top-1/2 left-1/3 w-[400px] h-[400px] bg-teal-500/10 rounded-full blur-[80px] pointer-events-none" />
 
-      <div ref={heroRef} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-20 md:pb-28">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-20 md:pb-28">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Left Column: Text */}
+
+          {/* Left Column: Text — children carry .hero-reveal for staggered CSS animation */}
           <div>
             {/* Pill badge */}
-            <div
-              data-reveal
-              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 border border-teal-400/30 backdrop-blur-sm mb-8 text-white"
-              style={{ opacity: 0, transform: 'translateY(20px)', transition: 'opacity 0.6s ease, transform 0.6s ease' }}
-            >
+            <div className="hero-reveal inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 border border-teal-400/30 backdrop-blur-sm mb-8 text-white">
               <span className="flex h-2 w-2 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-300" />
@@ -110,12 +103,8 @@ export function Hero({ lang, dict }: HeroProps) {
               </span>
             </div>
 
-            {/* H1 */}
-            <h1
-              data-reveal
-              className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] mb-6 tracking-tight text-white"
-              style={{ opacity: 0, transform: 'translateY(20px)', transition: 'opacity 0.6s ease, transform 0.6s ease' }}
-            >
+            {/* H1 — always visible for SSR & LCP; CSS animation adds motion after mount */}
+            <h1 className="hero-reveal text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] mb-6 tracking-tight text-white">
               <span className="block">{dict.title.split(' ').slice(0, 3).join(' ')}</span>
               <span className="block bg-gradient-to-r from-teal-300 via-cyan-200 to-teal-400 bg-clip-text text-transparent">
                 {dict.title.split(' ').slice(3).join(' ')}
@@ -123,20 +112,12 @@ export function Hero({ lang, dict }: HeroProps) {
             </h1>
 
             {/* Subtitle */}
-            <p
-              data-reveal
-              className="text-lg text-slate-300 mb-10 max-w-xl leading-relaxed"
-              style={{ opacity: 0, transform: 'translateY(20px)', transition: 'opacity 0.6s ease, transform 0.6s ease' }}
-            >
+            <p className="hero-reveal text-lg text-slate-300 mb-10 max-w-xl leading-relaxed">
               {dict.subtitle}
             </p>
 
             {/* CTA buttons */}
-            <div
-              data-reveal
-              className="flex flex-col sm:flex-row gap-4"
-              style={{ opacity: 0, transform: 'translateY(20px)', transition: 'opacity 0.6s ease, transform 0.6s ease' }}
-            >
+            <div className="hero-reveal flex flex-col sm:flex-row gap-4">
               <Link
                 href={`/${lang}/contact`}
                 className="group relative px-8 py-4 bg-gradient-to-r from-teal-400 to-teal-500 text-slate-900 font-bold text-lg rounded-2xl shadow-[0_0_40px_rgba(45,212,191,0.4)] hover:shadow-[0_0_60px_rgba(45,212,191,0.6)] hover:scale-[1.03] transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden"
@@ -155,18 +136,9 @@ export function Hero({ lang, dict }: HeroProps) {
               </Link>
             </div>
 
-            {/* Trust tags row */}
-            <div
-              data-reveal
-              className="mt-10 flex flex-wrap gap-3"
-              style={{ opacity: 0, transform: 'translateY(20px)', transition: 'opacity 0.6s ease, transform 0.6s ease' }}
-            >
-              {[
-                '✅ No Hidden Fees',
-                '🏥 Top Hospitals',
-                '⚡ 24hr Callback',
-                '🔒 100% Private'
-              ].map((tag) => (
+            {/* Trust tags */}
+            <div className="hero-reveal mt-10 flex flex-wrap gap-3">
+              {['✅ No Hidden Fees', '🏥 Top Hospitals', '⚡ 24hr Callback', '🔒 100% Private'].map((tag) => (
                 <span key={tag} className="px-3 py-1.5 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full text-xs text-slate-300 font-medium">
                   {tag}
                 </span>
@@ -175,16 +147,11 @@ export function Hero({ lang, dict }: HeroProps) {
           </div>
 
           {/* Right Column: Visual Card */}
-          <div
-            data-reveal
-            className="relative hidden lg:flex items-center justify-center"
-            style={{ opacity: 0, transform: 'translateY(20px)', transition: 'opacity 0.8s ease, transform 0.8s ease' }}
-          >
-            {/* Glowing card */}
+          <div className="hero-reveal relative hidden lg:flex items-center justify-center">
             <div className="relative w-full max-w-sm">
               {/* Outer glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-teal-400/30 to-cyan-500/20 rounded-[2.5rem] blur-2xl scale-105" />
-              
+
               {/* Main card */}
               <div className="relative bg-white/10 backdrop-blur-2xl rounded-[2.5rem] border border-white/20 p-8 shadow-2xl">
                 {/* Card header */}
@@ -194,7 +161,7 @@ export function Hero({ lang, dict }: HeroProps) {
                   </div>
                   <div>
                     <p className="text-white font-bold">HealthExpress</p>
-                    <p className="text-teal-300 text-xs">Verified & Trusted</p>
+                    <p className="text-teal-300 text-xs">Verified &amp; Trusted</p>
                   </div>
                   <div className="ml-auto flex items-center gap-1">
                     {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />)}
@@ -250,7 +217,7 @@ export function Hero({ lang, dict }: HeroProps) {
       {/* Wave divider */}
       <div className="relative h-16 md:h-24">
         <svg className="absolute bottom-0 w-full" viewBox="0 0 1440 60" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 60L60 50C120 40 240 20 360 15C480 10 600 20 720 27.5C840 35 960 40 1080 37.5C1200 35 1320 25 1380 20L1440 15V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0Z" fill="#f8fafc"/>
+          <path d="M0 60L60 50C120 40 240 20 360 15C480 10 600 20 720 27.5C840 35 960 40 1080 37.5C1200 35 1320 25 1380 20L1440 15V60H1380C1320 60 1200 60 1080 60C960 60 840 60 720 60C600 60 480 60 360 60C240 60 120 60 60 60H0Z" fill="#f8fafc" />
         </svg>
       </div>
     </section>

@@ -1,109 +1,109 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import prisma from '@/lib/prisma';
+import { surgeryContent as fallbackSurgeries } from '../../../../../prisma/surgery-content';
 
 export async function POST(req: NextRequest) {
     try {
-        const { message, history } = await req.json();
+        const { message, history, context } = await req.json();
 
         if (!process.env.GEMINI_API_KEY) {
             return NextResponse.json({ error: 'GEMINI_API_KEY is not configured' }, { status: 500 });
         }
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        // Try stable model names in order of preference
+        const MODEL_PREFERENCE = ['gemini-1.5-flash-latest', 'gemini-1.5-flash', 'gemini-pro'];
+        const model = genAI.getGenerativeModel({ model: MODEL_PREFERENCE[0] });
 
-        let model;
+        // Fetch surgeries for context with fallback
+        let surgeryContext = '';
         try {
-            model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e) {
-            console.warn('Failed to initialize gemini-2.0-flash, falling back to 1.5-flash');
-            model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+            const surgeries = await prisma.surgery.findMany({
+                select: {
+                    name: true,
+                    slug: true,
+                    category: true,
+                    overview: true,
+                    costRangeMin: true,
+                    costRangeMax: true,
+                    availableCities: true,
+                    insuranceLikely: true,
+                },
+            });
+
+            if (surgeries.length > 0) {
+                surgeryContext = surgeries.map(s =>
+                    `- ${s.name} (${s.category}): ${s.overview.substring(0, 100)}. Cost: ₹${s.costRangeMin.toLocaleString('en-IN')} - ₹${s.costRangeMax.toLocaleString('en-IN')}. Insurance: ${s.insuranceLikely ? 'Likely covered' : 'Usually self-pay'}. Cities: ${s.availableCities.slice(0, 5).join(', ')}.`
+                ).join('\n');
+            } else {
+                throw new Error('No surgeries found in database');
+            }
+        } catch (dbError) {
+            console.warn('Database unreachable or empty, using fallback surgery content:', dbError instanceof Error ? dbError.message : 'Unknown error');
+            // Use fallback from prisma/surgery-content.ts
+            surgeryContext = Object.entries(fallbackSurgeries).map(([name, content]) => 
+                `- ${name}: ${content.overview.substring(0, 100)}...`
+            ).join('\n');
         }
 
-        // Fetch surgeries for context
-        const surgeries = await prisma.surgery.findMany({
-            select: {
-                name: true,
-                slug: true,
-                category: true,
-                overview: true,
-                costRangeMin: true,
-                costRangeMax: true,
-            },
-        });
-
-        const surgeryContext = surgeries.map(s =>
-            `- ${s.name} (${s.category}): ${s.overview}. Cost: ₹${s.costRangeMin} - ₹${s.costRangeMax}`
-        ).join('\n');
+        // If user is on a specific surgery page, inject that context
+        const pageContext = context?.surgeryName
+            ? `\nThe user is currently viewing the "${context.surgeryName}" surgery page.`
+            : '';
 
         const systemPrompt = `
-You are MedBot, a helpful and professional AI assistant for HealthExpress India.
-HealthExpress India is a platform that simplifies surgical care by providing affordable, high-quality treatments and surgery assistance.
+You are MedBot, a warm, professional AI assistant for HealthExpress India — India's trusted surgery facilitation platform.
 
-Your goals:
-1. Help users find information about surgeries.
-2. Provide estimated costs based on the context provided.
-3. Encourage users to book a consultation or contact us for precise details.
-4. Always include a disclaimer that you are an AI assistant and users should consult a doctor for official medical advice.
+Your mission:
+1. Help patients understand their surgery options, costs, and what to expect.
+2. Give honest cost ranges from the data below — never make up numbers.
+3. Gently guide patients toward calling 93078-61041 or filling the inquiry form for a free consultation.
+4. Always end responses with a clear next step — either a phone number, a link to the surgery page, or the contact form.
+5. If someone sounds worried or mentions pain/emergency, prioritize getting them to call immediately.
 
-Available surgeries and details:
+Key facts about HealthExpress India:
+- ₹0 consultation fee — we never charge to help patients find care
+- 500+ partner hospitals across India
+- We help with insurance paperwork, cashless treatment, and hospital admission
+- Transparent pricing — no hidden costs
+- Phone: 93078-61041 (Mon-Sat, 9AM-6PM)
+- WhatsApp: +91 93078-61041
+${pageContext}
+
+Available surgeries with costs:
 ${surgeryContext}
 
-Tone: Empathetic, professional, and clear.
-Languages: You can respond in English or Hindi (Roman script or Devanagari) as per the user's preference.
-
-If a user asks about a surgery not in the list, tell them you are not sure if we cover it yet but they can leave their contact details for our team to check.
+Rules:
+- Keep responses concise — 2-4 sentences max unless explaining a complex procedure
+- Never diagnose. Always say "based on what you've described, this sounds like it could be [X], but please consult a doctor"
+- Respond in English or Hindi based on user's language
+- Be empathetic — patients are often scared and in pain
+- If asked about cost, always give the range AND mention it varies by city and hospital tier
+- If user mentions city (Mumbai, Delhi, etc.), note costs are typically 10-25% higher in metro cities
 `;
 
         const chat = model.startChat({
             history: [
                 { role: 'user', parts: [{ text: systemPrompt }] },
-                { role: 'model', parts: [{ text: 'Understood. I am MedBot, your HealthExpress India assistant. How can I help you today?' }] },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ...(history || []).map((h: any) => ({
+                { role: 'model', parts: [{ text: 'Understood. I am MedBot, your HealthExpress India assistant.' }] },
+                ...(history || []).map((h: { role: string; content: string }) => ({
                     role: h.role === 'user' ? 'user' : 'model',
                     parts: [{ text: h.content }],
                 })),
             ],
         });
 
-        let result;
-        try {
-            result = await chat.sendMessage(message);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (e: any) {
-            console.error('Gemini 2.0-flash failed, attempting fallback to 1.5-flash...', e.message);
-            const fallbackModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-            const fallbackChat = fallbackModel.startChat({
-                history: [
-                    { role: 'user', parts: [{ text: systemPrompt }] },
-                    { role: 'model', parts: [{ text: 'Understood. I am MedBot.' }] },
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    ...(history || []).map((h: any) => ({
-                        role: h.role === 'user' ? 'user' : 'model',
-                        parts: [{ text: h.content }],
-                    })),
-                ]
-            });
-            result = await fallbackChat.sendMessage(message);
-        }
-
-        const response = await result.response;
-        const text = response.text();
-
+        const result = await chat.sendMessage(message);
+        const text = (await result.response).text();
         return NextResponse.json({ text });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-        console.error('AI Assistant Critical Error:', {
-            errorMessage: error.message,
-            stack: error.stack,
-            cause: error.cause,
-        });
-        return NextResponse.json({
+
+    } catch (error: unknown) {
+        const errMsg = error instanceof Error ? error.message : 'unknown';
+        console.error('AI Assistant Error:', errMsg);
+        return NextResponse.json({ 
             error: 'Failed to process request',
-            debug: error.message, // Temporarily expose for live debugging
-            stack: error.stack
+            debug: process.env.NODE_ENV === 'development' ? errMsg : undefined
         }, { status: 500 });
     }
 }

@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
+const withAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: true,
+});
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['@react-email/components', 'resend', 'react-dom/server'],
@@ -20,13 +26,15 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  // Optimize bundle splitting
   experimental: {
     workerThreads: false,
-    cpus: 1
-  }
+    cpus: 1,
+    optimizePackageImports: ['lucide-react', 'react-icons', 'framer-motion', 'recharts'],
+  },
 };
 
-export default withSentryConfig(nextConfig, {
+export default withSentryConfig(withAnalyzer(nextConfig), {
   org: "healthexpress-india",
   project: "javascript-nextjs",
   silent: !process.env.CI,

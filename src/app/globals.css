@@ -83,6 +83,26 @@ html {
 .animate-slide-in      { animation: slideIn      0.3s ease-out  forwards; }
 .animate-bounce-subtle { animation: bounceSlight 2.5s ease-in-out infinite; }
 
+/* ── Performance: Hero reveal animation (CSS-driven, GPU composited) ── */
+/* Elements start visible for SSR/crawlers. JS adds .hero-ready to <section>
+   which switches on the animation without hiding content during LCP. */
+.hero-reveal {
+  will-change: opacity, transform;
+}
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-ready .hero-reveal {
+  animation: heroReveal 0.65s ease-out forwards;
+}
+.hero-ready .hero-reveal:nth-child(1) { animation-delay: 0ms; }
+.hero-ready .hero-reveal:nth-child(2) { animation-delay: 80ms; }
+.hero-ready .hero-reveal:nth-child(3) { animation-delay: 160ms; }
+.hero-ready .hero-reveal:nth-child(4) { animation-delay: 240ms; }
+.hero-ready .hero-reveal:nth-child(5) { animation-delay: 320ms; }
+
+
 /* ── Gradient text ── */
 .gradient-text {
   background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);

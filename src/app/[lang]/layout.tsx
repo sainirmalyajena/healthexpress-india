@@ -1,14 +1,29 @@
 import type { Metadata } from "next";
-import { Header, Footer, StickyMobileCTA } from "@/components/layout";
-import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
+import { Header, Footer } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Inter } from 'next/font/google';
 import "@/app/globals.css";
 import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
-import { MedBot } from "@/components/ui/MedBot";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import dynamic from "next/dynamic";
+
+// Lazy-load interactive widgets — they don't affect LCP or initial render
+const MedBot = dynamic(() => import("@/components/ui/MedBot").then(m => m.MedBot), {
+  ssr: false,
+  loading: () => null,
+});
+
+const WhatsAppButton = dynamic(() => import("@/components/ui/WhatsAppButton").then(m => m.WhatsAppButton), {
+  ssr: false,
+  loading: () => null,
+});
+
+const StickyMobileCTA = dynamic(() => import("@/components/layout").then(m => m.StickyMobileCTA), {
+  ssr: false,
+  loading: () => null,
+});
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 

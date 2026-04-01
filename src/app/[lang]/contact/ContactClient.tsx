@@ -400,6 +400,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                             <div className="flex -space-x-3">
                                                 {[1, 2, 3, 4].map((i) => (
                                                     <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                                         <img src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="Support Team" className="w-full h-full object-cover" />
                                                     </div>
                                                 ))}
