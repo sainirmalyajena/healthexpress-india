@@ -7,23 +7,7 @@ import "@/app/globals.css";
 import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import dynamic from "next/dynamic";
-
-// Lazy-load interactive widgets — they don't affect LCP or initial render
-const MedBot = dynamic(() => import("@/components/ui/MedBot").then(m => m.MedBot), {
-  ssr: false,
-  loading: () => null,
-});
-
-const WhatsAppButton = dynamic(() => import("@/components/ui/WhatsAppButton").then(m => m.WhatsAppButton), {
-  ssr: false,
-  loading: () => null,
-});
-
-const StickyMobileCTA = dynamic(() => import("@/components/layout").then(m => m.StickyMobileCTA), {
-  ssr: false,
-  loading: () => null,
-});
+import { ClientLayoutWidgets } from "@/components/layout/ClientLayoutWidgets";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -108,9 +92,7 @@ export default async function RootLayout({
         <Header lang={lang} dict={dictionary.navigation} />
         <main className="flex-1">{children}</main>
         <Footer lang={lang} dict={dictionary.footer} />
-        <MedBot lang={lang} />
-        <WhatsAppButton />
-        <StickyMobileCTA lang={lang} dict={dictionary.sticky_cta} />
+        <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
         <SpeedInsights />
       </body>
     </html>

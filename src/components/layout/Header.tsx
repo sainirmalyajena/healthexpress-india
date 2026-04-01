@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
     Phone,
     Menu,
@@ -177,75 +176,63 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
             </nav>
 
             {/* Mobile Navigation Drawer */}
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <div className="fixed inset-0 z-50 md:hidden">
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-                            onClick={() => setMobileMenuOpen(false)}
-                        />
+            {mobileMenuOpen && (
+                <div className="fixed inset-0 z-50 md:hidden">
+                    {/* Backdrop */}
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+                        onClick={() => setMobileMenuOpen(false)}
+                    />
 
-                        {/* Drawer Content */}
-                        <motion.div
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                            className="absolute top-0 right-0 w-[280px] h-full bg-white shadow-2xl flex flex-col"
-                        >
-                            <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                                <span className="font-bold text-lg text-slate-800">Menu</span>
-                                <button
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors"
-                                >
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
+                    {/* Drawer Content */}
+                    <div className="absolute top-0 right-0 w-[280px] h-full bg-white shadow-2xl flex flex-col">
+                        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+                            <span className="font-bold text-lg text-slate-800">Menu</span>
+                            <button
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
 
-                            <div className="flex-1 overflow-y-auto py-4 px-4 space-y-2">
-                                {navLinks.map((link) => (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        className={cn(
-                                            'block px-4 py-3 rounded-xl text-base font-medium transition-all',
-                                            isActive(link.href)
-                                                ? 'bg-teal-50 text-teal-700'
-                                                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                        )}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                    >
-                                        {link.label}
-                                    </Link>
-                                ))}
-                            </div>
-
-                            <div className="p-4 border-t border-slate-100 space-y-4 pb-8">
+                        <div className="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+                            {navLinks.map((link) => (
                                 <Link
-                                    href={`/${lang}/surgeries`}
-                                    className="block w-full py-3 px-4 bg-teal-600 text-white text-center font-semibold rounded-xl shadow-md active:scale-95 transition-transform"
+                                    key={link.href}
+                                    href={link.href}
+                                    className={cn(
+                                        'block px-4 py-3 rounded-xl text-base font-medium transition-all',
+                                        isActive(link.href)
+                                            ? 'bg-teal-50 text-teal-700'
+                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                    )}
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    {dict.surgeries}
+                                    {link.label}
                                 </Link>
-                                <a
-                                    href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
-                                    className="block w-full py-3 px-4 bg-slate-50 text-slate-700 text-center font-semibold rounded-xl border border-slate-200"
-                                >
-                                    {dict.call_support}
-                                </a>
-                            </div>
-                        </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="p-4 border-t border-slate-100 space-y-4 pb-8">
+                            <Link
+                                href={`/${lang}/surgeries`}
+                                className="block w-full py-3 px-4 bg-teal-600 text-white text-center font-semibold rounded-xl shadow-md active:scale-95 transition-transform"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                {dict.surgeries}
+                            </Link>
+                            <a
+                                href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
+                                className="block w-full py-3 px-4 bg-slate-50 text-slate-700 text-center font-semibold rounded-xl border border-slate-200"
+                            >
+                                {dict.call_support}
+                            </a>
+                        </div>
                     </div>
-                )}
-            </AnimatePresence>
+                </div>
+            )}
 
         </header>
     );
 }
-

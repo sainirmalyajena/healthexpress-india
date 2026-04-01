@@ -12,14 +12,18 @@ interface PageProps {
 }
 
 const getDoctor = cache(async (id: string) => {
-    const doctor = await prisma.doctor.findUnique({
-        where: { id },
-        include: {
-            hospital: true,
-            surgeries: true,
-        },
-    });
-    return doctor;
+    try {
+        return await prisma.doctor.findUnique({
+            where: { id },
+            include: {
+                hospital: true,
+                surgeries: true,
+            },
+        });
+    } catch (error) {
+        console.warn(`[getDoctor] Failed for id ${id}:`, error);
+        return null;
+    }
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Search, Phone, Building2, CheckCircle2 } from 'lucide-react';
 
 interface HowItWorksProps {
@@ -53,11 +52,7 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                <div
                     className="text-center mb-16 md:mb-20"
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-100 text-teal-700 text-sm font-semibold mb-4">
@@ -68,7 +63,7 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
                         {dict.title}
                     </h2>
                     <p className="text-slate-500 text-lg max-w-xl mx-auto">{dict.subtitle}</p>
-                </motion.div>
+                </div>
 
                 {/* Steps - connected timeline */}
                 <div className="relative">
@@ -77,12 +72,8 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
 
                     <div className="grid md:grid-cols-3 gap-6 md:gap-10">
                         {steps.map((step, idx) => (
-                            <motion.div
+                            <div
                                 key={step.number}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6, delay: idx * 0.15 }}
                                 className="relative flex flex-col items-center text-center group"
                             >
                                 {/* Step number ring */}
@@ -104,17 +95,13 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
                                     <h3 className="text-xl font-black text-slate-900 mb-3">{step.title}</h3>
                                     <p className="text-slate-600 leading-relaxed text-sm">{step.description}</p>
                                 </div>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
 
                 {/* Bottom CTA */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                <div
                     className="text-center mt-14"
                 >
                     <a
@@ -124,7 +111,7 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
                         <Phone className="w-5 h-5" />
                         {lang === 'hi' ? 'अभी कॉल करें: 93078-61041' : 'Call Now: 93078-61041'}
                     </a>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

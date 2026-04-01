@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
 
 interface TestimonialsProps {
@@ -37,11 +36,7 @@ export default function Testimonials({ lang, dict }: TestimonialsProps) {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                <div
                     className="text-center mb-16"
                 >
                     <div className="inline-flex items-center gap-2 mb-4">
@@ -54,17 +49,13 @@ export default function Testimonials({ lang, dict }: TestimonialsProps) {
                     </div>
                     <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">{dict.title}</h2>
                     <div className="w-16 h-1.5 bg-gradient-to-r from-teal-500 to-cyan-500 mx-auto rounded-full" />
-                </motion.div>
+                </div>
 
                 {/* Testimonial cards */}
                 <div className="grid md:grid-cols-3 gap-6 md:gap-8">
                     {testimonials.map((testimonial, i) => (
-                        <motion.div
+                        <div
                             key={i}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: i * 0.15 }}
                             className="group relative bg-white rounded-[2rem] p-8 border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all"
                         >
                             {/* Quote icon */}
@@ -108,22 +99,18 @@ export default function Testimonials({ lang, dict }: TestimonialsProps) {
                                     Verified ✓
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
                 </div>
 
                 {/* Bottom trust strip */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                <div
                     className="mt-14 text-center"
                 >
                     <p className="text-slate-400 text-sm">
                         {lang === 'hi' ? 'Join 10,000+ satisfied patients nationwide' : 'Join 10,000+ satisfied patients nationwide'}
                     </p>
-                </motion.div>
+                </div>
             </div>
         </section>
     );

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Lock, ArrowRight, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
@@ -89,13 +88,10 @@ export default function PatientLoginPage() {
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-xl shadow-slate-200/50 sm:rounded-3xl sm:px-10 border border-slate-100">
-                    <AnimatePresence mode="wait">
                         {step === 'phone' ? (
-                            <motion.div
+                            <div
                                 key="phone-step"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 20 }}
+                                className="animate-in fade-in duration-300"
                             >
                                 <form className="space-y-6" onSubmit={handleSendOTP}>
                                     <div>
@@ -135,13 +131,11 @@ export default function PatientLoginPage() {
                                         <ArrowRight className="w-4 h-4" />
                                     </button>
                                 </form>
-                            </motion.div>
+                            </div>
                         ) : (
-                            <motion.div
+                            <div
                                 key="otp-step"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
+                                className="animate-in fade-in duration-300"
                             >
                                 <form className="space-y-6" onSubmit={handleVerifyOTP}>
                                     <div>
@@ -200,9 +194,8 @@ export default function PatientLoginPage() {
                                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm & Login'}
                                     </button>
                                 </form>
-                            </motion.div>
+                            </div>
                         )}
-                    </AnimatePresence>
                 </div>
 
                 <p className="mt-8 text-center text-sm text-slate-500">

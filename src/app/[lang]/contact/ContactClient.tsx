@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Phone, 
     Mail, 
@@ -69,20 +68,6 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
         }
     };
 
-    const fadeInUp = {
-        initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.5 }
-    };
-
-    const staggerContainer = {
-        animate: {
-            transition: {
-                staggerChildren: 0.1
-            }
-        }
-    };
-
     return (
         <div className="min-h-screen bg-slate-50 overflow-x-hidden">
             {/* Hero Section */}
@@ -91,10 +76,8 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                 <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
                 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center max-w-3xl mx-auto"
+                    <div
+                        className="text-center max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom"
                     >
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
                             {dict.header_title}
@@ -102,7 +85,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                         <p className="text-lg md:text-xl text-teal-100/90 leading-relaxed">
                             {dict.header_subtitle}
                         </p>
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -112,14 +95,11 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                     
                     {/* Left Column: Direct Contact & Trust */}
                     <div className="lg:col-span-5 space-y-8">
-                        <motion.div 
-                            variants={staggerContainer}
-                            initial="initial"
-                            animate="animate"
+                        <div
                             className="space-y-4"
                         >
                             {/* Contact Cards */}
-                            <motion.div variants={fadeInUp} className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
+                            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
                                 <a href="tel:9307861041" onClick={() => trackPhoneClick('9307861041')} className="flex items-center gap-5">
                                     <div className="w-14 h-14 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
                                         <Phone className="w-6 h-6" />
@@ -131,10 +111,10 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                     </div>
                                     <ArrowRight className="ml-auto w-5 h-5 text-slate-300 group-hover:text-teal-500 transition-all group-hover:translate-x-1" />
                                 </a>
-                            </motion.div>
+                            </div>
 
-                            <motion.div variants={fadeInUp} className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
-                                <a 
+                            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
+                                <a
                                     href="https://wa.me/919307861041" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
@@ -151,9 +131,9 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                     </div>
                                     <ArrowRight className="ml-auto w-5 h-5 text-slate-300 group-hover:text-green-500 transition-all group-hover:translate-x-1" />
                                 </a>
-                            </motion.div>
+                            </div>
 
-                            <motion.div variants={fadeInUp} className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
+                            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
                                 <a href="mailto:hello@healthexpress.in" className="flex items-center gap-5">
                                     <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
                                         <Mail className="w-6 h-6" />
@@ -165,9 +145,9 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                     </div>
                                     <ArrowRight className="ml-auto w-5 h-5 text-slate-300 group-hover:text-blue-500 transition-all group-hover:translate-x-1" />
                                 </a>
-                            </motion.div>
+                            </div>
 
-                            <motion.div variants={fadeInUp} className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
+                            <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
                                 <div className="flex items-start gap-5">
                                     <div className="w-14 h-14 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center flex-shrink-0">
                                         <MapPin className="w-6 h-6" />
@@ -180,8 +160,8 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                         </p>
                                     </div>
                                 </div>
-                            </motion.div>
-                            <motion.div variants={fadeInUp} className="bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden !mt-8">
+                            </div>
+                            <div className="bg-slate-900 text-white rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden !mt-8">
                                 <div className="absolute top-0 right-0 p-16 bg-teal-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
                                 <h3 className="text-xl font-bold mb-6 relative z-10">{lang === 'hi' ? 'हमारा वादा' : 'Our Commitment'}</h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10">
@@ -202,26 +182,19 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                         <span className="text-sm font-medium text-slate-200 uppercase tracking-wide">Expert Guidance</span>
                                     </div>
                                 </div>
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Right Column: Form */}
-                    <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="lg:col-span-7"
+                    <div
+                        className="lg:col-span-7 animate-in slide-in-from-right duration-500 delay-200 fill-mode-both"
                     >
                         <div className="bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-100 overflow-hidden relative">
-                            <AnimatePresence mode="wait">
                                 {submitted ? (
-                                    <motion.div 
+                                    <div
                                         key="success"
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        className="text-center py-12"
+                                        className="text-center py-12 animate-in zoom-in duration-300"
                                     >
                                         <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                                             <CheckCircle2 className="w-12 h-12 text-green-600" />
@@ -256,13 +229,11 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                             {dict.submit_another}
                                             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                                         </button>
-                                    </motion.div>
+                                    </div>
                                 ) : (
-                                    <motion.div 
+                                    <div
                                         key="form"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
+                                        className="animate-in fade-in duration-300"
                                     >
                                         <div className="mb-10">
                                             <h2 className="text-3xl font-bold text-slate-900 mb-3">{dict.form_title}</h2>
@@ -409,11 +380,10 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 )}
-                            </AnimatePresence>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
 
@@ -451,7 +421,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                             <p className="text-sm text-slate-400">{lang === 'hi' ? 'जोड़ प्रत्यारोपण' : 'Joint Replacement & Support'}</p>
                         </Link>
 
-                        <Link href={`/${lang}/faq`} className="group">
+                        <Link href={`/${lang}#faq`} className="group">
                             <h4 className="font-bold text-white mb-3 group-hover:text-teal-400 transition-colors flex items-center gap-2">
                                 {lang === 'hi' ? 'अक्सर पूछे जाने वाले प्रश्न' : 'FAQs'}
                                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 opacity-0 group-hover:opacity-100" />

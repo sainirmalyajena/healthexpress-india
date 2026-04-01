@@ -30,10 +30,15 @@ const CITY_COST_FACTORS: Record<string, number> = {
 };
 
 const getSurgery = cache(async (slug: string) => {
-  return prisma.surgery.findUnique({
-    where: { slug },
-    include: { doctors: { include: { hospital: true } } },
-  });
+  try {
+    return await prisma.surgery.findUnique({
+      where: { slug },
+      include: { doctors: { include: { hospital: true } } },
+    });
+  } catch (error) {
+    console.warn(`[getSurgery] Failed for slug ${slug}:`, error);
+    return null;
+  }
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
