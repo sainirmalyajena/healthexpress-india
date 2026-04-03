@@ -136,7 +136,7 @@ export function Hero({ lang, dict }: HeroProps) {
               {/* Main Visual with Elite Border */}
               <div className="relative rounded-[3rem] overflow-hidden luxury-border shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
                 <Image 
-                  src="/images/home/hero-surgeon.png" 
+                  src="/images/home/hero-elite.png" 
                   alt="Premium Healthcare"
                   width={600}
                   height={800}

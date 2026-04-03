@@ -116,7 +116,7 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
                    {/* Right: Immersive Visual */}
                    <div className="relative rounded-[4rem] overflow-hidden luxury-border shadow-2xl">
                         <Image 
-                            src="/images/home/trust-hospital.png" 
+                            src="/images/home/trust-elite.png" 
                             alt="Luxury Healthcare Facility" 
                             width={800} 
                             height={1000}
