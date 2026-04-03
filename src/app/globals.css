@@ -1,32 +1,49 @@
 @import "tailwindcss";
 
 @theme {
-  --color-teal-50: #f0fdfa;
-  --color-teal-100: #ccfbf1;
-  --color-teal-200: #99f6e4;
-  --color-teal-300: #5eead4;
-  --color-teal-400: #2dd4bf;
-  --color-teal-500: #14b8a6;
-  --color-teal-600: #0d9488;
-  --color-teal-700: #0f766e;
-  --color-teal-800: #115e59;
-  --color-teal-900: #134e4a;
+  /* Elite Palette */
+  --color-teal-50: #f0fdf9;
+  --color-teal-100: #ccfbf0;
+  --color-teal-200: #99f6e1;
+  --color-teal-300: #5ee9cf;
+  --color-teal-400: #2dd4ba;
+  --color-teal-500: #0d9488;  /* Primary Trust Teal */
+  --color-teal-600: #0f766e;
+  --color-teal-700: #115e59;
+  --color-teal-800: #134e4a;
+  --color-teal-900: #054a44;  /* Luxury Teal */
 
-  --color-primary: #0d9488;
+  --color-gold-50: #fffcf0;
+  --color-gold-500: #d4af37; /* Champagne Gold */
+  --color-gold-600: #b8860b;
+
+  --color-primary: #054a44;
   --color-secondary: #475569;
+  --color-accent: #d4af37;
+
+  /* Custom Shadows */
+  --shadow-elite: 0 20px 40px -15px rgba(5, 74, 68, 0.1), 0 10px 15px -10px rgba(5, 74, 68, 0.05);
+  --shadow-glass: 0 8px 32px 0 rgba(15, 23, 42, 0.1);
 }
 
 :root {
   --foreground: #0f172a;
-  --background: #f8fafc;
+  --background: #fdfdfd;
+  --font-outfit: "Outfit", sans-serif;
+  --font-inter: "Inter", sans-serif;
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter);
   color: var(--foreground);
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-outfit);
+  letter-spacing: -0.02em;
 }
 
 html {
@@ -40,21 +57,20 @@ html {
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f8fafc;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  border: 3px solid #f8fafc;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #cbd5e1;
 }
 
-/* Hide scrollbar utility (used in category pills) */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -63,81 +79,94 @@ html {
   display: none;
 }
 
-/* ── Animations ── */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0);    }
+/* ── Luxury Components ── */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-20px); }
-  to   { opacity: 1; transform: translateX(0);     }
+.glass-dark {
+  background: rgba(5, 74, 68, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-@keyframes bounceSlight {
-  0%, 100% { transform: translateY(0);    }
-  50%       { transform: translateY(-6px); }
+.shadow-premium {
+  box-shadow: var(--shadow-elite);
 }
 
-.animate-fade-in       { animation: fadeIn       0.5s ease-out  forwards; }
-.animate-slide-in      { animation: slideIn      0.3s ease-out  forwards; }
-.animate-bounce-subtle { animation: bounceSlight 2.5s ease-in-out infinite; }
-
-/* ── Performance: Hero reveal animation (CSS-driven, GPU composited) ── */
-/* Elements start visible for SSR/crawlers. JS adds .hero-ready to <section>
-   which switches on the animation without hiding content during LCP. */
-.hero-reveal {
-  will-change: opacity, transform;
-}
-@keyframes heroReveal {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.hero-ready .hero-reveal {
-  animation: heroReveal 0.65s ease-out forwards;
-}
-.hero-ready .hero-reveal:nth-child(1) { animation-delay: 0ms; }
-.hero-ready .hero-reveal:nth-child(2) { animation-delay: 80ms; }
-.hero-ready .hero-reveal:nth-child(3) { animation-delay: 160ms; }
-.hero-ready .hero-reveal:nth-child(4) { animation-delay: 240ms; }
-.hero-ready .hero-reveal:nth-child(5) { animation-delay: 320ms; }
-
-
-/* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #115e59 100%);
+  background: linear-gradient(135deg, #054a44 0%, #0d9488 50%, #d4af37 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ── Glass ── */
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+.luxury-border {
+  border: 1px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, #ccfbf0, #d4af37) border-box;
 }
+
+/* ── Animations ── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.animate-reveal {
+  animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-reveal {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.hero-ready .hero-reveal {
+  animation: revealUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-ready .hero-reveal:nth-child(1) { animation-delay: 0.1s; }
+.hero-ready .hero-reveal:nth-child(2) { animation-delay: 0.2s; }
+.hero-ready .hero-reveal:nth-child(3) { animation-delay: 0.3s; }
+.hero-ready .hero-reveal:nth-child(4) { animation-delay: 0.4s; }
+.hero-ready .hero-reveal:nth-child(5) { animation-delay: 0.5s; }
 
 /* ── Surgery detail prose ── */
 .prose-surgery h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #0f172a;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  font-family: var(--font-outfit);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #054a44;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 .prose-surgery p {
-  color: #475569;
-  line-height: 1.7;
-  margin-bottom: 1rem;
+  color: #334155;
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
 }
 .prose-surgery ul {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  list-style-type: none;
+  margin-bottom: 1.5rem;
+  padding-left: 0;
 }
 .prose-surgery li {
+  position: relative;
+  padding-left: 1.75rem;
   color: #475569;
   line-height: 1.7;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
+.prose-surgery li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: #d4af37;
+  font-weight: bold;
+}
+

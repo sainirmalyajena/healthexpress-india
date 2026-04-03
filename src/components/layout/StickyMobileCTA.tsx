@@ -4,10 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Phone, CalendarCheck } from 'lucide-react';
 
+interface StickyCtaDict {
+    call: string;
+    book: string;
+}
+
 interface StickyMobileCTAProps {
     lang: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    dict: any;
+    dict: StickyCtaDict;
 }
 
 export default function StickyMobileCTA({ lang, dict }: StickyMobileCTAProps) {

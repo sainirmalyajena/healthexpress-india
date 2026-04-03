@@ -14,7 +14,12 @@ const StickyMobileCTA = dynamic(() => import("@/components/layout").then(m => m.
   ssr: false,
 });
 
-export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: any }) {
+interface StickyCtaDict {
+    call: string;
+    book: string;
+}
+
+export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: StickyCtaDict }) {
     return (
         <>
             <MedBot lang={lang} />

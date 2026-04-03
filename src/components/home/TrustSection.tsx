@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ShieldCheck, Trophy, CircleDollarSign, Handshake, Star, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { ShieldCheck, Trophy, CircleDollarSign, Handshake, Star, ArrowRight, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { Button } from '@/components/ui';
 
 interface TrustSectionProps {
     lang: string;
@@ -23,7 +25,7 @@ function AnimatedStat({ end, prefix = '', suffix = '', label }: { end: number; p
                 if (entry.isIntersecting && !started.current) {
                     started.current = true;
                     let start = 0;
-                    const duration = 2000;
+                    const duration = 2500;
                     const step = end / (duration / 16);
                     const timer = setInterval(() => {
                         start = Math.min(start + step, end);
@@ -39,100 +41,113 @@ function AnimatedStat({ end, prefix = '', suffix = '', label }: { end: number; p
     }, [end]);
 
     return (
-        <div ref={ref} className="text-center">
-            <div className="text-4xl md:text-5xl font-black text-white mb-1">
-                {prefix}{count}{suffix}
+        <div ref={ref} className="text-center group">
+            <div className="text-4xl md:text-6xl font-black text-white mb-2 font-outfit tracking-tighter group-hover:text-teal-300 transition-colors">
+                {prefix}{count.toLocaleString()}{suffix}
             </div>
-            <div className="text-slate-400 text-sm font-medium">{label}</div>
+            <div className="text-teal-50/50 text-xs md:text-sm font-bold uppercase tracking-[0.2em]">{label}</div>
         </div>
     );
 }
 
 export default function TrustSection({ lang, dict }: TrustSectionProps) {
     const trustPoints = [
-        { icon: ShieldCheck, title: dict.point1_title, description: dict.point1_desc, color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20' },
-        { icon: Trophy, title: dict.point2_title, description: dict.point2_desc, color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-400/20' },
-        { icon: CircleDollarSign, title: dict.point3_title, description: dict.point3_desc, color: 'text-teal-400', bg: 'bg-teal-400/10', border: 'border-teal-400/20' },
-        { icon: Handshake, title: dict.point4_title, description: dict.point4_desc, color: 'text-blue-400', bg: 'bg-blue-400/10', border: 'border-blue-400/20' },
+        { icon: ShieldCheck, title: dict.point1_title, description: dict.point1_desc, color: 'text-teal-400', bg: 'bg-teal-400/5', border: 'border-white/10' },
+        { icon: Trophy, title: dict.point2_title, description: dict.point2_desc, color: 'text-amber-400', bg: 'bg-amber-400/5', border: 'border-white/10' },
+        { icon: CircleDollarSign, title: dict.point3_title, description: dict.point3_desc, color: 'text-emerald-400', bg: 'bg-emerald-400/5', border: 'border-white/10' },
+        { icon: Handshake, title: dict.point4_title, description: dict.point4_desc, color: 'text-blue-400', bg: 'bg-blue-400/5', border: 'border-white/10' },
     ];
 
     const hospitals = ['Apollo', 'Fortis', 'Max', 'Medanta', 'AIIMS', 'Narayana', 'Manipal', 'Kokilaben'];
 
     return (
-        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
-            {/* Glow orbs */}
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px]" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px]" />
+        <section className="bg-[#051c18] relative py-24 md:py-32 overflow-hidden">
+            {/* Visual Continuity Orbs */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 blur-[100px] rounded-full" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-600/5 blur-[100px] rounded-full" />
 
-            {/* Stats bar */}
-            <div className="border-b border-white/10 py-12 md:py-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-                        <AnimatedStat end={500} suffix="+" label={lang === 'hi' ? 'पार्टनर अस्पताल' : 'Partner Hospitals'} />
-                        <AnimatedStat end={28} suffix="" label={lang === 'hi' ? 'शहरों में उपस्थित' : 'Cities Covered'} />
-                        <AnimatedStat end={10000} suffix="+" label={lang === 'hi' ? 'सफल मरीज' : 'Patients Helped'} />
-                        <AnimatedStat prefix="₹" end={0} suffix="" label={lang === 'hi' ? 'परामर्श शुल्क' : 'Consultation Fee'} />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                
+                {/* Stats Bar Integrated with Glassmorphism */}
+                <div className="glass p-10 md:p-16 rounded-[3rem] border border-white/5 mb-24 shadow-premium">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+                        <AnimatedStat end={500} suffix="+" label={lang === 'hi' ? 'पार्टनर अस्पताल' : 'Elite Hospitals'} />
+                        <AnimatedStat end={28} suffix="" label={lang === 'hi' ? 'शहर' : 'Cities'} />
+                        <AnimatedStat end={10000} suffix="+" label={lang === 'hi' ? 'सफल मरीज' : 'Patient Success'} />
+                        <AnimatedStat prefix="₹" end={0} suffix="" label={lang === 'hi' ? 'परामर्श' : 'Consultation'} />
                     </div>
                 </div>
-            </div>
 
-            {/* Why choose us */}
-            <div className="py-16 md:py-24">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Section header */}
-                    <div className="text-center mb-14">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-400/10 border border-teal-400/20 text-teal-400 text-sm font-semibold mb-4">
+                <div className="grid lg:grid-cols-2 gap-20 items-stretch">
+                   {/* Left: Textual Authority */}
+                   <div className="flex flex-col justify-center">
+                        <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-teal-400/5 border border-teal-400/10 text-teal-400 text-sm font-bold mb-8 w-fit">
                             <Star className="w-4 h-4 fill-teal-400" />
-                            {lang === 'hi' ? 'हमें क्यों चुनें' : 'Why Choose Us'}
+                            {lang === 'hi' ? 'भारत का प्रीमियम विकल्प' : 'The Premium Choice for Care'}
                         </div>
-                        <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
-                            {lang === 'hi' ? 'भारत का सबसे भरोसेमंद\nस्वास्थ्य सेवा मंच' : 'Healthcare You Can\nTrust Completely'}
+                        <h2 className="text-4xl md:text-5xl font-black text-white mb-8 leading-[1.1] tracking-tight">
+                            {lang === 'hi' ? 'भारत का सबसे भरोसेमंद\nस्वास्थ्य सेवा मंच' : 'International Standards\nof Surgical Care.'}
                         </h2>
-                    </div>
 
-                    {/* Trust cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-16">
-                        {trustPoints.map((point, idx) => (
-                            <div
-                                key={point.title}
-                                className={`${point.bg} border ${point.border} rounded-3xl p-6 hover:scale-[1.03] transition-transform`}
-                                style={{ animationDelay: `${idx * 100}ms` }}
-                            >
-                                <div className={`w-12 h-12 ${point.bg} rounded-2xl flex items-center justify-center mb-4`}>
-                                    <point.icon className={`w-6 h-6 ${point.color}`} />
-                                </div>
-                                <h3 className="text-base font-bold text-white mb-2">{point.title}</h3>
-                                <p className="text-sm text-slate-400 leading-relaxed">{point.description}</p>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Hospital logos marquee */}
-                    <div className="border-t border-white/10 pt-12">
-                        <p className="text-center text-xs text-slate-500 font-semibold uppercase tracking-widest mb-8">
-                            {lang === 'hi' ? 'हमारे पार्टनर अस्पताल' : 'Our Partner Hospital Networks'}
-                        </p>
-                        <div className="flex flex-wrap justify-center gap-4">
-                            {hospitals.map((hospital) => (
-                                <div key={hospital} className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl">
-                                    <span className="text-slate-300 font-bold text-sm tracking-wide">{hospital}</span>
+                        <div className="grid sm:grid-cols-2 gap-6">
+                            {trustPoints.map((point) => (
+                                <div key={point.title} className="group p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+                                    <div className={`w-12 h-12 ${point.bg} rounded-2xl flex items-center justify-center mb-5 transition-transform group-hover:scale-110`}>
+                                        <point.icon className={`w-6 h-6 ${point.color}`} />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-2">{point.title}</h3>
+                                    <p className="text-sm text-teal-50/50 leading-relaxed">{point.description}</p>
                                 </div>
                             ))}
                         </div>
-                    </div>
 
-                    {/* CTA */}
-                    <div className="text-center mt-14">
-                        <Link
-                            href={`/${lang}/contact`}
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold rounded-2xl shadow-[0_0_30px_rgba(20,184,166,0.4)] hover:shadow-[0_0_50px_rgba(20,184,166,0.6)] hover:scale-105 transition-all"
-                        >
-                            {lang === 'hi' ? 'मुफ़्त परामर्श पाएं' : 'Get Free Consultation'}
-                            <ArrowRight className="w-5 h-5" />
-                        </Link>
+                        <div className="mt-12 flex items-center gap-6">
+                           <Button variant="glow" size="lg" className="rounded-2xl px-10">
+                              {lang === 'hi' ? 'संपर्क करें' : 'Private Concierge'}
+                              <ArrowRight className="w-5 h-5 ml-2" />
+                           </Button>
+                           <div className="flex items-center gap-2">
+                              <CheckCircle className="w-5 h-5 text-teal-400" />
+                              <span className="text-sm font-bold text-white uppercase tracking-widest">NABH Verified</span>
+                           </div>
+                        </div>
+                   </div>
+
+                   {/* Right: Immersive Visual */}
+                   <div className="relative rounded-[4rem] overflow-hidden luxury-border shadow-2xl">
+                        <Image 
+                            src="/images/home/trust-hospital.png" 
+                            alt="Luxury Healthcare Facility" 
+                            width={800} 
+                            height={1000}
+                            className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#051c18] via-transparent to-transparent" />
+                        <div className="absolute bottom-10 left-10 right-10 glass p-8 rounded-[2.5rem]">
+                            <p className="text-teal-400 font-black text-xs uppercase tracking-[0.3em] mb-3">Facility Standard</p>
+                            <h4 className="text-2xl font-bold text-teal-900 mb-2">Wait Times Reduced by 85%</h4>
+                            <p className="text-sm text-teal-900/70 font-medium leading-relaxed">
+                                Experience immediate access to Indias leading surgical specialists without the wait.
+                            </p>
+                        </div>
+                   </div>
+                </div>
+
+                {/* Network Partners with premium styling */}
+                <div className="mt-32 pt-20 border-t border-white/5">
+                    <p className="text-center text-[10px] text-teal-50/40 font-black uppercase tracking-[0.4em] mb-12">
+                        {lang === 'hi' ? 'हमारे पार्टनर नेटवर्क' : 'Elite Hospital Network Partners'}
+                    </p>
+                    <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
+                        {hospitals.map((hospital) => (
+                            <span key={hospital} className="text-2xl font-black text-white/40 font-outfit hover:text-white transition-colors cursor-default">
+                                {hospital.toUpperCase()}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>
         </section>
     );
 }
+

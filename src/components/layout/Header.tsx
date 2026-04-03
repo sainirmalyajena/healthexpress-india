@@ -15,6 +15,8 @@ import {
     ChevronRight,
     ArrowUpRight
 } from 'lucide-react';
+import { Button } from '@/components/ui';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Header({ lang, dict }: { lang: string; dict: any }) {
@@ -63,7 +65,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                 <div className="flex items-center justify-between h-16 md:h-20">
                     {/* Logo */}
                     <Link href={`/${lang}`} className="flex items-center gap-3 group">
-                        <div className="relative w-10 h-10 transition-transform group-hover:scale-105">
+                        <div className="relative w-10 h-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-premium rounded-xl">
                             <Image
                                 src="/logo.png"
                                 alt="HealthExpress Logo"
@@ -72,43 +74,43 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-teal-600 to-teal-800 bg-clip-text text-transparent">
+                            <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent">
                                 HealthExpress
                             </span>
-                            <span className="text-[10px] uppercase tracking-wider text-slate-500 block font-semibold">India</span>
+                            <span className="text-[10px] uppercase tracking-[0.3em] text-teal-600/60 block font-black ml-0.5">Concierge</span>
                         </div>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-6">
+                    <div className="hidden lg:flex items-center gap-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    'text-sm font-medium transition-colors relative py-2',
+                                    'text-xs font-black uppercase tracking-[0.15em] transition-all relative py-2',
                                     isActive(link.href)
-                                        ? 'text-teal-600'
-                                        : 'text-slate-600 hover:text-teal-600'
+                                        ? 'text-teal-900'
+                                        : 'text-slate-500 hover:text-teal-700'
                                 )}
                             >
                                 {link.label}
                                 {isActive(link.href) && (
-                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 rounded-full" />
+                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 rounded-full animate-reveal" />
                                 )}
                             </Link>
                         ))}
                     </div>
 
                     {/* Language Switcher & CTA */}
-                    <div className="hidden md:flex items-center gap-4">
-                        {/* Language Toggle */}
-                        <div className="flex items-center bg-slate-100 rounded-full p-1 mr-2">
+                    <div className="hidden md:flex items-center gap-6">
+                        {/* Language Toggle - Glass style */}
+                        <div className="flex items-center bg-slate-900/5 backdrop-blur-md rounded-2xl p-1 border border-slate-900/5">
                             <Link
                                 href={redirectedPathname('en')}
                                 className={cn(
-                                    "px-3 py-1 text-xs font-bold rounded-full transition-all",
-                                    lang === 'en' ? "bg-white text-teal-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                                    "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
+                                    lang === 'en' ? "bg-white text-teal-900 shadow-premium" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
                                 EN
@@ -116,8 +118,8 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             <Link
                                 href={redirectedPathname('hi')}
                                 className={cn(
-                                    "px-3 py-1 text-xs font-bold rounded-full transition-all",
-                                    lang === 'hi' ? "bg-white text-teal-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                                    "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
+                                    lang === 'hi' ? "bg-white text-teal-900 shadow-premium" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
                                 HI
@@ -126,19 +128,23 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
 
                         <Link
                             href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
-                            className="text-sm font-semibold text-slate-600 hover:text-teal-600 mr-2 flex items-center gap-2"
+                            className="text-xs font-black text-slate-500 hover:text-teal-900 tracking-wider flex items-center gap-2 transition-colors"
                         >
-                            <Phone className="w-4 h-4" />
+                            <Phone className="w-4 h-4 text-teal-600" />
                             {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
                         </Link>
-                        <Link
-                            href={`/${lang}/surgeries`}
-                            className="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white text-sm font-semibold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                        
+                        <Button
+                            variant="glow"
+                            size="md"
+                            className="rounded-2xl shadow-premium"
+                            onClick={() => window.location.href = `/${lang}/surgeries`}
                         >
                             {dict.surgeries}
-                            <ArrowUpRight className="w-4 h-4" />
-                        </Link>
+                            <ArrowUpRight className="w-4 h-4 ml-2" />
+                        </Button>
                     </div>
+
 
                     {/* Mobile Menu Button */}
                     <div className="flex items-center gap-3 md:hidden">

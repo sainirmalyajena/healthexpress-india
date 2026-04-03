@@ -2,14 +2,24 @@ import type { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
-import { Inter } from 'next/font/google';
+import { Inter, Outfit } from 'next/font/google';
 import "@/app/globals.css";
 import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientLayoutWidgets } from "@/components/layout/ClientLayoutWidgets";
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+});
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -77,7 +87,7 @@ export default async function RootLayout({
   const dictionary = await getDictionary(lang as Locale);
   const organizationSchema = generateOrganizationSchema();
   return (
-    <html lang={lang}>
+    <html lang={lang} className={`${inter.variable} ${outfit.variable}`}>
       <head>
         {/* Organization Schema */}
         <script
@@ -87,7 +97,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} min-h-screen flex flex-col pb-[80px] md:pb-0 overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-100 selection:text-teal-900`}>
+      <body className="min-h-screen flex flex-col pb-[80px] md:pb-0 overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white">
         <Analytics />
         <Header lang={lang} dict={dictionary.navigation} />
         <main className="flex-1">{children}</main>
@@ -98,3 +108,4 @@ export default async function RootLayout({
     </html>
   );
 }
+
