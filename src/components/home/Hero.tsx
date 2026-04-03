@@ -136,7 +136,7 @@ export function Hero({ lang, dict }: HeroProps) {
               {/* Main Visual with Elite Border */}
               <div className="relative rounded-[3rem] overflow-hidden luxury-border shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
                 <Image 
-                  src="/images/home/hero-elite.png" 
+                  src="/hero-elite.png" 
                   alt="Premium Healthcare"
                   width={600}
                   height={800}
@@ -174,7 +174,7 @@ export function Hero({ lang, dict }: HeroProps) {
                   <div className="flex -space-x-3">
                     {[1,2,3].map(i => (
                       <div key={i} className="w-8 h-8 rounded-full border-2 border-teal-900 bg-teal-800 overflow-hidden">
-                        <Image src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Patient" width={32} height={32} />
+                        <Image src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Patient" width={32} height={32} unoptimized />
                       </div>
                     ))}
                   </div>
