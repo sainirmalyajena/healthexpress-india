@@ -30,7 +30,7 @@ export function proxy(request: NextRequest) {
         pathname.startsWith('/api/') ||
         pathname.startsWith('/_next/') ||
         pathname.includes('favicon.ico') ||
-        pathname.includes('logo.png')
+        /\.(png|jpg|jpeg|svg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$/i.test(pathname)
     ) {
         return
     }
@@ -56,6 +56,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-    // Matcher ignoring `/_next/` and `/api/`
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    // Matcher ignoring `/_next/`, `/api/`, and static files
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$).*)'],
 }
