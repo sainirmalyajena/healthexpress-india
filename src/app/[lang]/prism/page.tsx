@@ -163,9 +163,8 @@ export default function PrismHealthcurePage() {
       <footer className="bg-slate-900 text-slate-300 py-16">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div>
-            <div className="flex items-center gap-2 text-2xl font-bold text-white mb-6">
-              <Eye className="w-8 h-8 text-teal-500" />
-              Prism Healthcure
+            <div className="mb-6 inline-block bg-white p-2 rounded-xl">
+              <img src="/prism-logo.jpg" alt="Prism Healthcure" className="h-12 w-auto object-contain" />
             </div>
             <p className="mb-6 leading-relaxed">Delivering premium, compassionate, and advanced ophthalmology care to illuminate your life.</p>
           </div>

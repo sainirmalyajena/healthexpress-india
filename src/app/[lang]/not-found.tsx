@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { FiArrowLeft, FiHome, FiSearch, FiHelpCircle } from 'react-icons/fi';
 
 export default function NotFound() {
+    const params = useParams();
+    const lang = params?.lang || 'en';
     return (
         <div className="min-h-[70vh] flex items-center justify-center bg-slate-50 px-4">
             <div className="max-w-2xl w-full text-center space-y-8">
@@ -26,7 +31,7 @@ export default function NotFound() {
                 {/* Helpful Links Grid */}
                 <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto text-left">
                     <Link
-                        href="/"
+                        href={`/${lang}`}
                         className="group flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-teal-500 hover:shadow-lg transition-all"
                     >
                         <div className="p-2 bg-teal-50 rounded-lg text-teal-600 group-hover:bg-teal-600 group-hover:text-white transition-colors">
@@ -39,7 +44,7 @@ export default function NotFound() {
                     </Link>
 
                     <Link
-                        href="/surgeries"
+                        href={`/${lang}/surgeries`}
                         className="group flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-teal-500 hover:shadow-lg transition-all"
                     >
                         <div className="p-2 bg-blue-50 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -52,7 +57,7 @@ export default function NotFound() {
                     </Link>
 
                     <Link
-                        href="/doctors"
+                        href={`/${lang}/doctors`}
                         className="group flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-teal-500 hover:shadow-lg transition-all"
                     >
                         <div className="p-2 bg-purple-50 rounded-lg text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
@@ -65,7 +70,7 @@ export default function NotFound() {
                     </Link>
 
                     <Link
-                        href="/contact"
+                        href={`/${lang}/contact`}
                         className="group flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-teal-500 hover:shadow-lg transition-all"
                     >
                         <div className="p-2 bg-orange-50 rounded-lg text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">

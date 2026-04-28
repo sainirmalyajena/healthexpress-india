@@ -4,6 +4,8 @@ import { DoctorCard } from '@/components/doctors/DoctorCard';
 import { Metadata } from 'next';
 import { Prisma } from '@/generated/prisma';
 import { getDictionary } from '@/get-dictionary';
+
+export const dynamic = 'force-dynamic';
 import { Locale } from '@/i18n-config';
 
 interface PageProps {

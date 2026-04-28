@@ -32,10 +32,21 @@ function deepMerge(target: any, source: any): any {
 }
 
 export const getDictionary = async (locale: Locale) => {
-    const enDict = await dictionaries.en();
-    if (locale === 'en') return enDict;
+    try {
+        const enDict = await dictionaries.en();
+        
+        // Safety check: if locale is English or unsupported, return English
+        if (locale === 'en' || !dictionaries[locale]) {
+            return enDict;
+        }
 
-    const targetDict = await dictionaries[locale]();
-    // Return target merged with English as fallback
-    return deepMerge(enDict, targetDict);
+        const targetData = await dictionaries[locale]();
+        
+        // Return target merged with English as fallback for missing keys
+        return deepMerge(enDict, targetData);
+    } catch (error) {
+        console.error(`Status 500: Failed to load dictionary for locale: ${locale}. Falling back to English.`, error);
+        // Absolute fallback to English to prevent server crash
+        return dictionaries.en();
+    }
 }

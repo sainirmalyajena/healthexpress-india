@@ -14,8 +14,8 @@ interface OrganizationSchemaOptions {
 }
 
 export function generateOrganizationSchema(options?: OrganizationSchemaOptions) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
-    const name = options?.name || process.env.NEXT_PUBLIC_BUSINESS_NAME || 'HealthExpress India';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://prismhealthcure.com';
+    const name = options?.name || process.env.NEXT_PUBLIC_BUSINESS_NAME || 'Prism Healthcure';
     const description = options?.description ||
         process.env.NEXT_PUBLIC_BUSINESS_DESCRIPTION ||
         'Connecting patients with 500+ hospitals across India for quality, affordable surgery';
@@ -30,7 +30,7 @@ export function generateOrganizationSchema(options?: OrganizationSchemaOptions) 
         contactPoint: {
             '@type': 'ContactPoint',
             telephone: options?.phone || process.env.NEXT_PUBLIC_PHONE || '+91 93078 61041',
-            email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'hello@healthexpress.in',
+            email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'contact@prismhealthcure.com',
             contactType: 'customer service',
             areaServed: 'IN',
             availableLanguage: ['en', 'hi']
@@ -63,7 +63,7 @@ interface MedicalProcedureSchemaOptions {
 }
 
 export function generateMedicalProcedureSchema(surgery: MedicalProcedureSchemaOptions) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://prismhealthcure.com';
 
     return {
         '@context': 'https://schema.org',
@@ -103,7 +103,7 @@ export function generateMedicalProcedureSchema(surgery: MedicalProcedureSchemaOp
         ],
         provider: {
             '@type': 'MedicalOrganization',
-            name: 'HealthExpress India',
+            name: 'Prism Healthcure',
             url: baseUrl,
             logo: `${baseUrl}/logo.png`,
             contactPoint: {
@@ -151,16 +151,16 @@ interface LocalBusinessSchemaOptions {
 }
 
 export function generateLocalBusinessSchema(options?: LocalBusinessSchemaOptions) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://prismhealthcure.com';
 
     return {
         '@context': 'https://schema.org',
         '@type': 'MedicalBusiness',
-        name: options?.name || 'HealthExpress India',
+        name: options?.name || 'Prism Healthcure',
         description: options?.description || 'Healthcare coordination and surgery support services',
         url: baseUrl,
         telephone: options?.phone || process.env.NEXT_PUBLIC_PHONE || '+91 93078 61041',
-        email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'hello@healthexpress.in',
+        email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'contact@prismhealthcure.com',
         address: {
             '@type': 'PostalAddress',
             addressCountry: 'IN',
@@ -210,7 +210,7 @@ export function generateCollectionPageSchema(name: string, description: string, 
         url,
         publisher: {
             '@type': 'MedicalOrganization',
-            name: 'HealthExpress India'
+            name: 'Prism Healthcure'
         }
     };
 }

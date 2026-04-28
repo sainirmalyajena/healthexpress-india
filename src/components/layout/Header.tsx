@@ -64,21 +64,12 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 md:h-20">
                     {/* Logo */}
-                    <Link href={`/${lang}`} className="flex items-center gap-3 group">
-                        <div className="relative w-10 h-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-premium rounded-xl">
-                            <Image
-                                src="/logo.png"
-                                alt="HealthExpress Logo"
-                                fill
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent">
-                                HealthExpress
-                            </span>
-                            <span className="text-[10px] uppercase tracking-[0.3em] text-teal-600/60 block font-black ml-0.5">Concierge</span>
-                        </div>
+                    <Link href={`/${lang}`} className="flex items-center group">
+                        <img 
+                            src="/prism-logo.jpg" 
+                            alt="Prism Healthcure Logo" 
+                            className="h-12 md:h-14 w-auto object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
+                        />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -134,15 +125,16 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
                         </Link>
                         
-                        <Button
-                            variant="glow"
-                            size="md"
-                            className="rounded-2xl shadow-premium"
-                            onClick={() => window.location.href = `/${lang}/surgeries`}
-                        >
-                            {dict.surgeries}
-                            <ArrowUpRight className="w-4 h-4 ml-2" />
-                        </Button>
+                        <Link href={`/${lang}/surgeries`}>
+                            <Button
+                                variant="glow"
+                                size="md"
+                                className="rounded-2xl shadow-premium"
+                            >
+                                {dict.surgeries}
+                                <ArrowUpRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        </Link>
                     </div>
 
 

@@ -15,6 +15,10 @@ export default function PartnerLoginPage() {
         setLoading(true);
         setError('');
 
+        const timeoutId = setTimeout(() => {
+            setError('The server is taking longer than expected to respond. The database may be waking up. Please wait a moment and try again.');
+        }, 12000); // 12 second warning
+
         try {
             const res = await fetch('/api/partner/auth', {
                 method: 'POST',
@@ -22,6 +26,7 @@ export default function PartnerLoginPage() {
                 body: JSON.stringify({ email, password }),
             });
 
+            clearTimeout(timeoutId);
             const data = await res.json();
 
             if (!res.ok) {
@@ -30,7 +35,12 @@ export default function PartnerLoginPage() {
 
             router.push('/partner/dashboard');
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Login failed');
+            clearTimeout(timeoutId);
+            if (err instanceof Error && (err.name === 'AbortError' || err.message.includes('fetch'))) {
+                setError('Unable to connect to the server. The database might be waking up. Please try again in 10-20 seconds.');
+            } else {
+                setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+            }
         } finally {
             setLoading(false);
         }
