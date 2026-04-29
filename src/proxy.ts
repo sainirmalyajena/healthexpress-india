@@ -22,11 +22,6 @@ export function proxy(request: NextRequest) {
     const isPrismDomain = hostname.includes(PRISM_DOMAIN) || hostname.includes('prism-healthcure')
     const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1')
 
-    // Redirect /prism off the main HealthExpress domain to the dedicated domain
-    if (!isPrismDomain && !isLocalhost && pathname.includes('/prism')) {
-        return NextResponse.redirect(new URL(`https://${PRISM_DOMAIN}${pathname}`, request.url))
-    }
-
     // Handle Prism Domain rewrites
     if (isPrismDomain) {
         if (pathname === '/' || pathname === '/en' || pathname === '/hi') {
@@ -62,8 +57,8 @@ export function proxy(request: NextRequest) {
 
     // Set custom header for layout detection
     const requestHeaders = new Headers(request.headers)
-    // Treat localhost/prism as Prism site for testing, otherwise use domain check
-    const shouldBePrism = isPrismDomain || (isLocalhost && pathname.includes('/prism'))
+    // Use Prism shell if on Prism domain OR if path is /prism (for verification on HE domain)
+    const shouldBePrism = isPrismDomain || pathname.includes('/prism')
     requestHeaders.set('x-prism-site', shouldBePrism ? 'true' : 'false')
 
     return NextResponse.next({
