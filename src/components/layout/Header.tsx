@@ -77,7 +77,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent">
                                 HealthExpress
                             </span>
-                            <span className="text-[10px] uppercase tracking-[0.3em] text-teal-600/60 block font-black ml-0.5">Concierge</span>
+                            <span className="text-[10px] uppercase tracking-[0.3em] text-teal-600/60 block font-black ml-0.5">India</span>
                         </div>
                     </Link>
 
@@ -125,20 +125,6 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                                 HI
                             </Link>
                         </div>
-
-                        {/* Concierge Hotline */}
-                        <Link
-                            href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
-                            className="group flex flex-col items-end"
-                        >
-                            <span className="text-[9px] uppercase font-black text-teal-600 tracking-[0.2em] leading-none mb-1.5">Direct Line</span>
-                            <div className="flex items-center gap-2 text-[14px] font-black text-slate-900 group-hover:text-teal-700 transition-colors">
-                                <div className="w-7 h-7 rounded-full bg-teal-50 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
-                                    <Phone className="w-3.5 h-3.5 text-teal-600" />
-                                </div>
-                                {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
-                            </div>
-                        </Link>
                         
                         <Button
                             variant="glow"

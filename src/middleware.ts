@@ -28,10 +28,7 @@ export function middleware(request: NextRequest) {
     if (
         pathname.startsWith('/api/') ||
         pathname.startsWith('/_next/') ||
-        pathname.includes('favicon.ico') ||
-        pathname.includes('logo.png') ||
-        pathname.includes('robots.txt') ||
-        pathname.includes('sitemap.xml')
+        pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico|xml|txt)$/)
     ) {
         return
     }
