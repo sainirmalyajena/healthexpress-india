@@ -25,8 +25,14 @@ const outfit = Outfit({
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const isHi = lang === 'hi';
-  const headersList = await headers();
-  const isPrismSite = headersList.get('x-prism-site') === 'true';
+  
+  let isPrismSite = false;
+  try {
+    const headersList = await headers();
+    isPrismSite = headersList.get('x-prism-site') === 'true';
+  } catch (e) {
+    console.error('Metadata headers error:', e);
+  }
 
   if (isPrismSite) {
     return {
@@ -95,12 +101,26 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const dictionary = await getDictionary(lang as Locale);
+  
+  // Safe dictionary loading
+  let dictionary;
+  try {
+    dictionary = await getDictionary(lang as Locale);
+  } catch (e) {
+    console.error('Dictionary load error:', e);
+    dictionary = await getDictionary('en');
+  }
+  
   const organizationSchema = generateOrganizationSchema();
   
   // Detect if we're on the Prism domain
-  const headersList = await headers();
-  const isPrismSite = headersList.get('x-prism-site') === 'true';
+  let isPrismSite = false;
+  try {
+    const headersList = await headers();
+    isPrismSite = headersList.get('x-prism-site') === 'true';
+  } catch (e) {
+    console.error('Layout headers error:', e);
+  }
 
   return (
     <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
