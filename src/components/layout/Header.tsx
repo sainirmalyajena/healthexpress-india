@@ -54,6 +54,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
 
     return (
         <header
+            data-deployment-id="HE_INDIA_2026_FINAL"
             className={cn(
                 "sticky top-0 z-50 transition-all duration-300",
                 scrolled

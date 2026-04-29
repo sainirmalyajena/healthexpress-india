@@ -28,7 +28,9 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
     };
 
     return (
-        <footer className="bg-[#051c18] text-slate-400 pt-24 pb-24 md:pb-0 border-t border-white/5">
+        <footer 
+            data-deployment-id="HE_INDIA_2026_FINAL"
+            className="bg-[#051c18] text-slate-400 pt-24 pb-24 md:pb-0 border-t border-white/5">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12">
                     {/* Brand & Mission */}
