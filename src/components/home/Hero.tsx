@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Phone, Shield, Star, CheckCircle, Sparkles } from 'lucide-react';
+import { ArrowRight, Phone, Shield, Star, CheckCircle, Sparkles, Users } from 'lucide-react';
 import { Button } from '@/components/ui';
 
 interface HeroProps {
@@ -173,8 +173,8 @@ export function Hero({ lang, dict }: HeroProps) {
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-3">
                     {[1,2,3].map(i => (
-                      <div key={i} className="w-8 h-8 rounded-full border-2 border-teal-900 bg-teal-800 overflow-hidden">
-                        <Image src={`https://i.pravatar.cc/100?img=${i+10}`} alt="Patient" width={32} height={32} unoptimized />
+                      <div key={i} className="w-8 h-8 rounded-full border-2 border-teal-900 bg-teal-800 flex items-center justify-center text-teal-300">
+                        <Users className="w-4 h-4" />
                       </div>
                     ))}
                   </div>

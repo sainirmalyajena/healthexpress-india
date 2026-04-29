@@ -21,7 +21,7 @@ function getLocale(request: NextRequest): string | undefined {
     return locale
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname
 
     // Skip API, static assets, and favicon
@@ -29,7 +29,9 @@ export function proxy(request: NextRequest) {
         pathname.startsWith('/api/') ||
         pathname.startsWith('/_next/') ||
         pathname.includes('favicon.ico') ||
-        pathname.includes('logo.png')
+        pathname.includes('logo.png') ||
+        pathname.includes('robots.txt') ||
+        pathname.includes('sitemap.xml')
     ) {
         return
     }

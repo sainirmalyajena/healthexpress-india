@@ -28,7 +28,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
     };
 
     return (
-        <footer className="bg-[#051c18] text-slate-400 pt-24 border-t border-white/5">
+        <footer className="bg-[#051c18] text-slate-400 pt-24 pb-24 md:pb-0 border-t border-white/5">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12">
                     {/* Brand & Mission */}
@@ -132,7 +132,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                             <div className="flex gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
                                 <Link href={`/${lang}/privacy`} className="hover:text-teal-400 transition-colors">Privacy</Link>
                                 <Link href={`/${lang}/terms`} className="hover:text-teal-400 transition-colors">Terms</Link>
-                                <Link href={`/${lang}/sitemap`} className="hover:text-teal-400 transition-colors">Sitemap</Link>
+                                <Link href="/sitemap.xml" className="hover:text-teal-400 transition-colors">Sitemap</Link>
                             </div>
                             <p className="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
                                 © {currentYear} HealthExpress India Concierge. {dict.rights}
