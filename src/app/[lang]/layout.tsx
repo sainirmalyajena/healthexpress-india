@@ -25,6 +25,16 @@ const outfit = Outfit({
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const isHi = lang === 'hi';
+  const headersList = await headers();
+  const isPrismSite = headersList.get('x-prism-site') === 'true';
+
+  if (isPrismSite) {
+    return {
+      title: 'Prism Healthcure | Premium Ophthalmology & Eye Care',
+      description: 'Advanced eye treatments by top ophthalmologists. Book your consultation today.',
+      metadataBase: new URL('https://prismhealthcure.com'),
+    };
+  }
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
 
@@ -88,16 +98,14 @@ export default async function RootLayout({
   const dictionary = await getDictionary(lang as Locale);
   const organizationSchema = generateOrganizationSchema();
   
-  // Detect if we're on a /prism route to hide HealthExpress shell
+  // Detect if we're on the Prism domain
   const headersList = await headers();
-  const pathname = headersList.get('x-next-url') || headersList.get('x-invoke-path') || '';
-  const isPrism = pathname.includes('/prism');
-  
+  const isPrismSite = headersList.get('x-prism-site') === 'true';
+
   return (
     <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head>
-        {/* Organization Schema - only for main site */}
-        {!isPrism && (
+        {!isPrismSite && (
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
@@ -106,16 +114,23 @@ export default async function RootLayout({
           />
         )}
       </head>
-      <body className={`min-h-screen flex flex-col ${isPrism ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
+      <body className={`min-h-screen flex flex-col ${isPrismSite ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
         <Analytics />
-        <ConditionalShell showOn="main">
+        
+        {/* Only show HealthExpress Header/Footer/Sticky on the main domain */}
+        {!isPrismSite && (
           <Header lang={lang} dict={dictionary.navigation} />
-        </ConditionalShell>
+        )}
+
         <main className="flex-1">{children}</main>
-        <ConditionalShell showOn="main">
-          <Footer lang={lang} dict={dictionary.footer} />
-          <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
-        </ConditionalShell>
+
+        {!isPrismSite && (
+          <>
+            <Footer lang={lang} dict={dictionary.footer} />
+            <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
+          </>
+        )}
+
         <SpeedInsights />
       </body>
     </html>
