@@ -37,13 +37,14 @@ export default function PrismHeader() {
         : "bg-white/70 backdrop-blur-md py-4"
     )}>
       <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="#hero" className="flex items-center gap-2.5 group" onClick={() => setIsOpen(false)}>
-          <img 
-            src="/prism-logo.jpg" 
-            alt="Prism Healthcure" 
-            className="h-11 md:h-13 w-auto object-contain rounded-lg transition-transform duration-300 group-hover:scale-105"
-          />
+        {/* Logo - Premium Text Design */}
+        <Link href="#hero" className="flex flex-col group transition-all" onClick={() => setIsOpen(false)}>
+          <span className="text-xl md:text-2xl font-black font-outfit tracking-tighter leading-none bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent group-hover:from-teal-600 group-hover:to-teal-800">
+            PRISM
+          </span>
+          <span className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-teal-600/70 block font-black ml-0.5 mt-0.5 group-hover:text-teal-600 transition-colors">
+            Healthcure
+          </span>
         </Link>
         
         {/* Desktop Nav */}
@@ -93,7 +94,14 @@ export default function PrismHeader() {
       )}>
         {/* Mobile Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-          <img src="/prism-logo.jpg" alt="Prism Healthcure" className="h-10 w-auto object-contain rounded-lg" />
+          <div className="flex flex-col">
+            <span className="text-xl font-black font-outfit tracking-tighter leading-none bg-gradient-to-br from-teal-700 to-teal-900 bg-clip-text text-transparent">
+              PRISM
+            </span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-teal-600/70 block font-black ml-0.5 mt-0.5">
+              Healthcure
+            </span>
+          </div>
           <button 
             onClick={() => setIsOpen(false)} 
             className="p-2.5 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors"

@@ -263,8 +263,13 @@ export default function PrismHealthcurePage() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
             <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-2.5 mb-5">
-                <img src="/prism-logo.jpg" alt="Prism Healthcure" className="h-12 w-auto object-contain rounded-lg" />
+              <div className="flex flex-col mb-6">
+                <span className="text-2xl font-black font-outfit tracking-tighter leading-none text-white">
+                  PRISM
+                </span>
+                <span className="text-[11px] uppercase tracking-[0.4em] text-teal-400 block font-black ml-0.5 mt-1">
+                  Healthcure
+                </span>
               </div>
               <p className="text-sm leading-relaxed mb-6 text-slate-400">Premium ophthalmology care delivering advanced, compassionate eye treatments for every age.</p>
             </div>
