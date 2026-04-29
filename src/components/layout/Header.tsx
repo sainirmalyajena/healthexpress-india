@@ -82,35 +82,35 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-6">
+                    <div className="hidden lg:flex items-center gap-10">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    'text-[11px] font-black uppercase tracking-[0.12em] transition-all relative py-2',
+                                    'text-[13px] font-bold uppercase tracking-[0.18em] transition-all relative py-2',
                                     isActive(link.href)
                                         ? 'text-teal-900'
-                                        : 'text-slate-500 hover:text-teal-700'
+                                        : 'text-slate-500 hover:text-teal-900'
                                 )}
                             >
-                                {link.label}
+                                <span className="relative z-10">{link.label}</span>
                                 {isActive(link.href) && (
-                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 rounded-full animate-reveal" />
+                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 rounded-full" />
                                 )}
                             </Link>
                         ))}
                     </div>
 
                     {/* Language Switcher & CTA */}
-                    <div className="hidden lg:flex items-center gap-4">
-                        {/* Language Toggle - Glass style */}
-                        <div className="flex items-center bg-slate-900/5 backdrop-blur-md rounded-2xl p-0.5 border border-slate-900/5">
+                    <div className="hidden lg:flex items-center gap-8">
+                        {/* Language Toggle - Premium Pill */}
+                        <div className="flex items-center bg-slate-100/80 backdrop-blur-md rounded-2xl p-1 border border-slate-200/50 shadow-inner">
                             <Link
                                 href={redirectedPathname('en')}
                                 className={cn(
-                                    "px-3 py-1 text-[9px] font-black tracking-widest rounded-xl transition-all",
-                                    lang === 'en' ? "bg-white text-teal-900 shadow-premium" : "text-slate-400 hover:text-slate-600"
+                                    "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
+                                    lang === 'en' ? "bg-white text-teal-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
                                 EN
@@ -118,30 +118,36 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             <Link
                                 href={redirectedPathname('hi')}
                                 className={cn(
-                                    "px-3 py-1 text-[9px] font-black tracking-widest rounded-xl transition-all",
-                                    lang === 'hi' ? "bg-white text-teal-900 shadow-premium" : "text-slate-400 hover:text-slate-600"
+                                    "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
+                                    lang === 'hi' ? "bg-white text-teal-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
                                 HI
                             </Link>
                         </div>
 
+                        {/* Concierge Hotline */}
                         <Link
                             href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
-                            className="text-[11px] font-black text-slate-500 hover:text-teal-900 tracking-wider flex items-center gap-1.5 transition-colors"
+                            className="group flex flex-col items-end"
                         >
-                            <Phone className="w-3.5 h-3.5 text-teal-600" />
-                            {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
+                            <span className="text-[9px] uppercase font-black text-teal-600 tracking-[0.2em] leading-none mb-1.5">Direct Line</span>
+                            <div className="flex items-center gap-2 text-[14px] font-black text-slate-900 group-hover:text-teal-700 transition-colors">
+                                <div className="w-7 h-7 rounded-full bg-teal-50 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                                    <Phone className="w-3.5 h-3.5 text-teal-600" />
+                                </div>
+                                {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
+                            </div>
                         </Link>
                         
                         <Button
                             variant="glow"
-                            size="sm"
-                            className="rounded-xl shadow-premium text-[11px] h-9"
+                            size="md"
+                            className="rounded-2xl shadow-premium px-8 h-12 text-[12px] font-black uppercase tracking-[0.2em]"
                             onClick={() => window.location.href = `/${lang}/surgeries`}
                         >
                             {dict.surgeries}
-                            <ArrowUpRight className="w-3.5 h-3.5 ml-1.5" />
+                            <ArrowUpRight className="w-4 h-4 ml-2.5" />
                         </Button>
                     </div>
 
