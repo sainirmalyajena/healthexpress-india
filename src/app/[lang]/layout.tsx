@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Header, Footer } from "@/components/layout";
+import { Header, Footer, ConditionalShell } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Inter, Outfit } from 'next/font/google';
@@ -108,13 +108,16 @@ export default async function RootLayout({
       </head>
       <body className={`min-h-screen flex flex-col ${isPrism ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
         <Analytics />
-        {!isPrism && <Header lang={lang} dict={dictionary.navigation} />}
+        <ConditionalShell showOn="main">
+          <Header lang={lang} dict={dictionary.navigation} />
+        </ConditionalShell>
         <main className="flex-1">{children}</main>
-        {!isPrism && <Footer lang={lang} dict={dictionary.footer} />}
-        {!isPrism && <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />}
+        <ConditionalShell showOn="main">
+          <Footer lang={lang} dict={dictionary.footer} />
+          <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
+        </ConditionalShell>
         <SpeedInsights />
       </body>
     </html>
   );
 }
-
