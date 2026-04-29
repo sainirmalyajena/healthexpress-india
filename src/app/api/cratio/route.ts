@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       data: {
         Name: name,
         Mobile: mobile,
-        LeadSource: "Prism Healthcure Landing Page",
+        LeadSource: "Prism Healthcure Website",
         Requirements: service,
         // Add other mapped fields here
       }

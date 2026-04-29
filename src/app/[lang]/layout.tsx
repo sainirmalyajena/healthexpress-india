@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Header, Footer } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
@@ -86,23 +87,31 @@ export default async function RootLayout({
   const { lang } = await params;
   const dictionary = await getDictionary(lang as Locale);
   const organizationSchema = generateOrganizationSchema();
+  
+  // Detect if we're on a /prism route to hide HealthExpress shell
+  const headersList = await headers();
+  const pathname = headersList.get('x-next-url') || headersList.get('x-invoke-path') || '';
+  const isPrism = pathname.includes('/prism');
+  
   return (
-    <html lang={lang} className={`${inter.variable} ${outfit.variable}`}>
+    <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head>
-        {/* Organization Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema)
-          }}
-        />
+        {/* Organization Schema - only for main site */}
+        {!isPrism && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationSchema)
+            }}
+          />
+        )}
       </head>
-      <body className="min-h-screen flex flex-col pb-[80px] md:pb-0 overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white">
+      <body className={`min-h-screen flex flex-col ${isPrism ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
         <Analytics />
-        <Header lang={lang} dict={dictionary.navigation} />
+        {!isPrism && <Header lang={lang} dict={dictionary.navigation} />}
         <main className="flex-1">{children}</main>
-        <Footer lang={lang} dict={dictionary.footer} />
-        <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
+        {!isPrism && <Footer lang={lang} dict={dictionary.footer} />}
+        {!isPrism && <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />}
         <SpeedInsights />
       </body>
     </html>
