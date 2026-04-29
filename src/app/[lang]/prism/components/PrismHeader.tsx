@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Eye, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function PrismHeader() {
@@ -28,8 +28,9 @@ export default function PrismHeader() {
       scrolled || isOpen ? "bg-white shadow-md py-3" : "bg-white/80 backdrop-blur-md py-5"
     )}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <Link href="#hero" className="flex items-center" onClick={() => setIsOpen(false)}>
-          <img src="/prism-logo.jpg" alt="Prism Healthcure" className="h-14 md:h-16 w-auto object-contain mix-blend-multiply" />
+        <Link href="#hero" className="flex items-center gap-2 text-2xl font-bold text-teal-700" onClick={() => setIsOpen(false)}>
+          <Eye className="w-8 h-8" />
+          <span>Prism <span className="text-gray-900">Healthcure</span></span>
         </Link>
         
         {/* Desktop Nav */}

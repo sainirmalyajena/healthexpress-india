@@ -27,11 +27,18 @@ export default function DashboardShell({ children, userName }: DashboardShellPro
             <aside className="w-64 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen">
                 <div className="p-6 border-b border-slate-100">
                     <Link href="/" className="flex items-center gap-2 group">
-                        <img
-                            src="/prism-logo.jpg"
-                            alt="Prism Healthcure Logo"
-                            className="h-10 w-auto object-contain mix-blend-multiply transition-transform group-hover:scale-105"
-                        />
+                        <div className="relative w-8 h-8 transition-transform group-hover:scale-105">
+                            <Image
+                                src="/logo.png"
+                                alt="HealthExpress Logo"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="font-bold text-slate-900 leading-tight">HealthExpress</span>
+                            <span className="text-[10px] text-teal-600 font-bold uppercase tracking-widest">Command Center</span>
+                        </div>
                     </Link>
                 </div>
 
@@ -83,11 +90,15 @@ export default function DashboardShell({ children, userName }: DashboardShellPro
                 <header className="lg:hidden bg-white border-b border-slate-200 p-4 sticky top-0 z-30">
                     <div className="flex items-center justify-between">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <img
-                                src="/prism-logo.jpg"
-                                alt="Prism Healthcure Logo"
-                                className="h-8 w-auto object-contain mix-blend-multiply transition-transform group-hover:scale-105"
-                            />
+                            <div className="relative w-8 h-8 transition-transform group-hover:scale-105">
+                                <Image
+                                    src="/logo.png"
+                                    alt="HealthExpress Logo"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                            <span className="font-bold text-slate-900 italic">HealthExpress</span>
                         </Link>
                         {/* Mobile menu toggle would go here */}
                     </div>

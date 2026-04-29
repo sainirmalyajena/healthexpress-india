@@ -23,16 +23,13 @@ function getLocale(request: NextRequest): string | undefined {
 
 export function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname
-    console.log('Proxy handling:', pathname);
 
     // Skip API, static assets, and favicon
     if (
         pathname.startsWith('/api/') ||
         pathname.startsWith('/_next/') ||
         pathname.includes('favicon.ico') ||
-        pathname.includes('robots.txt') ||
-        pathname.includes('sitemap.xml') ||
-        /\.(png|jpg|jpeg|svg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$/i.test(pathname)
+        pathname.includes('logo.png')
     ) {
         return
     }
@@ -58,6 +55,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-    // Matcher ignoring `/_next/`, `/api/`, and static files
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$).*)'],
+    // Matcher ignoring `/_next/` and `/api/`
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

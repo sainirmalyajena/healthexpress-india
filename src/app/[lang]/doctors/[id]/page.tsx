@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
@@ -89,13 +88,12 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mt-4">
                     <div className="md:flex">
                         {/* Photo */}
-                        <div className="md:w-64 h-64 md:h-auto bg-slate-100 flex-shrink-0 relative">
-                            <Image
+                        <div className="md:w-64 h-64 md:h-auto bg-slate-100 flex-shrink-0">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
                                 src={doctor.image}
                                 alt={doctor.name}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 768px) 100vw, 256px"
+                                className="w-full h-full object-cover"
                             />
                         </div>
 

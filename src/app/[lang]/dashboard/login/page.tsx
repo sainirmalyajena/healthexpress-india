@@ -25,10 +25,6 @@ export default function AdminLoginPage() {
         setIsLoading(true);
         setError('');
 
-        const timeoutId = setTimeout(() => {
-            setError('The server is taking longer than expected to respond. This usually happens when the database is starting up. Please wait a moment and try again.');
-        }, 12000); // 12 second warning
-
         try {
             const response = await fetch('/api/dashboard/auth', {
                 method: 'POST',
@@ -36,7 +32,6 @@ export default function AdminLoginPage() {
                 body: JSON.stringify(data),
             });
 
-            clearTimeout(timeoutId);
             const result = await response.json();
 
             if (response.ok) {
@@ -45,10 +40,8 @@ export default function AdminLoginPage() {
             } else {
                 setError(result.error || 'Invalid credentials');
             }
-        } catch (err) {
-            clearTimeout(timeoutId);
-            console.error('Login Error:', err);
-            setError('Unable to connect to the server. The database might be waking up. Please try again in 10-20 seconds.');
+        } catch {
+            setError('Network error. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -59,11 +52,12 @@ export default function AdminLoginPage() {
             <div className="w-full max-w-md">
                 <div className="bg-white rounded-2xl shadow-xl p-8">
                     <div className="text-center mb-8">
-                        <div className="mb-4">
-                            <img
-                                src="/prism-logo.jpg"
-                                alt="Prism Healthcure Logo"
-                                className="h-16 w-auto object-contain mix-blend-multiply mx-auto transition-transform hover:scale-105"
+                        <div className="relative w-16 h-16 transition-transform hover:scale-105 mx-auto mb-4">
+                            <Image
+                                src="/logo.png"
+                                alt="HealthExpress Logo"
+                                fill
+                                className="object-contain"
                             />
                         </div>
                         <h1 className="text-2xl font-bold text-slate-900">Admin Login</h1>
@@ -80,7 +74,7 @@ export default function AdminLoginPage() {
                         <Input
                             label="Email"
                             type="email"
-                            placeholder="admin@prismhealthcure.com"
+                            placeholder="admin@healthexpress.in"
                             {...register('email')}
                             error={errors.email?.message}
                             required
@@ -102,7 +96,7 @@ export default function AdminLoginPage() {
 
                     <div className="mt-6 text-center text-sm text-slate-500">
                         <p>Demo credentials:</p>
-                        <p className="font-mono text-xs mt-1">admin@prismhealthcure.com / admin123</p>
+                        <p className="font-mono text-xs mt-1">admin@healthexpress.in / admin123</p>
                     </div>
                 </div>
             </div>

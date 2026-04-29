@@ -82,13 +82,13 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-8">
+                    <div className="hidden lg:flex items-center gap-6">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    'text-xs font-black uppercase tracking-[0.15em] transition-all relative py-2',
+                                    'text-[11px] font-black uppercase tracking-[0.12em] transition-all relative py-2',
                                     isActive(link.href)
                                         ? 'text-teal-900'
                                         : 'text-slate-500 hover:text-teal-700'
@@ -103,13 +103,13 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </div>
 
                     {/* Language Switcher & CTA */}
-                    <div className="hidden md:flex items-center gap-6">
+                    <div className="hidden lg:flex items-center gap-4">
                         {/* Language Toggle - Glass style */}
-                        <div className="flex items-center bg-slate-900/5 backdrop-blur-md rounded-2xl p-1 border border-slate-900/5">
+                        <div className="flex items-center bg-slate-900/5 backdrop-blur-md rounded-2xl p-0.5 border border-slate-900/5">
                             <Link
                                 href={redirectedPathname('en')}
                                 className={cn(
-                                    "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
+                                    "px-3 py-1 text-[9px] font-black tracking-widest rounded-xl transition-all",
                                     lang === 'en' ? "bg-white text-teal-900 shadow-premium" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
@@ -118,7 +118,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             <Link
                                 href={redirectedPathname('hi')}
                                 className={cn(
-                                    "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
+                                    "px-3 py-1 text-[9px] font-black tracking-widest rounded-xl transition-all",
                                     lang === 'hi' ? "bg-white text-teal-900 shadow-premium" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
@@ -128,22 +128,21 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
 
                         <Link
                             href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
-                            className="text-xs font-black text-slate-500 hover:text-teal-900 tracking-wider flex items-center gap-2 transition-colors"
+                            className="text-[11px] font-black text-slate-500 hover:text-teal-900 tracking-wider flex items-center gap-1.5 transition-colors"
                         >
-                            <Phone className="w-4 h-4 text-teal-600" />
+                            <Phone className="w-3.5 h-3.5 text-teal-600" />
                             {process.env.NEXT_PUBLIC_PHONE || '93078-61041'}
                         </Link>
                         
-                        <Link href={`/${lang}/surgeries`}>
-                            <Button
-                                variant="glow"
-                                size="md"
-                                className="rounded-2xl shadow-premium"
-                            >
-                                {dict.surgeries}
-                                <ArrowUpRight className="w-4 h-4 ml-2" />
-                            </Button>
-                        </Link>
+                        <Button
+                            variant="glow"
+                            size="sm"
+                            className="rounded-xl shadow-premium text-[11px] h-9"
+                            onClick={() => window.location.href = `/${lang}/surgeries`}
+                        >
+                            {dict.surgeries}
+                            <ArrowUpRight className="w-3.5 h-3.5 ml-1.5" />
+                        </Button>
                     </div>
 
 

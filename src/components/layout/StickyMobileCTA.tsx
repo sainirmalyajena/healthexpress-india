@@ -17,7 +17,7 @@ interface StickyMobileCTAProps {
 export default function StickyMobileCTA({ lang, dict }: StickyMobileCTAProps) {
     return (
         <div
-            className="fixed bottom-0 left-0 right-0 z-[60] bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 md:hidden flex gap-3 w-full shadow-[0_-8px_30px_rgb(0,0,0,0.08)]"
+            className="fixed bottom-0 left-0 right-0 z-[60] bg-white/90 backdrop-blur-md border-t border-slate-200 p-4 md:hidden flex gap-3 w-full pb-safe-offset-4 shadow-[0_-8px_30px_rgb(0,0,0,0.04)]"
         >
             <a
                 href="tel:+919307861041"

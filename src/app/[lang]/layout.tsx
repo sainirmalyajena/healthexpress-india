@@ -87,7 +87,7 @@ export default async function RootLayout({
   const dictionary = await getDictionary(lang as Locale);
   const organizationSchema = generateOrganizationSchema();
   return (
-    <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
+    <html lang={lang} className={`${inter.variable} ${outfit.variable}`}>
       <head>
         {/* Organization Schema */}
         <script

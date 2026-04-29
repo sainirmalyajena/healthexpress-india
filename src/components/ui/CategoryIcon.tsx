@@ -14,8 +14,10 @@ import {
     Ribbon,
     Stethoscope
 } from 'lucide-react';
+import { Category } from '@/generated/prisma';
+
 interface CategoryIconProps {
-    category: string;
+    category: Category | string;
     className?: string;
 }
 

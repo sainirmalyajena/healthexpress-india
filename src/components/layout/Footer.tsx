@@ -8,22 +8,22 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
 
     const footerLinks = {
         services: [
-            { href: `/${lang}/surgeries`, label: dict.surgical_directory || (lang === 'hi' ? 'सर्जरी डायरेक्टरी' : 'Surgical Directory') },
-            { href: `/${lang}/surgeries?category=GENERAL_SURGERY`, label: dict.general_surgery || (lang === 'hi' ? 'जनरल सर्जरी' : 'General Surgery') },
-            { href: `/${lang}/surgeries?category=ORTHOPEDICS`, label: dict.orthopedics || (lang === 'hi' ? 'ऑर्थोपेडिक्स' : 'Orthopedic Excellence') },
-            { href: `/${lang}/surgeries?category=CARDIAC`, label: dict.cardiac_care || (lang === 'hi' ? 'कार्डियक केयर' : 'Cardiac Care') },
+            { href: `/${lang}/surgeries`, label: 'Surgical Directory' },
+            { href: `/${lang}/surgeries?category=GENERAL_SURGERY`, label: 'General Surgery' },
+            { href: `/${lang}/surgeries?category=ORTHOPEDICS`, label: 'Orthopedic Excellence' },
+            { href: `/${lang}/surgeries?category=CARDIAC`, label: 'Cardiac Care' },
         ],
         company: [
-            { href: `/${lang}/blog`, label: dict.blog || (lang === 'hi' ? 'चिकित्सा अंतर्दृष्टि' : 'Medical Insights') },
-            { href: `/${lang}/partners`, label: dict.partners || (lang === 'hi' ? 'अस्पताल नेटवर्क' : 'Hospital Network') },
-            { href: `/${lang}/contact`, label: dict.contact || (lang === 'hi' ? 'प्राइवेट कंसीयज' : 'Private Concierge') },
-            { href: `/${lang}/privacy`, label: dict.privacy_protocol || (lang === 'hi' ? 'गोपनीयता प्रोटोकॉल' : 'Privacy Protocol') },
+            { href: `/${lang}/blog`, label: dict.blog || 'Medical Insights' },
+            { href: `/${lang}/partners`, label: dict.partners || 'Hospital Network' },
+            { href: `/${lang}/contact`, label: dict.contact || 'Private Concierge' },
+            { href: `/${lang}/privacy`, label: 'Privacy Protocol' },
         ],
         cities: [
-            { href: `/${lang}/surgeries?city=Mumbai`, label: dict.mumbai || (lang === 'hi' ? 'मुंबई एलीट' : 'Mumbai Elite') },
-            { href: `/${lang}/surgeries?city=Delhi`, label: dict.delhi || (lang === 'hi' ? 'दिल्ली एनसीआर' : 'Delhi NCR') },
-            { href: `/${lang}/surgeries?city=Bangalore`, label: dict.bangalore || (lang === 'hi' ? 'बैंगलोर' : 'Bangalore') },
-            { href: `/${lang}/surgeries?city=Chennai`, label: dict.chennai || (lang === 'hi' ? 'चेन्नई' : 'Chennai') },
+            { href: `/${lang}/surgeries?city=Mumbai`, label: 'Mumbai Elite' },
+            { href: `/${lang}/surgeries?city=Delhi`, label: 'Delhi NCR' },
+            { href: `/${lang}/surgeries?city=Bangalore`, label: 'Bangalore' },
+            { href: `/${lang}/surgeries?city=Chennai`, label: 'Chennai' },
         ],
     };
 
@@ -33,33 +33,27 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12">
                     {/* Brand & Mission */}
                     <div className="lg:col-span-1">
-                        <Link href={`/${lang}`} className="flex items-center mb-8 group">
-                            <div className="relative w-12 h-12 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-premium rounded-xl bg-white p-2">
+                        <Link href={`/${lang}`} className="flex items-center gap-3 mb-8 group">
+                            <div className="relative w-12 h-12 transition-transform group-hover:scale-110 shadow-premium rounded-xl">
                                 <Image
                                     src="/logo.png"
                                     alt="HealthExpress Logo"
-                                    fill
+                                    width={48}
+                                    height={48}
                                     className="object-contain"
                                 />
                             </div>
-                            <div className="flex flex-col ml-3">
-                                <span className="text-xl font-black font-outfit tracking-tighter text-white">
-                                    HealthExpress
-                                </span>
-                                <span className="text-[10px] uppercase tracking-[0.3em] text-teal-400 block font-black ml-0.5">Concierge</span>
+                            <div className="flex flex-col">
+                                <span className="text-xl font-black font-outfit text-white tracking-tight">HealthExpress</span>
+                                <span className="text-[10px] uppercase tracking-[0.4em] text-teal-400 font-black">Concierge</span>
                             </div>
                         </Link>
                         <p className="text-sm leading-relaxed mb-10 text-slate-400/80 font-medium">
                             The premium surgical bridge connecting international standards of care with India&apos;s leading medical specialists. Experience healthcare redefined.
                         </p>
                         <div className="flex gap-5">
-                            {[
-                                { Icon: Facebook, url: "https://facebook.com/healthexpressindia" },
-                                { Icon: Twitter, url: "https://twitter.com/healthexpressindia" },
-                                { Icon: Linkedin, url: "https://linkedin.com/company/healthexpressindia" },
-                                { Icon: Instagram, url: "https://instagram.com/healthexpressindia" }
-                            ].map(({ Icon, url }, i) => (
-                                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Social Link">
+                            {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
+                                <a key={i} href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Social Link">
                                     <Icon className="w-4 h-4" />
                                 </a>
                             ))}
@@ -68,7 +62,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
 
                     {/* Links Groups */}
                     <div>
-                        <h3 className="text-white font-black font-outfit text-xs uppercase tracking-[0.3em] mb-8">{dict.medical_services || (lang === 'hi' ? 'चिकित्सा सेवाएं' : 'Medical Services')}</h3>
+                        <h3 className="text-white font-black font-outfit text-xs uppercase tracking-[0.3em] mb-8">Medical Services</h3>
                         <ul className="space-y-4">
                             {footerLinks.services.map((link) => (
                                 <li key={link.href}>
@@ -82,7 +76,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                     </div>
 
                     <div>
-                        <h3 className="text-white font-black font-outfit text-xs uppercase tracking-[0.3em] mb-8">{dict.establishment || (lang === 'hi' ? 'प्रतिष्ठान' : 'Establishment')}</h3>
+                        <h3 className="text-white font-black font-outfit text-xs uppercase tracking-[0.3em] mb-8">Establishment</h3>
                         <ul className="space-y-4">
                             {footerLinks.company.map((link) => (
                                 <li key={link.href}>
@@ -97,14 +91,14 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
 
                     {/* Contact Elite */}
                     <div>
-                        <h3 className="text-white font-black font-outfit text-xs uppercase tracking-[0.3em] mb-8">{dict.private_access || (lang === 'hi' ? 'निजी संपर्क' : 'Private Access')}</h3>
+                        <h3 className="text-white font-black font-outfit text-xs uppercase tracking-[0.3em] mb-8">Private Access</h3>
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-teal-400/5 border border-teal-400/10 flex items-center justify-center flex-shrink-0">
                                     <Phone className="w-4 h-4 text-teal-400" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black uppercase text-teal-400/50 mb-1">{dict.direct_line || (lang === 'hi' ? 'सीधा संपर्क' : 'Direct Line')}</p>
+                                    <p className="text-[10px] font-black uppercase text-teal-400/50 mb-1">Direct Line</p>
                                     <a href="tel:9307861041" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">93078-61041</a>
                                 </div>
                             </div>
@@ -113,8 +107,8 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                                     <Mail className="w-4 h-4 text-teal-400" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black uppercase text-teal-400/50 mb-1">{dict.inquiries || (lang === 'hi' ? 'पूछताछ' : 'Inquiries')}</p>
-                                    <a href="mailto:hello@healthexpress.in" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">hello@healthexpress.in</a>
+                                    <p className="text-[10px] font-black uppercase text-teal-400/50 mb-1">Inquiries</p>
+                                    <a href="mailto:care@healthexpress.in" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">care@healthexpress.in</a>
                                 </div>
                             </div>
                         </div>

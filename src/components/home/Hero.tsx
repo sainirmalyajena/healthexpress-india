@@ -86,41 +86,35 @@ export function Hero({ lang, dict }: HeroProps) {
             </div>
 
             <h1 className="hero-reveal text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] mb-8 text-white tracking-tight">
-              {dict?.title ? (
-                <>
-                  {dict.title.split(' ').slice(0, 3).join(' ')}
-                  <span className="block mt-2 bg-gradient-to-r from-teal-300 via-emerald-200 to-gold-500 bg-clip-text text-transparent">
-                    {dict.title.split(' ').slice(3).join(' ')}
-                  </span>
-                </>
-              ) : 'Expert Surgery Support'}
+              {dict.title.split(' ').slice(0, 3).join(' ')}
+              <span className="block mt-2 bg-gradient-to-r from-teal-300 via-emerald-200 to-gold-500 bg-clip-text text-transparent">
+                {dict.title.split(' ').slice(3).join(' ')}
+              </span>
             </h1>
 
             <p className="hero-reveal text-lg md:text-xl text-teal-50/70 mb-12 max-w-xl leading-relaxed font-medium">
-              {dict?.subtitle}
+              {dict.subtitle}
             </p>
 
             <div className="hero-reveal flex flex-col sm:flex-row gap-5 mb-12">
-              <Link href={`/${lang}/contact`} className="w-full sm:w-auto">
-                <Button 
-                  variant="glow" 
-                  size="xl" 
-                  className="w-full"
-                >
-                  {lang === 'hi' ? 'लागत अनुमान प्राप्त करें' : 'Get Luxury Care Estimate'}
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+              <Button 
+                variant="glow" 
+                size="xl" 
+                className="w-full sm:w-auto"
+                onClick={() => window.location.href = `/${lang}/contact`}
+              >
+                {lang === 'hi' ? 'लागत अनुमान प्राप्त करें' : 'Get Luxury Care Estimate'}
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
               
-              <Link href={`/${lang}/surgeries`} className="w-full sm:w-auto">
-                <Button 
-                  variant="glass" 
-                  size="xl" 
-                  className="w-full"
-                >
-                  {dict?.cta_find || 'Find Surgery'}
-                </Button>
-              </Link>
+              <Button 
+                variant="glass" 
+                size="xl" 
+                className="w-full sm:w-auto"
+                onClick={() => window.location.href = `/${lang}/surgeries`}
+              >
+                {dict.cta_find}
+              </Button>
             </div>
 
             {/* Trust Badges */}
@@ -142,8 +136,8 @@ export function Hero({ lang, dict }: HeroProps) {
               {/* Main Visual with Elite Border */}
               <div className="relative rounded-[3rem] overflow-hidden luxury-border shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
                 <Image 
-                  src="/hero-elite.png" 
-                  alt="Premium Healthcare"
+                  src="/hero-ai.png" 
+                  alt="Trusted Healthcare Partner"
                   width={600}
                   height={800}
                   className="w-full h-full object-cover"

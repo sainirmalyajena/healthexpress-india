@@ -1,9 +1,6 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-
-export const dynamic = 'force-dynamic';
-
 import {
   Search, SlidersHorizontal, MapPin, ShieldCheck,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

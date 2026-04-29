@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
+import { Category } from '@/generated/prisma';
 import dynamic from 'next/dynamic';
 import { getDictionary } from '@/get-dictionary';
 import { Hero } from '@/components/home/Hero';
@@ -8,20 +9,7 @@ import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui';
 
-const categories = [
-  'GENERAL_SURGERY',
-  'ORTHOPEDICS',
-  'UROLOGY',
-  'ENT',
-  'GYNECOLOGY',
-  'OPHTHALMOLOGY',
-  'CARDIAC',
-  'NEURO',
-  'GASTRO',
-  'DENTAL',
-  'COSMETIC',
-  'PEDIATRIC'
-];
+const categories = Object.values(Category);
 
 const DynamicHowItWorks = dynamic(() => import('@/components/home/HowItWorks'), {
   ssr: true,
@@ -142,15 +130,14 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Link href={`/${lang}/contact`}>
-                <Button 
-                  variant="glow" 
-                  size="xl" 
-                  className="px-12 w-full sm:w-auto"
-                >
-                  {dict.cta.estimate}
-                </Button>
-              </Link>
+              <Button 
+                variant="glow" 
+                size="xl" 
+                className="px-12"
+                onClick={() => window.location.href = `/${lang}/contact`}
+              >
+                {dict.cta.estimate}
+              </Button>
               <a
                 href="tel:9307861041"
                 className="group flex items-center justify-center gap-4 px-10 py-5 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-black text-base rounded-[1.5rem] hover:bg-white/20 transition-all active:scale-95"

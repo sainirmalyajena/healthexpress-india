@@ -12,21 +12,7 @@
         "title": "Your Trusted Partner for Surgery in India",
         "subtitle": "Connecting patients with top surgeons and accredited hospitals for affordable, high-quality medical care.",
         "cta_find": "Find Surgery",
-        "cta_call": "Call Support",
-        "elite_tag": "India's Elite Surgery Network",
-        "total_care": "Total Care",
-        "success_rate_label": "Patient Success Rate",
-        "verified_reviews": "Verified Reviews",
-        "trust_protocol": "Trust Protocol",
-        "standards": "NABH Gold Standards",
-        "scroll_hint": "Elevate"
-    },
-    "categories_section": {
-        "specialized_care": "Specialized Care",
-        "expertise_title": "Expertise Across Specialties.",
-        "expertise_subtitle": "World-class surgical care across all major disciplines.",
-        "view_all": "View Full Directory",
-        "explore": "Explore"
+        "cta_call": "Call Support"
     },
     "footer": {
         "disclaimer": "Medical Disclaimer: Information provided on this website is for general awareness only and is not a substitute for professional medical advice, diagnosis, or treatment.",
@@ -56,19 +42,13 @@
         "point3_title": "Transparent Pricing",
         "point3_desc": "No hidden charges",
         "point4_title": "End-to-End Support",
-        "point4_desc": "Admission to recovery",
-        "premium_choice": "The Premium Choice for Care",
-        "standards_title": "International Standards of Surgical Care.",
-        "wait_times_tag": "Facility Standard",
-        "wait_times_title": "Wait Times Reduced by 85%",
-        "wait_times_desc": "Experience immediate access to India's leading surgical specialists without the wait.",
-        "network_partners": "Elite Hospital Network Partners"
+        "point4_desc": "Admission to recovery"
     },
     "testimonials": {
         "title": "Patients Love Us",
         "test1_name": "Rajesh Kumar",
         "test1_location": "Mumbai • Knee Replacement",
-        "test1_text": "HealthExpress India helped me find the best doctor for my knee surgery. The team was supportive and the cost was exactly as estimated.",
+        "test1_text": "HealthExpress helped me find the best doctor for my knee surgery. The team was supportive and the cost was exactly as estimated.",
         "test2_name": "Ananya Sharma",
         "test2_location": "Delhi • Cataract Surgery",
         "test2_text": "The coordination was seamless. I didn't have to worry about hospital paperwork at all. Highly recommended for affordable care.",
