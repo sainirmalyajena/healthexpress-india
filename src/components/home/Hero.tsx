@@ -130,37 +130,49 @@ export function Hero({ lang, dict }: HeroProps) {
             </div>
           </div>
 
-          {/* Right: Visual Experience */}
+          {/* Right: Smooth & Polished Visual Experience */}
           <div className="hero-reveal relative lg:block">
-            <div className="relative group">
-              {/* Main Visual with Elite Border */}
-              <div className="relative rounded-[3rem] overflow-hidden luxury-border shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]">
-                <Image 
-                  src="/hero-ai.png" 
-                  alt="Trusted Healthcare Partner"
-                  width={600}
-                  height={800}
-                  className="w-full h-full object-cover"
-                  priority
-                />
+            <div className="relative group min-h-[500px] flex items-center justify-center">
+              
+              {/* Dynamic CSS Visual - Ultra Fast */}
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-transparent rounded-[3rem] luxury-border overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(20,184,166,0.1)_0%,transparent_50%)]" />
+                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-teal-500/20 blur-[100px] rounded-full animate-pulse" />
+                <div className="absolute -top-20 -left-20 w-60 h-60 bg-emerald-500/10 blur-[80px] rounded-full" />
                 
-                {/* Visual Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                {/* Abstract Glassmorphic Grid */}
+                <div className="absolute inset-0 opacity-20" 
+                     style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+              </div>
+
+              {/* Smaller, Optimized Floating Image Card */}
+              <div className="relative z-10 w-[85%] luxury-border rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 group-hover:scale-[1.03] group-hover:-translate-y-2">
+                <div className="aspect-[4/3] bg-teal-900/50 relative">
+                   <Image 
+                    src="/hero-opt.png" 
+                    alt="Trusted Healthcare Partner"
+                    fill
+                    className="object-cover opacity-90 transition-opacity group-hover:opacity-100"
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#022c22]/80 via-transparent to-transparent" />
+                </div>
                 
-                {/* Floating Experience Card */}
-                <div className="absolute bottom-8 left-8 right-8 glass p-6 rounded-3xl border border-white/20 shadow-premium animate-bounce-subtle">
+                {/* Embedded Stats Card */}
+                <div className="absolute bottom-6 left-6 right-6 glass p-5 rounded-2xl border border-white/10 shadow-premium">
                    <div className="flex items-center justify-between">
-                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-teal-600 flex items-center justify-center text-white shadow-lg">
-                          <CheckCircle className="w-6 h-6" />
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-lg">
+                          <CheckCircle className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="text-xs text-teal-800 font-black uppercase tracking-widest mb-1">Total Care</p>
-                          <p className="text-lg font-bold text-slate-900">Patient Success Rate</p>
+                          <p className="text-[9px] text-teal-800 font-black uppercase tracking-widest mb-0.5">Success Rate</p>
+                          <p className="text-sm font-bold text-slate-900">Patient Satisfaction</p>
                         </div>
                      </div>
                      <div className="text-right">
-                        <p className="text-3xl font-black text-teal-600">
+                        <p className="text-2xl font-black text-teal-600">
                           <AnimatedCounter end={99} suffix="%" />
                         </p>
                      </div>
@@ -168,31 +180,32 @@ export function Hero({ lang, dict }: HeroProps) {
                 </div>
               </div>
 
-              {/* Subsidiary Floating Cards */}
-              <div className="absolute -top-6 -right-6 glass-dark p-5 rounded-2xl border border-white/10 shadow-premium animate-reveal delay-300">
+              {/* Subsidiary Floating Badge */}
+              <div className="absolute -top-6 -right-6 glass-dark p-4 rounded-2xl border border-white/10 shadow-premium animate-reveal delay-300">
                 <div className="flex items-center gap-3">
-                  <div className="flex -space-x-3">
+                  <div className="flex -space-x-2.5">
                     {[1,2,3].map(i => (
-                      <div key={i} className="w-8 h-8 rounded-full border-2 border-teal-900 bg-teal-800 flex items-center justify-center text-teal-300">
-                        <Users className="w-4 h-4" />
+                      <div key={i} className="w-7 h-7 rounded-full border-2 border-teal-900 bg-teal-800 flex items-center justify-center text-teal-300">
+                        <Users className="w-3 h-3" />
                       </div>
                     ))}
                   </div>
                   <div>
-                    <p className="text-xs font-black text-white leading-none">10K+</p>
-                    <p className="text-[10px] text-teal-200 uppercase tracking-tighter">Verified Reviews</p>
+                    <p className="text-[11px] font-black text-white leading-none">10K+</p>
+                    <p className="text-[9px] text-teal-200 uppercase tracking-tighter">Verified Reviews</p>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-10 -left-10 glass-dark px-6 py-4 rounded-3xl border border-emerald-500/20 shadow-2xl animate-reveal delay-500 hidden md:block">
+              {/* Protocol Badge */}
+              <div className="absolute -bottom-8 -left-8 glass-dark px-5 py-3 rounded-2xl border border-emerald-500/20 shadow-2xl animate-reveal delay-500 hidden md:block">
                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                       <Shield className="w-5 h-5 text-emerald-400" />
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                       <Shield className="w-4 h-4 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-[10px] text-emerald-300 font-bold uppercase tracking-widest">Trust Protocol</p>
-                      <p className="text-sm font-bold text-white">NABH Gold Standards</p>
+                      <p className="text-[9px] text-emerald-300 font-bold uppercase tracking-widest leading-none mb-1">Trust Protocol</p>
+                      <p className="text-xs font-bold text-white">NABH Gold Standards</p>
                     </div>
                  </div>
               </div>
