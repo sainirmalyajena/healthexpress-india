@@ -34,21 +34,30 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                     {/* Brand & Mission */}
                     <div className="lg:col-span-1">
                         <Link href={`/${lang}`} className="flex items-center mb-8 group">
-                            <img
-                                src="/prism-logo.jpg"
-                                alt="Prism Healthcure Logo"
-                                className="h-16 w-auto object-contain transition-transform group-hover:scale-105 bg-white p-2 rounded-xl"
-                            />
+                            <div className="relative w-12 h-12 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-premium rounded-xl bg-white p-2">
+                                <Image
+                                    src="/logo.png"
+                                    alt="HealthExpress Logo"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                            <div className="flex flex-col ml-3">
+                                <span className="text-xl font-black font-outfit tracking-tighter text-white">
+                                    HealthExpress
+                                </span>
+                                <span className="text-[10px] uppercase tracking-[0.3em] text-teal-400 block font-black ml-0.5">Concierge</span>
+                            </div>
                         </Link>
                         <p className="text-sm leading-relaxed mb-10 text-slate-400/80 font-medium">
                             The premium surgical bridge connecting international standards of care with India&apos;s leading medical specialists. Experience healthcare redefined.
                         </p>
                         <div className="flex gap-5">
                             {[
-                                { Icon: Facebook, url: "https://facebook.com/prismhealthcure" },
-                                { Icon: Twitter, url: "https://twitter.com/prismhealthcure" },
-                                { Icon: Linkedin, url: "https://linkedin.com/company/prismhealthcure" },
-                                { Icon: Instagram, url: "https://instagram.com/prismhealthcure" }
+                                { Icon: Facebook, url: "https://facebook.com/healthexpressindia" },
+                                { Icon: Twitter, url: "https://twitter.com/healthexpressindia" },
+                                { Icon: Linkedin, url: "https://linkedin.com/company/healthexpressindia" },
+                                { Icon: Instagram, url: "https://instagram.com/healthexpressindia" }
                             ].map(({ Icon, url }, i) => (
                                 <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Social Link">
                                     <Icon className="w-4 h-4" />
@@ -105,7 +114,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black uppercase text-teal-400/50 mb-1">{dict.inquiries || (lang === 'hi' ? 'पूछताछ' : 'Inquiries')}</p>
-                                    <a href="mailto:contact@prismhealthcure.com" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">contact@prismhealthcure.com</a>
+                                    <a href="mailto:hello@healthexpress.in" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">hello@healthexpress.in</a>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +141,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                                 <Link href={`/${lang}/sitemap`} className="hover:text-teal-400 transition-colors">Sitemap</Link>
                             </div>
                             <p className="text-[10px] font-medium text-slate-600 uppercase tracking-widest">
-                                © {currentYear} Prism Healthcure Concierge. {dict.rights}
+                                © {currentYear} HealthExpress India Concierge. {dict.rights}
                             </p>
                         </div>
                     </div>

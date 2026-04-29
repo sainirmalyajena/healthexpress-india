@@ -25,18 +25,18 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const isHi = lang === 'hi';
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://prismhealthcure.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
 
   return {
     title: {
-      default: isHi ? "Prism Healthcure - सर्जरी और अस्पताल सहायता" : "Prism Healthcure - Surgery & Hospitalization Support",
-      template: "%s | Prism Healthcure",
+      default: isHi ? "HealthExpress India - सर्जरी और अस्पताल सहायता" : "HealthExpress India - Surgery & Hospitalization Support",
+      template: "%s | HealthExpress India",
     },
     description: isHi
       ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें। हमारी व्यापक सर्जरी डायरेक्टरी ब्राउज़ करें और शीर्ष स्वास्थ्य सेवा प्रदाताओं से जुड़ें।"
       : "Find the right surgery at the right hospital across India. Browse our comprehensive surgery directory and connect with top healthcare providers.",
     keywords: ["surgery", "hospital", "healthcare", "India", "medical", "treatment", "surgery cost", "hospital booking", "affordable surgery", "best surgeons india", "medical tourism india", "health packages", "delhi", "mumbai", "bangalore", "pune", "hyderabad", "chennai"],
-    authors: [{ name: "Prism Healthcure" }],
+    authors: [{ name: "HealthExpress India" }],
     alternates: {
       canonical: `${baseUrl}/${lang}`,
       languages: {
@@ -48,21 +48,21 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       type: "website",
       locale: isHi ? "hi_IN" : "en_IN",
       url: `${baseUrl}/${lang}`,
-      siteName: "Prism Healthcure",
-      title: isHi ? "Prism Healthcure - सर्जरी और अस्पताल सहायता" : "Prism Healthcure - Surgery & Hospitalization Support",
+      siteName: "HealthExpress India",
+      title: isHi ? "HealthExpress India - सर्जरी और अस्पताल सहायता" : "HealthExpress India - Surgery & Hospitalization Support",
       description: isHi ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें।" : "Find the right surgery at the right hospital across India.",
       images: [
         {
           url: "/og-image.png",
           width: 1200,
           height: 630,
-          alt: "Prism Healthcure",
+          alt: "HealthExpress India",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: isHi ? "Prism Healthcure - सर्जरी और अस्पताल सहायता" : "Prism Healthcure - Surgery & Hospitalization Support",
+      title: isHi ? "HealthExpress India - सर्जरी और अस्पताल सहायता" : "HealthExpress India - Surgery & Hospitalization Support",
       description: isHi ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें।" : "Find the right surgery at the right hospital across India.",
     },
     robots: {
