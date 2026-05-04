@@ -154,37 +154,54 @@ export default async function RootLayout({
     }
   }
 
-  return (
-    <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
-      <head>
-        {!isPrismSite && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(organizationSchema)
-            }}
-          />
-        )}
-      </head>
-      <body className={`min-h-screen flex flex-col ${isPrismSite ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
-        <Analytics />
-        
-        {/* Only show HealthExpress Header/Footer/Sticky on the main domain */}
-        {!isPrismSite && (
-          <Header lang={lang} dict={dictionary.navigation} />
-        )}
+  try {
+    return (
+      <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
+        <head>
+          {!isPrismSite && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(organizationSchema)
+              }}
+            />
+          )}
+        </head>
+        <body className={`min-h-screen flex flex-col ${isPrismSite ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
+          <Analytics />
+          
+          {/* Only show HealthExpress Header/Footer/Sticky on the main domain */}
+          {!isPrismSite && (
+            <Header lang={lang} dict={dictionary.navigation} />
+          )}
 
-        <main className="flex-1">{children}</main>
+          <main className="flex-1">{children}</main>
 
-        {!isPrismSite && (
-          <>
-            <Footer lang={lang} dict={dictionary.footer} />
-            <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
-          </>
-        )}
+          {!isPrismSite && (
+            <>
+              <Footer lang={lang} dict={dictionary.footer} />
+              <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
+            </>
+          )}
 
-        <SpeedInsights />
-      </body>
-    </html>
-  );
+          <SpeedInsights />
+        </body>
+      </html>
+    );
+  } catch (error) {
+    console.error('RootLayout Render Error:', error);
+    return (
+      <html lang="en">
+        <body>
+          <main className="flex items-center justify-center min-h-screen p-4 text-center">
+            <div>
+              <h1 className="text-2xl font-bold mb-4">HealthExpress India</h1>
+              <p>We are currently updating our systems. Please check back in a few minutes.</p>
+              <a href="tel:9307861041" className="mt-4 inline-block text-teal-600 font-bold">Call Support: 93078-61041</a>
+            </div>
+          </main>
+        </body>
+      </html>
+    );
+  }
 }
