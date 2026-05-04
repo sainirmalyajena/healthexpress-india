@@ -14,10 +14,9 @@ import {
     Ribbon,
     Stethoscope
 } from 'lucide-react';
-import { Category } from '@/generated/prisma';
-
+// Removed Prisma import to prevent DB connection requirement for UI rendering
 interface CategoryIconProps {
-    category: Category | string;
+    category: string;
     className?: string;
 }
 

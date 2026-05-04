@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
-import { Category } from '@/generated/prisma';
+// Removed Prisma import to prevent connection errors on the root page
 import dynamic from 'next/dynamic';
 import { getDictionary } from '@/get-dictionary';
 import { Hero } from '@/components/home/Hero';
@@ -9,8 +9,21 @@ import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui';
 
-const categories = Object.values(Category);
-
+const categories = [
+  'GENERAL_SURGERY',
+  'ORTHOPEDICS',
+  'UROLOGY',
+  'ENT',
+  'GYNECOLOGY',
+  'OPHTHALMOLOGY',
+  'CARDIAC',
+  'NEURO',
+  'GASTRO',
+  'DENTAL',
+  'COSMETIC',
+  'PEDIATRIC',
+  'ONCOLOGY'
+];
 const DynamicHowItWorks = dynamic(() => import('@/components/home/HowItWorks'), {
   ssr: true,
   loading: () => <div className="py-24 bg-white min-h-[400px] animate-pulse"></div>
