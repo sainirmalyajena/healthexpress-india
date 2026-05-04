@@ -2,7 +2,7 @@ import PrismHeader from './components/PrismHeader';
 import AppointmentForm from './components/AppointmentForm';
 import { Eye, Microscope, Droplets, Glasses, Target, Dna, CheckCircle2, ChevronDown, Star, MapPin, Phone, Mail, Clock, Shield, Award, Users, Heart } from 'lucide-react';
 import Link from 'next/link';
-import { getDictionary } from '@/dictionaries';
+import { getDictionary } from '@/get-dictionary';
 import { Metadata } from 'next';
 
 interface PageProps {
