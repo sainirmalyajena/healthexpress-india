@@ -2,12 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Phone } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { Menu, X, Phone, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export default function PrismHeader() {
+interface PrismHeaderProps {
+  lang: string;
+  dict: any;
+}
+
+export default function PrismHeader({ lang, dict }: PrismHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -22,12 +29,19 @@ export default function PrismHeader() {
   }, [isOpen]);
 
   const navLinks = [
-    { href: "#treatments", label: "Specialties" },
-    { href: "#doctors", label: "Our Doctors" },
-    { href: "#testimonials", label: "Reviews" },
+    { href: "#treatments", label: lang === 'hi' ? 'विशेषताएं' : 'Specialties' },
+    { href: "#doctors", label: lang === 'hi' ? 'हमारे डॉक्टर' : 'Our Doctors' },
+    { href: "#testimonials", label: lang === 'hi' ? 'समीक्षाएं' : 'Reviews' },
     { href: "#faq", label: "FAQ" },
-    { href: "#appointment", label: "Contact" },
+    { href: "#appointment", label: lang === 'hi' ? 'संपर्क' : 'Contact' },
   ];
+
+  const redirectedPathname = (locale: string) => {
+    if (!pathname) return '/';
+    const segments = pathname.split('/');
+    segments[1] = locale;
+    return segments.join('/');
+  };
 
   return (
     <header className={cn(
@@ -62,6 +76,23 @@ export default function PrismHeader() {
         
         {/* Desktop CTA */}
         <div className="hidden lg:flex items-center gap-4">
+          {/* Language Switcher */}
+          <div className="flex items-center gap-1 mr-2 px-3 py-1.5 bg-slate-100 rounded-full">
+            <Globe className="w-3.5 h-3.5 text-slate-400" />
+            <Link 
+              href={redirectedPathname('en')}
+              className={cn("text-[11px] font-bold px-2 py-0.5 rounded-full transition-all", lang === 'en' ? "bg-white text-teal-700 shadow-sm" : "text-slate-500 hover:text-slate-700")}
+            >
+              EN
+            </Link>
+            <Link 
+              href={redirectedPathname('hi')}
+              className={cn("text-[11px] font-bold px-2 py-0.5 rounded-full transition-all", lang === 'hi' ? "bg-white text-teal-700 shadow-sm" : "text-slate-500 hover:text-slate-700")}
+            >
+              हिन्दी
+            </Link>
+          </div>
+
           <a 
             href="tel:9307861041" 
             className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-teal-700 transition-colors"
@@ -73,18 +104,28 @@ export default function PrismHeader() {
             href="#appointment" 
             className="bg-teal-700 text-white px-7 py-3 rounded-full text-sm font-bold hover:bg-teal-800 transition-all shadow-lg shadow-teal-700/20 hover:shadow-teal-700/30 hover:-translate-y-0.5 active:translate-y-0"
           >
-            Book Appointment
+            {lang === 'hi' ? 'अपॉइंटमेंट' : 'Book Appointment'}
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
-          className="lg:hidden p-2.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex lg:hidden items-center gap-2">
+            {/* Mobile Lang Switch */}
+            <Link 
+              href={redirectedPathname(lang === 'en' ? 'hi' : 'en')}
+              className="text-[11px] font-black px-3 py-2 bg-slate-100 text-slate-600 rounded-xl flex items-center gap-1"
+            >
+              <Globe className="w-3 h-3" />
+              {lang === 'en' ? 'हिन्दी' : 'EN'}
+            </Link>
+            <button 
+                className="p-2.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle Menu"
+            >
+                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+        </div>
       </div>
 
       {/* Mobile Full-Screen Drawer */}
@@ -132,14 +173,14 @@ export default function PrismHeader() {
             className="block w-full bg-teal-700 text-white py-4 rounded-2xl font-bold text-center text-lg shadow-lg shadow-teal-700/20 active:scale-[0.98] transition-transform"
             onClick={() => setIsOpen(false)}
           >
-            Book Appointment
+            {lang === 'hi' ? 'अपॉइंटमेंट बुक करें' : 'Book Appointment'}
           </Link>
           <a 
             href="tel:9307861041" 
             className="flex items-center justify-center gap-2 w-full py-3.5 rounded-2xl font-semibold text-teal-700 bg-teal-50 border border-teal-100 active:scale-[0.98] transition-transform"
           >
             <Phone className="w-5 h-5" />
-            Call 93078-61041
+            {lang === 'hi' ? 'कॉल करें 93078-61041' : 'Call 93078-61041'}
           </a>
         </div>
       </div>

@@ -6,7 +6,10 @@ export const metadata: Metadata = {
     template: '%s | Prism Healthcure',
   },
   description: 'Advanced eye treatments including Cataract, LASIK, Retina, and Glaucoma care by top ophthalmologists. Book your consultation today.',
-  keywords: ['eye care', 'ophthalmology', 'cataract surgery', 'LASIK', 'retina care', 'glaucoma', 'eye specialist', 'Prism Healthcure'],
+  icons: {
+    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%230d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+  },
+  keywords: ['ophthalmology India', 'cataract surgery cost', 'LASIK eye surgery', 'best eye doctor Delhi', 'retina specialist', 'glaucoma treatment', 'cashless eye surgery', 'Prism Healthcure', 'eye care network'],
   authors: [{ name: 'Prism Healthcure' }],
   openGraph: {
     type: 'website',

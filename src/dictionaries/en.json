@@ -108,6 +108,7 @@
         "insurance_coverage": "Insurance Coverage",
         "may_not_be_covered": "May Not Be Covered",
         "check_provider_note": "*Check with your insurance provider for specifics",
+        "clinical_eval_note": "*Cost estimates are subject to clinical evaluation",
         "cashless_treatment": "Cashless Treatment",
         "cashless_desc": "Many of our partner hospitals offer cashless treatment for insured patients. Contact us to check eligibility and hospital tie-ups.",
         "faqs": "Frequently Asked Questions",
@@ -196,5 +197,53 @@
     "sticky_cta": {
         "call": "Call Now",
         "book": "Book Now"
+    },
+    "prism_page": {
+        "header_title": "Advanced Eye Care Centre",
+        "hero_title": "See the World with Perfect Clarity",
+        "hero_subtitle": "Prism Healthcure delivers world-class ophthalmology care — from advanced LASIK to pediatric eye treatments. Trust our expert team for a brighter, clearer tomorrow.",
+        "book_btn": "Book Free Consultation",
+        "call_btn": "Call Now",
+        "stats": {
+            "patients": "Happy Patients",
+            "success": "Success Rate",
+            "exp": "Years Experience"
+        },
+        "specialties_title": "Our Specialties",
+        "comp_eye_care": "Comprehensive Eye Care",
+        "eye_care_desc": "Advanced diagnostic and therapeutic treatments tailored to every vision need.",
+        "treatments": {
+            "cataract": { "title": "Cataract Surgery", "desc": "Advanced laser-assisted cataract removal with premium IOL implants for crystal-clear vision restoration." },
+            "lasik": { "title": "LASIK & Refractive", "desc": "Painless, bladeless laser vision correction using latest femtosecond technology." },
+            "retina": { "title": "Retina Care", "desc": "Specialized treatments for diabetic retinopathy, macular degeneration, and retinal detachment." },
+            "glaucoma": { "title": "Glaucoma Clinic", "desc": "Early detection and advanced medical, laser, and surgical management of glaucoma." },
+            "cornea": { "title": "Cornea Services", "desc": "Comprehensive care for corneal diseases including transplants and keratoconus treatment." },
+            "pediatric": { "title": "Pediatric Eye Care", "desc": "Gentle expert eye care for children — squint correction, lazy eye, and vision screening." }
+        },
+        "expert_team": "Expert Team",
+        "meet_specialists": "Meet Our Specialists",
+        "specialists_desc": "Internationally trained ophthalmologists dedicated to your vision health.",
+        "why_prism": "Why Prism Healthcure",
+        "vision_deserves_best": "Your Vision Deserves the Best",
+        "vision_desc": "We combine world-class medical expertise with cutting-edge technology and compassionate, personalized care.",
+        "why_points": [
+            { "title": "Latest Technology", "desc": "Femtosecond lasers, OCT imaging, and AI-powered diagnostics." },
+            { "title": "Globally Trained Doctors", "desc": "Our surgeons bring expertise from top international institutions." },
+            { "title": "Patient-First Approach", "desc": "Transparent pricing, comfortable facilities, and ethical care." },
+            { "title": "Cashless Insurance", "desc": "We work with all major insurers for hassle-free treatment." }
+        ],
+        "patient_stories": "Patient Stories",
+        "what_patients_say": "What Our Patients Say",
+        "have_questions": "Have Questions?",
+        "faqs_title": "Frequently Asked Questions",
+        "ready_vision": "Ready for Better Vision?",
+        "ready_desc": "Schedule a comprehensive eye checkup or consultation with our experts. Your vision is our priority.",
+        "confidential": "Your information is 100% confidential",
+        "book_appointment": "Book Appointment",
+        "premium_eye_care": "Premium ophthalmology care delivering advanced, compassionate eye treatments for every age.",
+        "quick_links": "Quick Links",
+        "services": "Services",
+        "contact": "Contact",
+        "all_rights": "All rights reserved."
     }
 }

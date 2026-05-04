@@ -16,6 +16,8 @@ import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 import { getAISuggestedTerms, isLikelySymptomatic } from '@/lib/ai-search';
 
+export const dynamic = 'force-dynamic';
+
 interface SearchParams {
   q?: string;
   category?: string;

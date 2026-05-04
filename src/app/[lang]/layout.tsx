@@ -26,19 +26,47 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const isHi = lang === 'hi';
   
-  let isPrismSite = false;
-  try {
-    const headersList = await headers();
-    isPrismSite = headersList.get('x-prism-site') === 'true';
-  } catch (e) {
-    console.error('Metadata headers error:', e);
+  const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
+  let isPrismSite = forcedBrand === 'prism';
+  
+  if (!isPrismSite) {
+    try {
+      const headersList = await headers();
+      isPrismSite = headersList.get('x-prism-site') === 'true';
+    } catch (e) {
+      console.error('Metadata headers error:', e);
+    }
   }
 
   if (isPrismSite) {
+    const prismTitle = 'Prism Healthcure | Premium Ophthalmology & Eye Care';
+    const prismDesc = 'Advanced eye treatments including Cataract, LASIK, and Retina care by top ophthalmologists. Book your consultation today.';
+    
     return {
-      title: 'Prism Healthcure | Premium Ophthalmology & Eye Care',
-      description: 'Advanced eye treatments by top ophthalmologists. Book your consultation today.',
+      title: prismTitle,
+      description: prismDesc,
       metadataBase: new URL('https://prismhealthcure.com'),
+      openGraph: {
+        title: prismTitle,
+        description: prismDesc,
+        url: 'https://prismhealthcure.com',
+        siteName: 'Prism Healthcure',
+        images: [{ url: '/prism-logo.jpg', width: 1200, height: 630, alt: 'Prism Healthcure' }],
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: prismTitle,
+        description: prismDesc,
+      },
+      icons: {
+        icon: '/prism-logo.jpg',
+        apple: '/prism-logo.jpg',
+      },
+      robots: {
+        index: true,
+        follow: true,
+      }
     };
   }
 
@@ -113,13 +141,17 @@ export default async function RootLayout({
   
   const organizationSchema = generateOrganizationSchema();
   
-  // Detect if we're on the Prism domain
-  let isPrismSite = false;
-  try {
-    const headersList = await headers();
-    isPrismSite = headersList.get('x-prism-site') === 'true';
-  } catch (e) {
-    console.error('Layout headers error:', e);
+  // Detect if we're on the Prism domain or forced by environment variable
+  const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
+  let isPrismSite = forcedBrand === 'prism';
+  
+  if (!isPrismSite) {
+    try {
+      const headersList = await headers();
+      isPrismSite = headersList.get('x-prism-site') === 'true';
+    } catch (e) {
+      console.error('Layout headers error:', e);
+    }
   }
 
   return (

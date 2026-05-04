@@ -6,6 +6,8 @@ import { Prisma } from '@/generated/prisma';
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
     params: Promise<{ lang: string }>;
     searchParams: Promise<{ specialty?: string; city?: string }>;

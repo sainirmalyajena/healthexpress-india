@@ -7,6 +7,8 @@ import { cache } from 'react';
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
     params: Promise<{ id: string; lang: string }>;
 }

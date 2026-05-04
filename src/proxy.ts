@@ -12,7 +12,7 @@ function getLocale(request: NextRequest): string | undefined {
     return locale
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
     const url = request.nextUrl
     const hostname = request.headers.get('host') || ''
     const pathname = url.pathname
