@@ -29,11 +29,11 @@ export default function PrismHeader({ lang, dict }: PrismHeaderProps) {
   }, [isOpen]);
 
   const navLinks = [
-    { href: "#treatments", label: lang === 'hi' ? 'विशेषताएं' : 'Specialties' },
-    { href: "#doctors", label: lang === 'hi' ? 'हमारे डॉक्टर' : 'Our Doctors' },
-    { href: "#testimonials", label: lang === 'hi' ? 'समीक्षाएं' : 'Reviews' },
-    { href: "#faq", label: "FAQ" },
-    { href: "#appointment", label: lang === 'hi' ? 'संपर्क' : 'Contact' },
+    { href: lang === 'en' ? "/en#treatments" : "/hi#treatments", label: lang === 'hi' ? 'विशेषताएं' : 'Specialties' },
+    { href: lang === 'en' ? "/en#doctors" : "/hi#doctors", label: lang === 'hi' ? 'हमारे डॉक्टर' : 'Our Doctors' },
+    { href: lang === 'en' ? "/en#testimonials" : "/hi#testimonials", label: lang === 'hi' ? 'समीक्षाएं' : 'Reviews' },
+    { href: lang === 'en' ? "/en#faq" : "/hi#faq", label: "FAQ" },
+    { href: lang === 'en' ? "/en#appointment" : "/hi#appointment", label: lang === 'hi' ? 'संपर्क' : 'Contact' },
   ];
 
   const redirectedPathname = (locale: string) => {
@@ -52,7 +52,7 @@ export default function PrismHeader({ lang, dict }: PrismHeaderProps) {
     )}>
       <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-center justify-between">
         {/* Logo - Premium Text Design */}
-        <Link href="#hero" className="flex flex-col group transition-all" onClick={() => setIsOpen(false)}>
+        <Link href={`/${lang}`} className="flex flex-col group transition-all" onClick={() => setIsOpen(false)}>
           <span className="text-xl md:text-2xl font-black font-outfit tracking-tighter leading-none bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent group-hover:from-teal-600 group-hover:to-teal-800">
             PRISM
           </span>
@@ -101,7 +101,7 @@ export default function PrismHeader({ lang, dict }: PrismHeaderProps) {
             93078-61041
           </a>
           <Link 
-            href="#appointment" 
+            href={lang === 'en' ? "/en#appointment" : "/hi#appointment"} 
             className="bg-teal-700 text-white px-7 py-3 rounded-full text-sm font-bold hover:bg-teal-800 transition-all shadow-lg shadow-teal-700/20 hover:shadow-teal-700/30 hover:-translate-y-0.5 active:translate-y-0"
           >
             {lang === 'hi' ? 'अपॉइंटमेंट' : 'Book Appointment'}
@@ -169,7 +169,7 @@ export default function PrismHeader({ lang, dict }: PrismHeaderProps) {
         {/* Mobile Bottom CTAs */}
         <div className="px-5 pb-8 pt-4 space-y-3 border-t border-slate-100">
           <Link 
-            href="#appointment" 
+            href={lang === 'en' ? "/en#appointment" : "/hi#appointment"} 
             className="block w-full bg-teal-700 text-white py-4 rounded-2xl font-bold text-center text-lg shadow-lg shadow-teal-700/20 active:scale-[0.98] transition-transform"
             onClick={() => setIsOpen(false)}
           >

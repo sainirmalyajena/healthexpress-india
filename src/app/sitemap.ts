@@ -11,38 +11,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (isPrismDomain) {
         const prismBaseUrl = 'https://prismhealthcure.com';
-        return [
-            {
-                url: prismBaseUrl,
+        const locales = ['en', 'hi'];
+        
+        const prismPages: MetadataRoute.Sitemap = [];
+        
+        locales.forEach(locale => {
+            // Main page for each locale
+            prismPages.push({
+                url: `${prismBaseUrl}/${locale}`,
                 lastModified: new Date(),
-                changeFrequency: 'weekly',
+                changeFrequency: 'daily',
                 priority: 1.0,
-            },
-            {
-                url: `${prismBaseUrl}/#treatments`,
+            });
+            
+            // Subpages for each locale
+            prismPages.push({
+                url: `${prismBaseUrl}/${locale}/privacy`,
                 lastModified: new Date(),
-                changeFrequency: 'weekly',
-                priority: 0.8,
-            },
-            {
-                url: `${prismBaseUrl}/#doctors`,
-                lastModified: new Date(),
-                changeFrequency: 'weekly',
-                priority: 0.7,
-            },
-            {
-                url: `${prismBaseUrl}/privacy`,
-                lastModified: new Date(),
-                changeFrequency: 'yearly',
+                changeFrequency: 'monthly',
                 priority: 0.3,
-            },
-            {
-                url: `${prismBaseUrl}/terms`,
+            });
+            
+            prismPages.push({
+                url: `${prismBaseUrl}/${locale}/terms`,
                 lastModified: new Date(),
-                changeFrequency: 'yearly',
+                changeFrequency: 'monthly',
                 priority: 0.3,
-            }
-        ];
+            });
+        });
+
+        return prismPages;
     }
 
     // Default HealthExpress Sitemap logic...

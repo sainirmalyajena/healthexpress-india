@@ -41,15 +41,23 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (isPrismSite) {
     const prismTitle = 'Prism Healthcure | Premium Ophthalmology & Eye Care';
     const prismDesc = 'Advanced eye treatments including Cataract, LASIK, and Retina care by top ophthalmologists. Book your consultation today.';
+    const prismBaseUrl = 'https://prismhealthcure.com';
     
     return {
       title: prismTitle,
       description: prismDesc,
-      metadataBase: new URL('https://prismhealthcure.com'),
+      metadataBase: new URL(prismBaseUrl),
+      alternates: {
+        canonical: `${prismBaseUrl}/${lang}`,
+        languages: {
+          'en-IN': `${prismBaseUrl}/en`,
+          'hi-IN': `${prismBaseUrl}/hi`,
+        },
+      },
       openGraph: {
         title: prismTitle,
         description: prismDesc,
-        url: 'https://prismhealthcure.com',
+        url: `${prismBaseUrl}/${lang}`,
         siteName: 'Prism Healthcure',
         images: [{ url: '/prism-logo.jpg', width: 1200, height: 630, alt: 'Prism Healthcure' }],
         type: 'website',
@@ -195,9 +203,11 @@ export default async function RootLayout({
         <body>
           <main className="flex items-center justify-center min-h-screen p-4 text-center">
             <div>
-              <h1 className="text-2xl font-bold mb-4">HealthExpress India</h1>
+              <h1 className="text-2xl font-bold mb-4">{isPrismSite ? 'Prism Healthcure' : 'HealthExpress India'}</h1>
               <p>We are currently updating our systems. Please check back in a few minutes.</p>
-              <a href="tel:9307861041" className="mt-4 inline-block text-teal-600 font-bold">Call Support: 93078-61041</a>
+              <a href={`tel:${isPrismSite ? '9307861041' : '9307861041'}`} className="mt-4 inline-block text-teal-600 font-bold">
+                Call Support: 93078-61041
+              </a>
             </div>
           </main>
         </body>
