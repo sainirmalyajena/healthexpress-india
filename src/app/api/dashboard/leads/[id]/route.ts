@@ -5,7 +5,7 @@ import { LeadStatus } from '@/generated/prisma';
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await auth();
 
@@ -15,7 +15,7 @@ export async function PATCH(
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = await props.params;
     const body = await request.json();
     const {
         status,
@@ -74,13 +74,13 @@ export async function PATCH(
 // GET /api/dashboard/leads/export — CSV download (id='export' used as route)
 export async function GET(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await auth();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (!session || (session.user as any)?.role !== 'ADMIN') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { id } = await params;
+    const { id } = await props.params;
     if (id !== 'export') return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
     const searchParams = request.nextUrl.searchParams;

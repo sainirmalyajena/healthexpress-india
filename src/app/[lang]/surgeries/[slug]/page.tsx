@@ -49,14 +49,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!surgery) return { title: 'Surgery Not Found' };
   const minCost = formatCurrency(surgery.costRangeMin);
   const maxCost = formatCurrency(surgery.costRangeMax);
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+  const canonical = `${baseUrl}/${lang}/surgeries/${slug}`;
+
   return {
     title: `${surgery.name} Cost in India – ${minCost} to ${maxCost} | HealthExpress`,
     description: `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
+    alternates: {
+      canonical: canonical,
+    },
     openGraph: {
       title: `${surgery.name} – HealthExpress India`,
       description: surgery.overview.substring(0, 160),
+      url: canonical,
       type: 'article',
       locale: lang === 'hi' ? 'hi_IN' : 'en_IN',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${surgery.name} – HealthExpress India`,
+      description: surgery.overview.substring(0, 160),
     },
     keywords: [
       surgery.name,

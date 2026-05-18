@@ -296,11 +296,26 @@ function CategoryPills({ lang, activeCategory }: { lang: string; activeCategory?
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
+  const title = lang === 'hi' ? 'सर्जरी निर्देशिका – HealthExpress India' : 'Surgery Directory – HealthExpress India';
+  const description = lang === 'hi'
+    ? 'भारत भर में 100+ सर्जरी प्रक्रियाओं की विस्तृत जानकारी। लागत, रिकवरी, और शीर्ष अस्पताल।'
+    : 'Find detailed information on 100+ surgical procedures across India — costs, recovery timelines, and top hospitals.';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+  const canonical = `${baseUrl}/${lang}/surgeries`;
+
   return {
-    title: lang === 'hi' ? 'सर्जरी निर्देशिका – HealthExpress India' : 'Surgery Directory – HealthExpress India',
-    description: lang === 'hi'
-      ? 'भारत भर में 100+ सर्जरी प्रक्रियाओं की विस्तृत जानकारी। लागत, रिकवरी, और शीर्ष अस्पताल।'
-      : 'Find detailed information on 100+ surgical procedures across India — costs, recovery timelines, and top hospitals.',
+    title,
+    description,
+    alternates: {
+      canonical: canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "HealthExpress India",
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "HealthExpress India" }],
+    },
   };
 }
 

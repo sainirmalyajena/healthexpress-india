@@ -5,7 +5,7 @@ import { LeadStatus } from '@/generated/prisma';
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await getPartnerSession();
 
@@ -13,7 +13,7 @@ export async function PATCH(
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = await props.params;
     const { status, hospitalNotes } = await request.json();
 
     try {
@@ -62,12 +62,12 @@ export async function PATCH(
 // POST /api/partner/leads/[id] — upload a document for this lead
 export async function POST(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await getPartnerSession();
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { id } = await params;
+    const { id } = await props.params;
 
     try {
         const body = await request.json();

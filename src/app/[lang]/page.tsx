@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
 // Removed Prisma import to prevent connection errors on the root page
@@ -38,6 +39,38 @@ const DynamicTestimonials = dynamic(() => import('@/components/home/Testimonials
   ssr: true,
   loading: () => <div className="py-24 bg-white min-h-[400px] animate-pulse"></div>
 });
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const isHi = lang === 'hi';
+  const title = isHi ? "HealthExpress India - सर्जरी और अस्पताल सहायता" : "HealthExpress India - Surgery & Hospitalization Support";
+  const description = isHi 
+    ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें। हमारी व्यापक सर्जरी डायरेक्टरी ब्राउज़ करें और शीर्ष स्वास्थ्य सेवा प्रदाताओं से जुड़ें।" 
+    : "Find the right surgery at the right hospital across India. Browse our comprehensive surgery directory and connect with top healthcare providers.";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+  const canonical = `${baseUrl}/${lang}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      siteName: "HealthExpress India",
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "HealthExpress India" }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/og-image.png'],
+    }
+  };
+}
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;

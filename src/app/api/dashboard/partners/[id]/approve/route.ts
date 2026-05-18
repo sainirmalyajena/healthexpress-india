@@ -5,7 +5,7 @@ import { PartnerStatus } from '@/generated/prisma';
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await auth();
 
@@ -15,7 +15,7 @@ export async function POST(
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = await props.params;
 
     try {
         const partnerReq = await prisma.partnerRequest.findUnique({

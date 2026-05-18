@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    props: { params: Promise<{ id: string }> }
 ) {
     const session = await getSession();
 
@@ -13,7 +13,7 @@ export async function POST(
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await params;
+    const { id } = await props.params;
     const { password } = await request.json();
 
     if (!password || password.length < 6) {
