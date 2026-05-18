@@ -78,18 +78,18 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent">
                                 HealthExpress
                             </span>
-                            <span className="text-[10px] uppercase tracking-[0.3em] text-teal-600/60 block font-black ml-0.5">India</span>
+                            <span className="text-[10px] uppercase tracking-widest text-teal-600/60 block font-black ml-0.5">India</span>
                         </div>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-10">
+                    <div className="hidden lg:flex items-center gap-6 xl:gap-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    'text-[13px] font-bold uppercase tracking-[0.18em] transition-all relative py-2',
+                                    'text-[13px] font-bold uppercase tracking-widest transition-all relative py-2',
                                     isActive(link.href)
                                         ? 'text-teal-900'
                                         : 'text-slate-500 hover:text-teal-900'
@@ -130,7 +130,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                         <Button
                             variant="glow"
                             size="md"
-                            className="rounded-2xl shadow-premium px-8 h-12 text-[12px] font-black uppercase tracking-[0.2em]"
+                            className="rounded-2xl shadow-premium px-8 h-12 text-sm font-bold uppercase tracking-wider"
                             onClick={() => window.location.href = `/${lang}/surgeries`}
                         >
                             {dict.surgeries}

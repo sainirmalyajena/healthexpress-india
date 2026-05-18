@@ -50,14 +50,8 @@ function AnimatedCounter({ end, suffix = '', prefix = '' }: { end: number; suffi
 export function Hero({ lang, dict }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const section = heroRef.current;
-    if (!section) return;
-    const raf = requestAnimationFrame(() => {
-      section.classList.add('hero-ready');
-    });
-    return () => cancelAnimationFrame(raf);
-  }, []);
+  // Removed JS-based intersection observer for critical hero content to prevent invisible text
+
 
   const trustTags = [
     { icon: Shield, text: lang === 'hi' ? 'कोई छिपी हुई फीस नहीं' : 'No Hidden Fees' },
@@ -78,25 +72,25 @@ export function Hero({ lang, dict }: HeroProps) {
           
           {/* Left: Content */}
           <div className="text-left">
-            <div className="hero-reveal mb-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl shadow-premium">
+            <div className="animate-reveal opacity-0 mb-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl shadow-premium" style={{ animationDelay: '0.1s' }}>
               <Sparkles className="w-4 h-4 text-accent animate-pulse" />
               <span className="text-xs md:text-sm font-bold tracking-wider text-teal-50 uppercase">
                 {lang === 'hi' ? 'भारत का प्रीमियम सर्जरी नेटवर्क' : "India's Elite Surgery Network"}
               </span>
             </div>
 
-            <h1 className="hero-reveal text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] mb-8 text-white tracking-tight">
+            <h1 className="animate-reveal opacity-0 text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-8 text-white tracking-tight" style={{ animationDelay: '0.2s' }}>
               {dict.title.split(' ').slice(0, 3).join(' ')}
               <span className="block mt-2 bg-gradient-to-r from-teal-300 via-emerald-200 to-gold-500 bg-clip-text text-transparent">
                 {dict.title.split(' ').slice(3).join(' ')}
               </span>
             </h1>
 
-            <p className="hero-reveal text-lg md:text-xl text-teal-50/70 mb-12 max-w-xl leading-relaxed font-medium">
+            <p className="animate-reveal opacity-0 text-lg md:text-xl text-teal-50/70 mb-12 max-w-xl leading-relaxed font-medium" style={{ animationDelay: '0.3s' }}>
               {dict.subtitle}
             </p>
 
-            <div className="hero-reveal flex flex-col sm:flex-row gap-5 mb-12">
+            <div className="animate-reveal opacity-0 flex flex-col sm:flex-row gap-5 mb-12" style={{ animationDelay: '0.4s' }}>
               <Button 
                 variant="glow" 
                 size="xl" 
@@ -118,7 +112,7 @@ export function Hero({ lang, dict }: HeroProps) {
             </div>
 
             {/* Trust Badges */}
-            <div className="hero-reveal flex flex-wrap gap-6 border-t border-white/10 pt-10">
+            <div className="animate-reveal opacity-0 flex flex-wrap gap-6 border-t border-white/10 pt-10" style={{ animationDelay: '0.5s' }}>
               {trustTags.map((tag, i) => (
                 <div key={i} className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-teal-500/10 flex items-center justify-center border border-teal-500/20">
@@ -131,7 +125,7 @@ export function Hero({ lang, dict }: HeroProps) {
           </div>
 
           {/* Right: Smooth & Polished Visual Experience */}
-          <div className="hero-reveal relative lg:block">
+          <div className="animate-reveal opacity-0 relative lg:block" style={{ animationDelay: '0.6s' }}>
             <div className="relative group min-h-[500px] flex items-center justify-center">
               
               {/* Dynamic CSS Visual - Ultra Fast */}
@@ -181,7 +175,7 @@ export function Hero({ lang, dict }: HeroProps) {
               </div>
 
               {/* Subsidiary Floating Badge */}
-              <div className="absolute -top-6 -right-6 glass-dark p-4 rounded-2xl border border-white/10 shadow-premium animate-reveal delay-300">
+              <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 glass-dark p-4 rounded-2xl border border-white/10 shadow-premium animate-reveal delay-300">
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-2.5">
                     {[1,2,3].map(i => (
@@ -198,7 +192,7 @@ export function Hero({ lang, dict }: HeroProps) {
               </div>
 
               {/* Protocol Badge */}
-              <div className="absolute -bottom-8 -left-8 glass-dark px-5 py-3 rounded-2xl border border-emerald-500/20 shadow-2xl animate-reveal delay-500 hidden md:block">
+              <div className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 glass-dark px-5 py-3 rounded-2xl border border-emerald-500/20 shadow-2xl animate-reveal delay-500 hidden md:block">
                  <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
                        <Shield className="w-4 h-4 text-emerald-400" />

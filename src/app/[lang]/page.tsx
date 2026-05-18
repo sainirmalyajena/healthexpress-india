@@ -88,11 +88,11 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           {/* Section header */}
           <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-black uppercase tracking-[0.3em] mb-6">
+                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-bold uppercase tracking-widest mb-6">
                   <Sparkles className="w-3.5 h-3.5" />
                   {lang === 'hi' ? 'सर्जरी श्रेणियां' : 'Specialized Care'}
                 </div>
-                <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-none tracking-tight">
+                <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-none tracking-tight">
                   {lang === 'hi' ? 'अपनी सर्जरी खोजें' : 'Expertise Across Specialties.'}
                 </h2>
                 <p className="text-slate-500 text-lg md:text-xl font-medium">
