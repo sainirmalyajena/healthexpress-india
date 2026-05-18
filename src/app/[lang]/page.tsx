@@ -176,14 +176,14 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button 
-                variant="glow" 
-                size="xl" 
-                className="px-12"
-                onClick={() => window.location.href = `/${lang}/contact`}
+              <Link 
+                href={`/${lang}/contact`}
+                className="inline-flex items-center justify-center font-bold rounded-[1.5rem] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-95 relative bg-gradient-to-r from-teal-400 to-teal-600 text-white shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:shadow-[0_0_35px_rgba(45,212,191,0.5)] hover:scale-[1.02] border border-teal-300/30 text-lg px-12 py-5"
               >
-                {dict.cta.estimate}
-              </Button>
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                    {dict.cta.estimate}
+                </span>
+              </Link>
               <a
                 href="tel:9307861041"
                 className="group flex items-center justify-center gap-4 px-10 py-5 bg-white/10 backdrop-blur-xl border border-white/20 text-white font-black text-base rounded-[1.5rem] hover:bg-white/20 transition-all active:scale-95"

@@ -43,14 +43,14 @@ export async function POST(request: NextRequest) {
             data: {
                 // Basic Info
                 hospitalName: body.hospitalName,
-                registrationNumber: body.registrationNumber,
-                city: body.city,
-                state: body.state,
-                pincode: body.pincode,
+                registrationNumber: body.registrationNumber || 'N/A',
+                city: body.city || 'Unknown',
+                state: body.state || 'Unknown',
+                pincode: body.pincode || '000000',
 
                 // Contact
-                contactPerson: body.contactPerson,
-                designation: body.designation,
+                contactPerson: body.contactPerson || 'Unknown',
+                designation: body.designation || 'Unknown',
                 email: body.email,
                 phone: body.phone,
                 website: body.website || null,
@@ -58,10 +58,10 @@ export async function POST(request: NextRequest) {
                 // Hospital Details
                 hospitalType: body.hospitalType || [],
                 specialties: body.specialties,
-                bedCapacity: parseInt(body.bedCapacity as string),
+                bedCapacity: parseInt(body.bedCapacity as string) || 0,
                 icuBeds: body.icuBeds ? parseInt(body.icuBeds as string) : null,
                 hasOT: body.hasOT || false,
-                yearsInOperation: parseInt(body.yearsInOperation as string),
+                yearsInOperation: parseInt(body.yearsInOperation as string) || 0,
 
                 // Accreditation
                 isNABH: body.isNABH || false,
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
                 hasBloodBank: body.hasBloodBank || false,
 
                 // Additional
-                partnershipReason: body.partnershipReason,
+                partnershipReason: body.partnershipReason || 'Not specified',
                 monthlyPatients: body.monthlyPatients ? parseInt(body.monthlyPatients as string) : null,
                 insuranceTieups: body.insuranceTieups || null,
 

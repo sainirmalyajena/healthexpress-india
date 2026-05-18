@@ -102,8 +102,15 @@ function SurgeryCard({ surgery, lang, dict }: { surgery: any; lang: string; dict
       href={`/${lang}/surgeries/${surgery.slug}`}
       className="group flex flex-col bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden"
     >
-      {/* Top accent */}
-      <div className="h-1 w-full bg-gradient-to-r from-teal-400 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Premium Image Header */}
+      <div className="h-32 w-full relative overflow-hidden bg-gradient-to-br from-slate-900 via-teal-900 to-teal-700">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/20 to-transparent mix-blend-overlay" />
+        <div className="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-700">
+          <span className="text-5xl opacity-40 group-hover:opacity-80 transition-opacity duration-500 drop-shadow-2xl filter saturate-0 group-hover:saturate-100">
+            {getCategoryIcon(surgery.category)}
+          </span>
+        </div>
+      </div>
 
       <div className="p-6 flex flex-col flex-1">
         {/* Badges row */}

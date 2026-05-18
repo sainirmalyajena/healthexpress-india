@@ -42,8 +42,12 @@ export default async function BlogPage({ params }: { params: Promise<{ lang: str
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {posts.map((post: any) => (
                             <article key={post.slug} className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col group">
-                                <div className="aspect-video bg-teal-50 flex items-center justify-center overflow-hidden">
-                                    <div className="text-4xl group-hover:scale-110 transition-transform duration-500">🏥</div>
+                                <div className="aspect-video relative bg-gradient-to-tr from-slate-900 via-teal-900 to-teal-600 flex items-center justify-center overflow-hidden">
+                                    <div className="absolute inset-0 opacity-30 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)] bg-[length:250%_250%] group-hover:animate-[shimmer_2s_infinite]" />
+                                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+                                    <div className="text-5xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 drop-shadow-xl z-10 filter saturate-0 group-hover:saturate-100">
+                                        🏥
+                                    </div>
                                 </div>
 
                                 <div className="p-6 flex-1 flex flex-col">
