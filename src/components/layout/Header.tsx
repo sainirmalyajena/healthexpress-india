@@ -83,7 +83,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+                    <div className="hidden xl:flex items-center gap-6 2xl:gap-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
@@ -104,7 +104,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </div>
 
                     {/* Language Switcher & CTA */}
-                    <div className="hidden lg:flex items-center gap-8">
+                    <div className="hidden xl:flex items-center gap-8">
                         {/* Language Toggle - Premium Pill */}
                         <div className="flex items-center bg-slate-100/80 backdrop-blur-md rounded-2xl p-1 border border-slate-200/50 shadow-inner">
                             <Link
@@ -140,7 +140,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
 
 
                     {/* Mobile Menu Button */}
-                    <div className="flex items-center gap-3 md:hidden">
+                    <div className="flex items-center gap-3 xl:hidden">
                         {/* Mobile Language Toggle */}
                         <div className="flex items-center bg-slate-100 rounded-full p-1">
                             <Link
@@ -176,7 +176,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
 
             {/* Mobile Navigation Drawer */}
             {mobileMenuOpen && (
-                <div className="fixed inset-0 z-50 md:hidden">
+                <div className="fixed inset-0 z-50 xl:hidden">
                     {/* Backdrop */}
                     <div
                         className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
