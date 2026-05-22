@@ -32,7 +32,6 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
     }, []);
 
     const navLinks = [
-        { href: `/${lang}`, label: dict.home },
         { href: `/${lang}/surgeries`, label: dict.surgeries },
         { href: `/${lang}/doctors`, label: dict.doctors },
         { href: `/${lang}/blog`, label: dict.blog },
