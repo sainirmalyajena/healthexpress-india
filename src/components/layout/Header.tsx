@@ -21,6 +21,7 @@ import { Button } from '@/components/ui';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Header({ lang, dict }: { lang: string; dict: any }) {
     const pathname = usePathname();
+    const isHome = pathname === `/${lang}`;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -55,9 +56,12 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
         <header
             data-deployment-id="HE_INDIA_2026_FINAL"
             className={cn(
-                "sticky top-0 z-50 transition-all duration-300 bg-[#022c22]",
+                "sticky top-0 z-50 transition-all duration-300",
+                isHome ? "bg-[#022c22]" : "bg-white",
                 scrolled
-                    ? "bg-[#022c22]/95 backdrop-blur-md border-b border-teal-800 shadow-sm"
+                    ? isHome 
+                        ? "bg-[#022c22]/95 backdrop-blur-md border-b border-teal-800 shadow-sm"
+                        : "bg-white/90 backdrop-blur-md border-b border-slate-200/50 shadow-sm"
                     : "border-b border-transparent"
             )}
         >
@@ -74,10 +78,10 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter text-white">
-                                Health<span className="text-teal-400">Express</span>
+                            <span className={cn("text-xl sm:text-2xl font-black font-outfit tracking-tighter", isHome ? "text-white" : "bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent")}>
+                                Health<span className={cn(isHome ? "text-teal-400" : "")}>Express</span>
                             </span>
-                            <span className="text-[10px] uppercase tracking-widest text-teal-300/80 block font-black ml-0.5">India</span>
+                            <span className={cn("text-[10px] uppercase tracking-widest block font-black ml-0.5", isHome ? "text-teal-300/80" : "text-teal-600/60")}>India</span>
                         </div>
                     </Link>
 
@@ -90,13 +94,13 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                                 className={cn(
                                     'text-[13px] font-bold uppercase tracking-widest transition-all relative py-2',
                                     isActive(link.href)
-                                        ? 'text-white'
-                                        : 'text-teal-100/70 hover:text-white'
+                                        ? (isHome ? 'text-white' : 'text-teal-900')
+                                        : (isHome ? 'text-teal-100/70 hover:text-white' : 'text-slate-500 hover:text-teal-900')
                                 )}
                             >
                                 <span className="relative z-10">{link.label}</span>
                                 {isActive(link.href) && (
-                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-400 rounded-full" />
+                                    <span className={cn("absolute bottom-0 left-0 right-0 h-0.5 rounded-full", isHome ? "bg-teal-400" : "bg-teal-600")} />
                                 )}
                             </Link>
                         ))}
@@ -105,12 +109,14 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     {/* Language Switcher & CTA */}
                     <div className="hidden xl:flex items-center gap-8">
                         {/* Language Toggle - Premium Pill */}
-                        <div className="flex items-center bg-white/5 backdrop-blur-md rounded-2xl p-1 border border-white/10 shadow-inner">
+                        <div className={cn("flex items-center backdrop-blur-md rounded-2xl p-1 shadow-inner", isHome ? "bg-white/5 border border-white/10" : "bg-slate-100/80 border border-slate-200/50")}>
                             <Link
                                 href={redirectedPathname('en')}
                                 className={cn(
                                     "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
-                                    lang === 'en' ? "bg-teal-500 text-white shadow-sm" : "text-teal-100/60 hover:text-white"
+                                    lang === 'en' 
+                                        ? (isHome ? "bg-teal-500 text-white shadow-sm" : "bg-white text-teal-900 shadow-sm") 
+                                        : (isHome ? "text-teal-100/60 hover:text-white" : "text-slate-400 hover:text-slate-600")
                                 )}
                             >
                                 EN
@@ -119,7 +125,9 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                                 href={redirectedPathname('hi')}
                                 className={cn(
                                     "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
-                                    lang === 'hi' ? "bg-teal-500 text-white shadow-sm" : "text-teal-100/60 hover:text-white"
+                                    lang === 'hi' 
+                                        ? (isHome ? "bg-teal-500 text-white shadow-sm" : "bg-white text-teal-900 shadow-sm") 
+                                        : (isHome ? "text-teal-100/60 hover:text-white" : "text-slate-400 hover:text-slate-600")
                                 )}
                             >
                                 HI

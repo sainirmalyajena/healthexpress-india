@@ -82,7 +82,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <Hero lang={lang} dict={dict.hero} />
 
       {/* Surgery Categories Section - Precision Grid */}
-      <section className="py-24 md:py-36 bg-[#fdfdfd] relative">
+      <section className="py-12 md:py-20 bg-[#fdfdfd] relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Section header */}
