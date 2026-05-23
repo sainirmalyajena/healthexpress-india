@@ -153,7 +153,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       </div>
 
       {/* Cinematic Bottom CTA */}
-      <section className="py-24 md:py-40 bg-[#fdfdfd] px-4">
+      <section className="py-16 md:py-24 bg-[#fdfdfd] px-4">
         <div className="max-w-6xl mx-auto rounded-[4rem] bg-slate-900 p-12 md:p-24 text-center text-white shadow-premium relative overflow-hidden">
           {/* Visual Accents */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />

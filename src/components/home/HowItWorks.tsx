@@ -34,7 +34,7 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
     ];
 
     return (
-        <section className="py-24 md:py-32 bg-[#fdfdfd] relative overflow-hidden">
+        <section className="py-16 md:py-20 bg-[#fdfdfd] relative overflow-hidden">
             {/* Background Sophistication */}
             <div className="absolute inset-0 opacity-40">
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-50 rounded-full blur-[120px]" />

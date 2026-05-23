@@ -81,11 +81,6 @@ export function Hero({ lang, dict }: HeroProps) {
         </div>
       </div>
 
-      {/* Elegant Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-        <div className="w-px h-12 bg-gradient-to-b from-white/20 to-white/80" />
-        <span className="text-[10px] text-white uppercase tracking-[0.3em] font-medium">Elevate</span>
-      </div>
     </section>
   );
 }

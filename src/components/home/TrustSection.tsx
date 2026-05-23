@@ -61,7 +61,7 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
     const hospitals = ['Apollo', 'Fortis', 'Max', 'Medanta', 'AIIMS', 'Narayana', 'Manipal', 'Kokilaben'];
 
     return (
-        <section className="bg-[#051c18] relative py-24 md:py-32 overflow-hidden">
+        <section className="bg-[#051c18] relative py-16 md:py-24 overflow-hidden">
             {/* Visual Continuity Orbs */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/5 blur-[100px] rounded-full" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-600/5 blur-[100px] rounded-full" />

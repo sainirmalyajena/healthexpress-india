@@ -133,7 +133,7 @@ function SurgeryCard({ surgery, lang, dict }: { surgery: any; lang: string; dict
         </h3>
 
         {/* Overview */}
-        <p className="text-sm text-slate-500 line-clamp-2 mb-4 flex-1 leading-relaxed">
+        <p className="text-sm text-slate-500 line-clamp-2 mb-4 leading-relaxed">
           {surgery.overview}
         </p>
 
@@ -162,7 +162,7 @@ function SurgeryCard({ surgery, lang, dict }: { surgery: any; lang: string; dict
         )}
 
         {/* Cost footer */}
-        <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <div className="pt-4 mt-auto border-t border-slate-100 flex items-center justify-between">
           <div>
             <p className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">{dict.estimated_cost}</p>
             <p className="text-sm font-bold text-slate-900">

@@ -138,9 +138,9 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             variant="glow"
                             size="md"
                             className="rounded-2xl shadow-premium px-8 h-12 text-sm font-bold uppercase tracking-wider"
-                            onClick={() => window.location.href = `/${lang}/surgeries`}
+                            onClick={() => window.location.href = `/${lang}/contact`}
                         >
-                            {dict.surgeries}
+                            {lang === 'hi' ? 'अनुमान प्राप्त करें' : 'Get Estimate'}
                             <ArrowUpRight className="w-4 h-4 ml-2.5" />
                         </Button>
                     </div>
