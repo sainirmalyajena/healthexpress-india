@@ -55,10 +55,10 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
         <header
             data-deployment-id="HE_INDIA_2026_FINAL"
             className={cn(
-                "sticky top-0 z-50 transition-all duration-300",
+                "sticky top-0 z-50 transition-all duration-300 bg-[#022c22]",
                 scrolled
-                    ? "bg-white/90 backdrop-blur-md border-b border-slate-200/50 shadow-sm"
-                    : "bg-transparent"
+                    ? "bg-[#022c22]/95 backdrop-blur-md border-b border-teal-800 shadow-sm"
+                    : "border-b border-transparent"
             )}
         >
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,10 +74,10 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                             />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter bg-gradient-to-br from-teal-700 via-teal-900 to-slate-900 bg-clip-text text-transparent">
-                                HealthExpress
+                            <span className="text-xl sm:text-2xl font-black font-outfit tracking-tighter text-white">
+                                Health<span className="text-teal-400">Express</span>
                             </span>
-                            <span className="text-[10px] uppercase tracking-widest text-teal-600/60 block font-black ml-0.5">India</span>
+                            <span className="text-[10px] uppercase tracking-widest text-teal-300/80 block font-black ml-0.5">India</span>
                         </div>
                     </Link>
 
@@ -90,13 +90,13 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                                 className={cn(
                                     'text-[13px] font-bold uppercase tracking-widest transition-all relative py-2',
                                     isActive(link.href)
-                                        ? 'text-teal-900'
-                                        : 'text-slate-500 hover:text-teal-900'
+                                        ? 'text-white'
+                                        : 'text-teal-100/70 hover:text-white'
                                 )}
                             >
                                 <span className="relative z-10">{link.label}</span>
                                 {isActive(link.href) && (
-                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 rounded-full" />
+                                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-400 rounded-full" />
                                 )}
                             </Link>
                         ))}
@@ -105,12 +105,12 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     {/* Language Switcher & CTA */}
                     <div className="hidden xl:flex items-center gap-8">
                         {/* Language Toggle - Premium Pill */}
-                        <div className="flex items-center bg-slate-100/80 backdrop-blur-md rounded-2xl p-1 border border-slate-200/50 shadow-inner">
+                        <div className="flex items-center bg-white/5 backdrop-blur-md rounded-2xl p-1 border border-white/10 shadow-inner">
                             <Link
                                 href={redirectedPathname('en')}
                                 className={cn(
                                     "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
-                                    lang === 'en' ? "bg-white text-teal-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                                    lang === 'en' ? "bg-teal-500 text-white shadow-sm" : "text-teal-100/60 hover:text-white"
                                 )}
                             >
                                 EN
@@ -119,7 +119,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                                 href={redirectedPathname('hi')}
                                 className={cn(
                                     "px-4 py-1.5 text-[10px] font-black tracking-widest rounded-xl transition-all",
-                                    lang === 'hi' ? "bg-white text-teal-900 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                                    lang === 'hi' ? "bg-teal-500 text-white shadow-sm" : "text-teal-100/60 hover:text-white"
                                 )}
                             >
                                 HI
