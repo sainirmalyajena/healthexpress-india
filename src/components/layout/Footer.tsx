@@ -18,7 +18,6 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
             { href: `/${lang}/partners`, label: dict.partners || 'Hospital Network' },
             { href: `/${lang}/contact`, label: dict.contact || 'Private Concierge' },
             { href: `/${lang}/privacy`, label: 'Privacy Protocol' },
-            { href: 'https://prismhealthcure.com', label: 'Prism Healthcure' },
         ],
         cities: [
             { href: `/${lang}/surgeries?city=Mumbai`, label: 'Mumbai Elite' },

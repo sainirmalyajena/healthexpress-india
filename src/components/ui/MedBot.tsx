@@ -86,7 +86,7 @@ export function MedBot({ lang, surgeryContext }: MedBotProps) {
     if (!visible) return null;
 
     return (
-        <div className="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-40 flex flex-col items-end">
+        <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 flex flex-col items-end">
 
             {/* Chat window - Elite Glassmorphism */}
             {isOpen && (
