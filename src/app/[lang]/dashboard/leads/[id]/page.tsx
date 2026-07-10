@@ -114,16 +114,18 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                 <div className="p-6">
                                     <div className="flex items-start justify-between mb-6">
                                         <div>
-                                            <p className="text-xl font-bold text-slate-900">{lead.surgery.name}</p>
-                                            <p className="text-sm text-teal-600 font-medium">{lead.surgery.category}</p>
+                                            <p className="text-xl font-bold text-slate-900">{lead.surgery?.name || 'General Inquiry'}</p>
+                                            <p className="text-sm text-teal-600 font-medium">{lead.surgery?.category || ''}</p>
                                         </div>
-                                        <Link
-                                            href={`/surgeries/${lead.surgery.slug}`}
-                                            className="text-xs font-bold text-teal-600 hover:text-teal-700 underline"
-                                            target="_blank"
-                                        >
-                                            View Public Page ↗
-                                        </Link>
+                                        {lead.surgery && (
+                                            <Link
+                                                href={`/surgeries/${lead.surgery.slug}`}
+                                                className="text-xs font-bold text-teal-600 hover:text-teal-700 underline"
+                                                target="_blank"
+                                            >
+                                                View Public Page ↗
+                                            </Link>
+                                        )}
                                     </div>
 
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl">
@@ -142,7 +144,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                         <div className="text-center">
                                             <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">Insurance</p>
                                             <p className="text-slate-900 font-bold">
-                                                {lead.surgery.insuranceLikely ? 'Likely' : 'Maybe'}
+                                                {lead.surgery?.insuranceLikely ? 'Likely' : 'Maybe'}
                                             </p>
                                         </div>
                                         <div className="text-center">

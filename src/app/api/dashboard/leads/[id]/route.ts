@@ -102,7 +102,7 @@ export async function GET(
     const headers = ['Reference ID', 'Full Name', 'Phone', 'Email', 'City', 'Surgery', 'Description', 'Insurance', 'Callback Time', 'Status', 'UTM Source', 'UTM Campaign', 'Created At'];
     const rows = leads.map((lead) => [
         lead.referenceId, lead.fullName, lead.phone, lead.email || '', lead.city,
-        lead.surgery.name, `"${lead.description.replace(/"/g, '""')}"`,
+        lead.surgery?.name || 'General Inquiry', `"${lead.description.replace(/"/g, '""')}"`,
         lead.insurance, lead.callbackTime || '', lead.status,
         lead.utmSource || '', lead.utmCampaign || '', lead.createdAt.toISOString(),
     ]);

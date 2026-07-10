@@ -40,7 +40,7 @@ model Hospital {
   city            String
   specialties     String[]
   discountPercent Float    @default(0)
-  email           String?  @unique // Optional for migration safety
+  email           String   @unique
   passwordHash    String?
   status          String   @default("ACTIVE")
   createdAt       DateTime @default(now())
@@ -58,7 +58,7 @@ model Doctor {
   image          String
   isVerified     Boolean   @default(false)
   accreditations String[]  @default([])
-  email          String?   @unique // Optional for migration
+  email          String    @unique
   passwordHash   String?
   status         String    @default("ACTIVE")
   availability   Json      @default("{}")
@@ -75,7 +75,7 @@ model Lead {
   phone          String
   email          String?
   city           String
-  surgeryId      String
+  surgeryId      String?
   hospitalId     String?
   description    String
   insurance      InsuranceOption @default(NO)
@@ -99,7 +99,7 @@ model Lead {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   hospital       Hospital?       @relation(fields: [hospitalId], references: [id])
-  surgery        Surgery         @relation(fields: [surgeryId], references: [id])
+  surgery        Surgery?        @relation(fields: [surgeryId], references: [id])
   documents      Document[]
   rating         Int?            // Patient satisfaction rating (1-5)
   feedback       String?         // Detailed patient feedback
@@ -128,15 +128,7 @@ model User {
   createdAt    DateTime @default(now())
 }
 
-model RateLimit {
-  id        String   @id @default(cuid())
-  ip        String   @unique
-  count     Int      @default(1)
-  expiresAt DateTime
 
-  @@index([ip])
-  @@index([expiresAt])
-}
 
 enum Category {
   GENERAL_SURGERY

@@ -90,7 +90,7 @@ export default async function PartnerDashboardPage() {
                                             <p className="text-[10px] font-black text-slate-400 tracking-wider">REF ID: {lead.referenceId}</p>
                                         </td>
                                         <td className="px-6 py-5">
-                                            <p className="text-sm font-bold text-slate-700 leading-tight">{lead.surgery.name}</p>
+                                            <p className="text-sm font-bold text-slate-700 leading-tight">{lead.surgery?.name || 'General Inquiry'}</p>
                                             <p className="text-[10px] font-bold text-teal-600/70 mt-0.5">{lead.city}</p>
                                         </td>
                                         <td className="px-6 py-5">

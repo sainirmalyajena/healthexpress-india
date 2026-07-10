@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
 import prisma from '@/lib/prisma';
+import { getSortedPostsData } from '@/lib/blog';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,53 +46,117 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Default HealthExpress Sitemap logic...
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const locales = ['en', 'hi'];
 
-    // Get all surgeries
+    // 1. Get all surgeries
     const surgeries = await prisma.surgery.findMany({
         select: { slug: true, updatedAt: true },
     });
 
-    // Static pages
-    const staticPages: MetadataRoute.Sitemap = [
-        {
-            url: baseUrl,
+    // 2. Get all active doctors
+    const doctors = await prisma.doctor.findMany({
+        where: { status: 'ACTIVE' },
+        select: { id: true, updatedAt: true },
+    });
+
+    // 3. Get all blog posts
+    let posts: { slug: string; date: string }[] = [];
+    try {
+        posts = await getSortedPostsData();
+    } catch (e) {
+        console.error('Failed to get blog posts for sitemap:', e);
+    }
+
+    const sitemapEntries: MetadataRoute.Sitemap = [];
+
+    // 4. Generate static pages for each locale
+    locales.forEach(locale => {
+        // Home
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}`,
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 1.0,
-        },
-        {
-            url: `${baseUrl}/surgeries`,
+        });
+        // Surgeries listing
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}/surgeries`,
             lastModified: new Date(),
             changeFrequency: 'daily',
             priority: 0.9,
-        },
-        {
-            url: `${baseUrl}/contact`,
+        });
+        // Doctors listing
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}/doctors`,
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 0.9,
+        });
+        // Blog listing
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}/blog`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        });
+        // Contact
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}/contact`,
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 0.8,
-        },
-        {
-            url: `${baseUrl}/privacy`,
+        });
+        // Privacy
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}/privacy`,
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 0.3,
-        },
-        {
-            url: `${baseUrl}/terms`,
+        });
+        // Terms
+        sitemapEntries.push({
+            url: `${baseUrl}/${locale}/terms`,
             lastModified: new Date(),
             changeFrequency: 'yearly',
             priority: 0.3,
-        },
-    ];
+        });
+    });
 
-    // Surgery pages
-    const surgeryPages: MetadataRoute.Sitemap = surgeries.map((surgery) => ({
-        url: `${baseUrl}/surgeries/${surgery.slug}`,
-        lastModified: surgery.updatedAt,
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-    }));
+    // 5. Generate surgery detail pages
+    surgeries.forEach(surgery => {
+        locales.forEach(locale => {
+            sitemapEntries.push({
+                url: `${baseUrl}/${locale}/surgeries/${surgery.slug}`,
+                lastModified: surgery.updatedAt,
+                changeFrequency: 'weekly',
+                priority: 0.8,
+            });
+        });
+    });
 
-    return [...staticPages, ...surgeryPages];
+    // 6. Generate doctor profile pages
+    doctors.forEach(doctor => {
+        locales.forEach(locale => {
+            sitemapEntries.push({
+                url: `${baseUrl}/${locale}/doctors/${doctor.id}`,
+                lastModified: doctor.updatedAt,
+                changeFrequency: 'monthly',
+                priority: 0.7,
+            });
+        });
+    });
+
+    // 7. Generate blog post pages
+    posts.forEach(post => {
+        locales.forEach(locale => {
+            sitemapEntries.push({
+                url: `${baseUrl}/${locale}/blog/${post.slug}`,
+                lastModified: new Date(post.date),
+                changeFrequency: 'monthly',
+                priority: 0.7,
+            });
+        });
+    });
+
+    return sitemapEntries;
 }

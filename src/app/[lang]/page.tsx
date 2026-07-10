@@ -9,6 +9,7 @@ import { Hero } from '@/components/home/Hero';
 import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { generateFAQSchema } from '@/lib/schema';
 
 const categories = [
   'GENERAL_SURGERY',
@@ -76,8 +77,41 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
 
+  const faqs = [
+    {
+      question: lang === 'hi' ? 'HealthExpress India क्या है?' : 'What is HealthExpress India?',
+      answer: lang === 'hi'
+        ? 'HealthExpress India एक प्रीमियम स्वास्थ्य सेवा मंच है जो रोगियों को भारत के अग्रणी अस्पतालों और अत्यधिक अनुभवी सर्जनों से जोड़ता है। हम पूरी चिकित्सा यात्रा के दौरान एंड-टू-एंड सहायता प्रदान करते हैं।'
+        : 'HealthExpress India is a premium healthcare platform that connects patients with leading hospitals and highly experienced surgeons across India, providing end-to-end support throughout the medical journey.'
+    },
+    {
+      question: lang === 'hi' ? 'क्या HealthExpress India कोई परामर्श शुल्क लेता है?' : 'Does HealthExpress India charge any consultation fee?',
+      answer: lang === 'hi'
+        ? 'नहीं, रोगियों के लिए हमारा मार्गदर्शन और देखभाल समन्वय सेवाएं पूरी तरह से निःशुल्क हैं। हम आपकी सहायता के लिए कोई छिपी हुई फीस या अतिरिक्त शुल्क नहीं लेते हैं।'
+        : 'No, our care coordination and guidance services are completely free for patients. We do not charge any hidden fees or extra costs.'
+    },
+    {
+      question: lang === 'hi' ? 'अस्पताल नेटवर्क में कौन से प्रमुख अस्पताल शामिल हैं?' : 'Which major hospitals are in the network?',
+      answer: lang === 'hi'
+        ? 'हमारे नेटवर्क में फोर्टिस, अपोलो, मैक्स, मेदांता, कोकिलाबेन और मनीपाल जैसे भारत के 500 से अधिक विशिष्ट अस्पताल शामिल हैं, जो JCI और NABH मानकों द्वारा मान्यता प्राप्त हैं।'
+        : 'Our network includes over 500 elite hospitals across India, such as Fortis, Apollo, Max, Medanta, Kokilaben, and Manipal, all accredited by JCI and NABH standards.'
+    },
+    {
+      question: lang === 'hi' ? 'क्या मेरी स्वास्थ्य बीमा पॉलिसी यहाँ मान्य होगी?' : 'Will my health insurance policy be accepted?',
+      answer: lang === 'hi'
+        ? 'हाँ, हम सभी प्रमुख स्वास्थ्य बीमा प्रदाताओं के साथ काम करते हैं ताकि आपको कैशलेस सर्जरी उपचार मिल सके। हमारी टीम आपके कवरेज को सत्यापित करने और क्लेम प्रक्रिया में सहायता करती है।'
+        : 'Yes, we work closely with major health insurance providers to facilitate cashless surgical treatments. Our team helps verify your policy coverage and assists with the pre-authorization claim process.'
+    }
+  ];
+
+  const faqSchema = generateFAQSchema(faqs);
+
   return (
     <div className="min-h-screen bg-[#fdfdfd]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       {/* Hero Section */}
       <Hero lang={lang} dict={dict.hero} />
 
@@ -151,6 +185,33 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
         <DynamicTrustSection lang={lang} dict={dict.trust} />
         <DynamicTestimonials lang={lang} dict={dict.testimonials} />
       </div>
+
+      {/* FAQ Section */}
+      <section className="py-16 md:py-24 bg-slate-50 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+              {lang === 'hi' ? 'अक्सर पूछे जाने वाले प्रश्न' : 'Frequently Asked Questions'}
+            </h2>
+            <p className="text-slate-500 text-base md:text-lg font-medium">
+              {lang === 'hi' ? 'HealthExpress India के बारे में सभी आवश्यक जानकारी यहाँ पाएं' : 'Find answers to common questions about HealthExpress India'}
+            </p>
+          </div>
+          <div className="space-y-6">
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-3 flex items-start gap-3">
+                  <span className="text-teal-500 font-extrabold">Q.</span>
+                  {faq.question}
+                </h3>
+                <p className="text-slate-600 leading-relaxed text-sm md:text-base pl-7">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Cinematic Bottom CTA */}
       <section className="py-16 md:py-24 bg-[#fdfdfd] px-4">

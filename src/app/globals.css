@@ -50,6 +50,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Defer rendering of off-screen sections — major LCP improvement */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Critical above-fold sections must NOT be deferred */
+section:first-of-type,
+.hero-section {
+  content-visibility: visible;
+  contain-intrinsic-size: unset;
+}
+
 *:focus-visible {
   outline: 2px solid #0d9488;
   outline-offset: 2px;

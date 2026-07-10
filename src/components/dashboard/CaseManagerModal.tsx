@@ -21,7 +21,7 @@ interface Lead {
     hasCard: boolean;
     notes?: string | null;
     hospital?: { name: string } | null;
-    surgery: { name: string };
+    surgery: { name: string } | null;
 }
 
 interface CaseManagerModalProps {
@@ -78,7 +78,7 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
                 <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                     <div>
                         <h3 className="font-bold text-slate-900">Manage Case</h3>
-                        <p className="text-xs text-slate-500">{lead.fullName} • {lead.surgery.name}</p>
+                        <p className="text-xs text-slate-500">{lead.fullName} • {lead.surgery?.name || 'General Inquiry'}</p>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
                         <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

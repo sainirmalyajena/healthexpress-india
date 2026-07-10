@@ -138,18 +138,20 @@ export default async function PatientDashboard() {
                         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="text-xl font-bold text-slate-900">Your Procedure</h2>
-                                <Link
-                                    href={`/surgeries/${lead.surgery.slug}`}
-                                    className="text-sm font-semibold text-teal-600 hover:underline flex items-center gap-1"
-                                >
-                                    View Guide <ArrowRight className="w-4 h-4" />
-                                </Link>
+                                {lead.surgery && (
+                                    <Link
+                                        href={`/surgeries/${lead.surgery.slug}`}
+                                        className="text-sm font-semibold text-teal-600 hover:underline flex items-center gap-1"
+                                    >
+                                        View Guide <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                )}
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-6">
                                 <div className="p-5 bg-slate-50 rounded-2xl">
                                     <p className="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Recommended Procedure</p>
-                                    <p className="text-lg font-bold text-slate-900">{lead.surgery.name}</p>
+                                    <p className="text-lg font-bold text-slate-900">{lead.surgery?.name || 'General Consultation'}</p>
                                 </div>
                                 <div className="p-5 bg-slate-50 rounded-2xl">
                                     <p className="text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Hospital Partner</p>

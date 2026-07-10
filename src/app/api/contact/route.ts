@@ -28,42 +28,14 @@ export async function POST(request: NextRequest) {
             ? descriptionParts.join(' | ')
             : 'General inquiry from contact page';
 
-        // Find or create "General Inquiry" surgery for contact form submissions
-        let generalSurgery = await prisma.surgery.findFirst({
-            where: { slug: 'general-inquiry' }
-        });
-
-        if (!generalSurgery) {
-            generalSurgery = await prisma.surgery.create({
-                data: {
-                    name: 'General Inquiry',
-                    slug: 'general-inquiry',
-                    category: 'GENERAL_SURGERY',
-                    overview: 'General contact form inquiry',
-                    indications: 'N/A',
-                    procedure: 'N/A',
-                    duration: 'N/A',
-                    hospitalStay: 'N/A',
-                    recovery: 'N/A',
-                    risks: 'N/A',
-                    preparation: 'N/A',
-                    postOpCare: 'N/A',
-                    costRangeMin: 0,
-                    costRangeMax: 0,
-                    insuranceLikely: false,
-                    symptoms: []
-                }
-            });
-        }
-
-        // Save to Database
+        // Save to Database without requiring a dummy surgery
         const lead = await prisma.lead.create({
             data: {
                 fullName: body.name,
                 phone: body.phone,
                 email: body.email || null,
                 city: body.city || 'Not specified',
-                surgeryId: generalSurgery.id,
+                surgeryId: null, // General inquiry
                 description,
                 sourcePage: '/contact',
                 referenceId,

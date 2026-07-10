@@ -276,7 +276,7 @@ export default async function AdminDashboard({
                                             <div className="flex items-center justify-between">
                                                 <div>
                                                     <p className="font-medium text-slate-900">{lead.fullName}</p>
-                                                    <p className="text-sm text-slate-500">{lead.surgery.name}</p>
+                                                    <p className="text-sm text-slate-500">{lead.surgery?.name || 'General Inquiry'}</p>
                                                 </div>
                                                 <div className="text-right">
                                                     <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${statusColors[lead.status]}`}>

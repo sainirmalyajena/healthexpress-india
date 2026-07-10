@@ -6,6 +6,7 @@ import { cache } from 'react';
 
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
+import { generatePhysicianSchema } from '@/lib/schema';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,8 +79,24 @@ export default async function DoctorProfilePage({ params }: PageProps) {
     const dict = dictionary.doctor_profile || {};
     const isHi = lang === 'hi';
 
+    const physicianSchema = generatePhysicianSchema({
+        name: doctor.name,
+        image: doctor.image,
+        description: doctor.about,
+        qualification: doctor.qualification,
+        experience: doctor.experience,
+        accreditations: doctor.surgeries.map(s => s.name),
+        hospitalName: doctor.hospital.name,
+        hospitalCity: doctor.hospital.city,
+        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com'}/${lang}/doctors/${doctor.id}`
+    });
+
     return (
         <div className="min-h-screen bg-slate-50 py-12">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(physicianSchema) }}
+            />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Back Link */}
                 <Link href={`/${lang}/doctors`} className="text-teal-600 hover:text-teal-700 text-sm font-medium mb-8 inline-flex items-center gap-1 group">
@@ -103,8 +120,18 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                         <div className="p-6 md:p-8 flex-1">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h1 className="text-2xl font-bold text-slate-900">Dr. {doctor.name}</h1>
+                                    <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                        Dr. {doctor.name}
+                                    </h1>
                                     <p className="text-teal-600 font-medium mt-1">{doctor.qualification}</p>
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold bg-green-50 text-green-700 border border-green-200/50 px-2 py-0.5 rounded">
+                                            ✔ NMC Verified
+                                        </span>
+                                        <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-bold bg-teal-50 text-teal-700 border border-teal-200/50 px-2 py-0.5 rounded">
+                                            ✔ NABH Affiliated Partner
+                                        </span>
+                                    </div>
                                 </div>
                                 <span className="bg-blue-50 text-blue-700 text-sm px-3 py-1 rounded-full font-medium">
                                     {doctor.experience}+ {isHi ? 'वर्षों का अनुभव' : 'Years Exp'}

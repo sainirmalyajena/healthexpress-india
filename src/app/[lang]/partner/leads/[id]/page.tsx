@@ -74,7 +74,7 @@ export default async function PartnerLeadDetailPage({
                         <div className="grid grid-cols-2 gap-y-8 gap-x-12">
                             <div>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Surgery Required</p>
-                                <p className="text-lg font-black text-slate-900">{lead.surgery.name}</p>
+                                <p className="text-lg font-black text-slate-900">{lead.surgery?.name || 'General Inquiry'}</p>
                             </div>
                             <div>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Patient Location</p>

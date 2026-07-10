@@ -4,6 +4,7 @@ import { getPostBySlug, getSortedPostsData } from '@/lib/blog';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { prisma } from '@/lib/prisma';
 
 interface Props {
     params: Promise<{ slug: string; lang: string }>;
@@ -60,6 +61,17 @@ export default async function BlogPostPage({ params }: Props) {
 
     const isHi = lang === 'hi';
 
+    // Fetch an active doctor to act as the medical reviewer
+    let reviewer = null;
+    try {
+        reviewer = await prisma.doctor.findFirst({
+            where: { status: 'ACTIVE' },
+            include: { hospital: true }
+        });
+    } catch (e) {
+        console.error('Failed to load reviewer doctor for blog post:', e);
+    }
+
     // Article Schema
     const articleSchema = {
         '@context': 'https://schema.org',
@@ -72,7 +84,23 @@ export default async function BlogPostPage({ params }: Props) {
         },
         datePublished: post.date,
         medicalAudience: 'Patient',
-        lastReviewed: post.date
+        lastReviewed: post.date,
+        ...(reviewer && {
+            reviewedBy: {
+                '@type': 'Physician',
+                name: `Dr. ${reviewer.name}`,
+                qualification: reviewer.qualification,
+                hospitalAffiliation: {
+                    '@type': 'Hospital',
+                    name: reviewer.hospital.name,
+                    address: {
+                        '@type': 'PostalAddress',
+                        addressLocality: reviewer.hospital.city,
+                        addressCountry: 'IN'
+                    }
+                }
+            }
+        })
     };
 
     return (
@@ -108,14 +136,33 @@ export default async function BlogPostPage({ params }: Props) {
                         {post.title}
                     </h1>
 
-                    <div className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-slate-100 w-fit">
-                        <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                            {post.author[0]}
+                    <div className="flex flex-wrap items-center gap-6">
+                        <div className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-slate-100 w-fit">
+                            <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                {post.author[0]}
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold text-slate-900">{isHi ? 'लेखक:' : 'Written by'} {post.author}</p>
+                                <p className="text-xs text-slate-500">{isHi ? 'चिकित्सा विशेषज्ञ' : 'Medical Specialist'}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-semibold text-slate-900">{isHi ? 'लेखक:' : 'Written by'} {post.author}</p>
-                            <p className="text-xs text-slate-500">{isHi ? 'चिकित्सा विशेषज्ञ' : 'Medical Specialist'}</p>
-                        </div>
+
+                        {reviewer && (
+                            <div className="flex items-center gap-4 p-4 bg-teal-50/50 rounded-2xl border border-teal-100/50 w-fit">
+                                <div className="w-12 h-12 bg-teal-700 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                    ⚕️
+                                </div>
+                                <div>
+                                    <p className="text-sm font-semibold text-slate-900">
+                                        {isHi ? 'चिकित्सा समीक्षक: ' : 'Fact-Checked & Reviewed by '}
+                                        <Link href={`/${lang}/doctors/${reviewer.id}`} className="text-teal-700 hover:text-teal-900 underline font-bold ml-1">
+                                            Dr. {reviewer.name}
+                                        </Link>
+                                    </p>
+                                    <p className="text-xs text-slate-500">{reviewer.qualification} | {reviewer.hospital.name}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </header>

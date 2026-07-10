@@ -20,6 +20,7 @@ async function main() {
             data: {
                 name: hospitalName,
                 city: 'Bangalore',
+                email: 'apollo@example.com',
                 specialties: ['Cardiology'],
                 discountPercent: 10,
                 status: 'ACTIVE'

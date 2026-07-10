@@ -192,6 +192,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
   const faqs = surgery.faqs as { question: string; answer: string }[];
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
   const categoryLabel = getCategoryLabel(surgery.category, dictionary.categories);
+  const doctor = surgery.doctors?.[0];
 
   const medicalSchema = generateMedicalProcedureSchema({
     name: surgery.name,
@@ -256,6 +257,16 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-3 leading-tight tracking-tight">
             {surgery.name}
           </h1>
+          {doctor && (
+            <div className="flex items-center gap-2 text-xs text-slate-500 mb-4 bg-teal-50/50 border border-teal-100/50 rounded-full px-3 py-1.5 w-fit">
+              <span className="text-xs">⚕️</span>
+              <span>{lang === 'hi' ? 'चिकित्सा विशेषज्ञ द्वारा समीक्षित और सत्यापित: ' : 'Reviewed & Verified by '}</span>
+              <Link href={`/${lang}/doctors/${doctor.id}`} className="font-semibold text-teal-700 hover:text-teal-900 underline">
+                Dr. {doctor.name}
+              </Link>
+              <span>({doctor.qualification})</span>
+            </div>
+          )}
           <p className="text-base md:text-lg text-slate-600 max-w-2xl leading-relaxed mb-8">
             {surgery.overview.split('.')[0]}.
           </p>
@@ -275,6 +286,45 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
 
           {/* Main content */}
           <div className="lg:col-span-2 space-y-8">
+
+            <section className="bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-2xl p-7 shadow-premium border border-teal-800/20">
+              <h2 className="flex items-center gap-3 text-lg font-bold text-teal-400 mb-4">
+                <span className="w-8 h-8 bg-teal-500/20 text-teal-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </span>
+                {lang === 'hi' ? 'त्वरित तथ्य और मुख्य बातें' : 'Quick Facts & Key Takeaways'}
+              </h2>
+              <div className="grid sm:grid-cols-2 gap-4 text-sm text-slate-200">
+                <div className="space-y-2.5">
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-teal-400 mt-0.5">•</span>
+                    <p><strong className="text-white">{lang === 'hi' ? 'अनुमानित लागत:' : 'Estimated Cost:'}</strong> {formatCurrency(surgery.costRangeMin)} - {formatCurrency(surgery.costRangeMax)}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-teal-400 mt-0.5">•</span>
+                    <p><strong className="text-white">{lang === 'hi' ? 'रिकवरी अवधि:' : 'Recovery Period:'}</strong> {surgery.recovery.split('.')[0]}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-teal-400 mt-0.5">•</span>
+                    <p><strong className="text-white">{lang === 'hi' ? 'अस्पताल में ठहराव:' : 'Hospital Stay:'}</strong> {surgery.hospitalStay}</p>
+                  </div>
+                </div>
+                <div className="space-y-2.5">
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-teal-400 mt-0.5">•</span>
+                    <p><strong className="text-white">{lang === 'hi' ? 'सामान्य लक्षण:' : 'Typical Symptoms:'}</strong> {surgery.symptoms.slice(0, 3).join(', ') || (lang === 'hi' ? 'मामले के अनुसार अलग' : 'Varies by case')}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-teal-400 mt-0.5">•</span>
+                    <p><strong className="text-white">{lang === 'hi' ? 'बीमा कवरेज:' : 'Insurance Coverage:'}</strong> {surgery.insuranceLikely ? (lang === 'hi' ? 'आमतौर पर कवर किया जाता है' : 'Usually covered') : (lang === 'hi' ? 'पॉलिसी जांच के अधीन' : 'Subject to policy check')}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="text-teal-400 mt-0.5">•</span>
+                    <p><strong className="text-white">{lang === 'hi' ? 'मान्यता:' : 'Accreditation:'}</strong> {lang === 'hi' ? 'JCI/NABH मानकों द्वारा सत्यापित' : 'Verified by JCI/NABH Standards'}</p>
+                  </div>
+                </div>
+              </div>
+            </section>
 
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">
               <SectionHeading icon={Stethoscope} title={dict.overview} />

@@ -8,33 +8,66 @@ const withAnalyzer = withBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['@react-email/components', 'resend', 'react-dom/server'],
+  // No serverExternalPackages needed — handled by transpilePackages already
+
+  // Add aggressive HTTP caching headers to static assets and pages
+  async headers() {
+    return [
+      {
+        // Static assets (JS, CSS, fonts, images) — cache for 1 year (immutable)
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        // Public folder assets
+        source: '/(.*)\\.(png|jpg|jpeg|gif|webp|avif|svg|ico|woff|woff2|ttf|eot)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        // Surgery pages — cache for 10 minutes with stale-while-revalidate
+        source: '/(en|hi)/surgeries/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=86400' },
+        ],
+      },
+      {
+        // Homepage — cache for 5 minutes
+        source: '/(en|hi)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=3600' },
+        ],
+      },
+    ];
+  },
+
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Aggressive caching for optimized images
+    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'plus.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.pravatar.cc',
-      }
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'plus.unsplash.com' },
+      { protocol: 'https', hostname: 'via.placeholder.com' },
+      { protocol: 'https', hostname: 'i.pravatar.cc' },
     ],
   },
-  // Optimize bundle splitting
+
+  // Performance: compress responses, enable React strict mode
+  compress: true,
+  reactStrictMode: true,
+  poweredByHeader: false,
+
   experimental: {
-    workerThreads: false,
-    cpus: 1,
-    optimizePackageImports: ['lucide-react', 'react-icons', 'framer-motion', 'recharts'],
+    // Removed cpus: 1 — this was artificially throttling the build AND runtime
+    optimizePackageImports: [
+      'lucide-react',
+      'react-icons',
+      'recharts',
+    ],
   },
 };
 

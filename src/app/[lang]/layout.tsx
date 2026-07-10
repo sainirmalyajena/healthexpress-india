@@ -14,12 +14,16 @@ const inter = Inter({
   subsets: ['latin'], 
   variable: '--font-inter',
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
@@ -166,6 +170,12 @@ export default async function RootLayout({
     return (
       <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
         <head>
+          {/* Resource hints for external origins */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+          <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+          <link rel="dns-prefetch" href="https://wa.me" />
           {!isPrismSite && (
             <script
               type="application/ld+json"

@@ -57,9 +57,7 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
         { icon: CircleDollarSign, title: dict.point3_title, description: dict.point3_desc, color: 'text-emerald-400', bg: 'bg-emerald-400/5', border: 'border-white/10' },
         { icon: Handshake, title: dict.point4_title, description: dict.point4_desc, color: 'text-blue-400', bg: 'bg-blue-400/5', border: 'border-white/10' },
     ];
-
-    const hospitals = ['Apollo', 'Fortis', 'Max', 'Medanta', 'AIIMS', 'Narayana', 'Manipal', 'Kokilaben'];
-
+    const hospitals = ['Manipal', 'ASG Eye Hospital', 'Mumbai Eye Care'];
     return (
         <section className="bg-[#051c18] relative py-16 md:py-24 overflow-hidden">
             {/* Visual Continuity Orbs */}
@@ -120,7 +118,8 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
                             alt="Luxury Healthcare Facility" 
                             width={800} 
                             height={1000}
-                            className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                            loading="lazy"
+                            className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#051c18] via-transparent to-transparent" />
                         <div className="absolute bottom-10 left-10 right-10 glass p-8 rounded-[2.5rem]">

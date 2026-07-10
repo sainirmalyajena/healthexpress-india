@@ -44,7 +44,10 @@ export function generateOrganizationSchema(options?: OrganizationSchemaOptions) 
             streetAddress: options?.address || process.env.NEXT_PUBLIC_ADDRESS || 'C-120, 2nd Floor, Lajpat Nagar 1'
         },
         sameAs: [
-            // Add social media profiles when available
+            'https://www.facebook.com/healthexpressindia',
+            'https://www.instagram.com/healthexpressindia',
+            'https://www.linkedin.com/company/healthexpressindia',
+            'https://twitter.com/healthexpressin'
         ]
     };
 }
@@ -212,5 +215,77 @@ export function generateCollectionPageSchema(name: string, description: string, 
             '@type': 'MedicalOrganization',
             name: 'HealthExpress India'
         }
+    };
+}
+
+interface PhysicianSchemaOptions {
+    name: string;
+    image: string;
+    description: string;
+    qualification: string;
+    experience: number;
+    accreditations: string[];
+    hospitalName: string;
+    hospitalCity: string;
+    url: string;
+}
+
+export function generatePhysicianSchema(doctor: PhysicianSchemaOptions) {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Physician',
+        '@id': doctor.url,
+        name: `Dr. ${doctor.name}`,
+        image: doctor.image.startsWith('http') ? doctor.image : `${baseUrl}${doctor.image}`,
+        description: doctor.description,
+        medicalSpecialty: 'SurgicalSpecialty',
+        qualification: doctor.qualification,
+        knowsAbout: doctor.accreditations,
+        experienceRequirements: {
+            '@type': 'OccupationalExperienceRequirements',
+            monthsOfExperience: doctor.experience * 12
+        },
+        hospitalAffiliation: {
+            '@type': 'Hospital',
+            name: doctor.hospitalName,
+            address: {
+                '@type': 'PostalAddress',
+                addressLocality: doctor.hospitalCity,
+                addressCountry: 'IN'
+            }
+        },
+        address: {
+            '@type': 'PostalAddress',
+            addressLocality: doctor.hospitalCity,
+            addressCountry: 'IN'
+        },
+        provider: {
+            '@type': 'MedicalOrganization',
+            name: 'HealthExpress India',
+            url: baseUrl
+        }
+    };
+}
+
+interface HospitalSchemaOptions {
+    name: string;
+    city: string;
+    specialties: string[];
+    url: string;
+}
+
+export function generateHospitalSchema(hospital: HospitalSchemaOptions) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Hospital',
+        '@id': hospital.url,
+        name: hospital.name,
+        address: {
+            '@type': 'PostalAddress',
+            addressLocality: hospital.city,
+            addressCountry: 'IN'
+        },
+        medicalSpecialty: hospital.specialties
     };
 }

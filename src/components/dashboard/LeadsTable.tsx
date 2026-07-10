@@ -16,7 +16,7 @@ interface Lead {
     createdAt: Date | string;
     surgery: {
         name: string;
-    };
+    } | null;
     hospital?: {
         name: string;
     } | null;
@@ -78,7 +78,7 @@ export default function LeadsTable({ leads, hospitals, statuses }: LeadsTablePro
                                                 <p className="text-xs text-slate-500">{lead.phone}</p>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-700">{lead.surgery.name}</td>
+                                        <td className="px-4 py-3 text-sm text-slate-700">{lead.surgery?.name || 'General Inquiry'}</td>
                                         <td className="px-4 py-3 text-sm text-slate-700">{lead.city}</td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-2">

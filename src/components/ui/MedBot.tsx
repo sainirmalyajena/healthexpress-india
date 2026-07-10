@@ -33,7 +33,8 @@ export function MedBot({ lang, surgeryContext }: MedBotProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const timer = setTimeout(() => setVisible(true), 1000);
+    // Defer MedBot well past LCP window (3s) to avoid blocking main thread during critical render
+    const timer = setTimeout(() => setVisible(true), 3000);
         return () => clearTimeout(timer);
     }, []);
 

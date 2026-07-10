@@ -35,7 +35,9 @@ async function main() {
     for (const l of leads) {
         // Fetch surgery name if needed, but doing simple ID aggregation for speed or relying on previous include
         // Let's just use the ID for now or fetch aggregated
-        leadsBySurgery[l.surgeryId] = (leadsBySurgery[l.surgeryId] || 0) + 1;
+        if (l.surgeryId) {
+            leadsBySurgery[l.surgeryId] = (leadsBySurgery[l.surgeryId] || 0) + 1;
+        }
     }
 
     // Quick fetch of top surgeries names
