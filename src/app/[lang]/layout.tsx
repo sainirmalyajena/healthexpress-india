@@ -156,15 +156,20 @@ export default async function RootLayout({
   // Detect if we're on the Prism domain or forced by environment variable
   const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
   let isPrismSite = forcedBrand === 'prism';
+  let isCampaignPage = false;
   
   if (!isPrismSite) {
     try {
       const headersList = await headers();
       isPrismSite = headersList.get('x-prism-site') === 'true';
+      isCampaignPage = headersList.get('x-campaign-page') === 'true';
     } catch (e) {
       console.error('Layout headers error:', e);
     }
   }
+  
+  // Campaign pages use their own minimal layout — hide all main nav
+  const hideMainNav = isPrismSite || isCampaignPage;
 
   try {
     return (
@@ -185,17 +190,17 @@ export default async function RootLayout({
             />
           )}
         </head>
-        <body className={`min-h-screen flex flex-col ${isPrismSite ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
+        <body className={`min-h-screen flex flex-col ${hideMainNav ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
           <Analytics />
           
-          {/* Only show HealthExpress Header/Footer/Sticky on the main domain */}
-          {!isPrismSite && (
+          {/* Only show HealthExpress Header/Footer/Sticky on main pages (not Prism or Campaign) */}
+          {!hideMainNav && (
             <Header lang={lang} dict={dictionary.navigation} />
           )}
 
           <main className="flex-1">{children}</main>
 
-          {!isPrismSite && (
+          {!hideMainNav && (
             <>
               <Footer lang={lang} dict={dictionary.footer} />
               <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />

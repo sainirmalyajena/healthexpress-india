@@ -99,6 +99,10 @@ export function middleware(request: NextRequest) {
         const requestHeaders = new Headers(request.headers)
         const shouldBePrism = isPrismDomain || (isLocalhost && pathname.includes('/prism'))
         requestHeaders.set('x-prism-site', shouldBePrism ? 'true' : 'false')
+        
+        // Detect campaign pages (e.g., /en/campaign/lasik) so layout can hide nav
+        const isCampaignPage = pathname.includes('/campaign/')
+        requestHeaders.set('x-campaign-page', isCampaignPage ? 'true' : 'false')
 
         return NextResponse.next({
             request: {
