@@ -30,7 +30,7 @@ export function middleware(request: NextRequest) {
         const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1')
 
         // --- TEMPORARY BLOCK FOR PRISM HEALTHCURE ---
-        if (isPrismDomain || pathname.includes('/prism')) {
+        if (isPrismDomain) {
             return new NextResponse('Website currently unavailable', { status: 403 })
         }
         // --------------------------------------------
