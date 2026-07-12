@@ -29,6 +29,12 @@ export function middleware(request: NextRequest) {
         const isPrismDomain = hostname.includes(PRISM_DOMAIN) || hostname.includes('prism-healthcure')
         const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1')
 
+        // --- TEMPORARY BLOCK FOR PRISM HEALTHCURE ---
+        if (isPrismDomain || pathname.includes('/prism')) {
+            return new NextResponse('Website currently unavailable', { status: 403 })
+        }
+        // --------------------------------------------
+
         // 1. Redirect /prism off the main HealthExpress domain to the dedicated domain
         if (!isPrismDomain && !isLocalhost && pathname.includes('/prism')) {
             const newPath = pathname.replace(/^\/[a-z]{2}\/prism/, '').replace(/^\/prism/, '') || '/'
