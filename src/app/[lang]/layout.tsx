@@ -26,6 +26,10 @@ const outfit = Outfit({
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
+export async function generateStaticParams() {
+  return [{ lang: 'en' }, { lang: 'hi' }];
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const isHi = lang === 'hi';
