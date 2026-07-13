@@ -93,8 +93,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     {
       question: lang === 'hi' ? 'अस्पताल नेटवर्क में कौन से प्रमुख अस्पताल शामिल हैं?' : 'Which major hospitals are in the network?',
       answer: lang === 'hi'
-        ? 'हमारे नेटवर्क में फोर्टिस, अपोलो, मैक्स, मेदांता, कोकिलाबेन और मनीपाल जैसे भारत के 500 से अधिक विशिष्ट अस्पताल शामिल हैं, जो JCI और NABH मानकों द्वारा मान्यता प्राप्त हैं।'
-        : 'Our network includes over 500 elite hospitals across India, such as Fortis, Apollo, Max, Medanta, Kokilaben, and Manipal, all accredited by JCI and NABH standards.'
+        ? 'हमारे नेटवर्क में ASG Eye Hospital, Manipal, और Mumbai Eye Care जैसे भारत के 500 से अधिक विशिष्ट अस्पताल शामिल हैं, जो JCI और NABH मानकों द्वारा मान्यता प्राप्त हैं।'
+        : 'Our network includes over 500 elite hospitals across India, such as ASG Eye Hospital, Manipal, and Mumbai Eye Care, all accredited by JCI and NABH standards.'
     },
     {
       question: lang === 'hi' ? 'क्या मेरी स्वास्थ्य बीमा पॉलिसी यहाँ मान्य होगी?' : 'Will my health insurance policy be accepted?',
