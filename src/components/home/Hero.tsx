@@ -18,13 +18,13 @@ export function Hero({ lang, dict }: HeroProps) {
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 mt-12 md:mt-0">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 items-center">
 
           {/* Left Column - Copy */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:pr-8">
 
             {/* Badge */}
-            <div className="mb-8 inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-premium">
+            <div className="mb-6 inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-premium">
               <Sparkles className="w-4 h-4 text-teal-400" aria-hidden="true" />
               <span className="text-xs md:text-sm font-bold tracking-wider text-teal-50 uppercase">
                 {lang === 'hi' ? 'भारत का प्रीमियम सर्जरी नेटवर्क' : "India's Elite Surgery Network"}
@@ -39,12 +39,12 @@ export function Hero({ lang, dict }: HeroProps) {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-teal-50/70 mb-10 max-w-2xl leading-relaxed font-medium">
+            <p className="text-lg md:text-xl text-teal-50/70 mb-8 max-w-xl leading-relaxed font-medium">
               {dict.subtitle}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-12 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-8 w-full sm:w-auto">
               <Link
                 href={`/${lang}/surgeries`}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold text-lg rounded-2xl hover:bg-white/20 transition-all active:scale-95"
@@ -71,7 +71,7 @@ export function Hero({ lang, dict }: HeroProps) {
           </div>
 
           {/* Right Column - Form */}
-          <div className="lg:col-span-5 relative w-full max-w-md mx-auto lg:max-w-none">
+          <div className="relative w-full max-w-md mx-auto lg:max-w-lg lg:ml-auto">
              <HeroInquiryForm />
           </div>
 
