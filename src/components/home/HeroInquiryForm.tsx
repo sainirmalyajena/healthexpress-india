@@ -33,7 +33,6 @@ export default function HeroInquiryForm() {
         setIsSubmitting(true);
 
         try {
-            // Track lead event via Pixel
             if (typeof window !== 'undefined' && (window as any).fbq) {
                 (window as any).fbq('track', 'Lead', {
                     content_name: 'Hero Form Lead',
@@ -41,7 +40,6 @@ export default function HeroInquiryForm() {
                 });
             }
 
-            // Submit to API endpoint
             const response = await fetch('/api/leads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -73,13 +71,13 @@ export default function HeroInquiryForm() {
 
     if (isSuccess) {
         return (
-            <div className="bg-white/10 backdrop-blur-md p-8 rounded-[2rem] border border-white/20 text-center animate-reveal shadow-premium h-full flex flex-col items-center justify-center min-h-[400px]">
-                <div className="w-20 h-20 bg-teal-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-teal-400/30">
-                    <CheckCircle className="w-10 h-10 text-teal-400" />
+            <div className="bg-white p-8 rounded-[2rem] border border-teal-100 text-center animate-reveal shadow-2xl shadow-black/20 h-full flex flex-col items-center justify-center min-h-[400px]">
+                <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-teal-100">
+                    <CheckCircle className="w-10 h-10 text-teal-600" />
                 </div>
-                <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Request Received!</h3>
-                <p className="text-teal-50/80 mb-8 text-lg font-medium">Our medical expert will call you within <span className="text-white font-bold">15 minutes</span> to discuss your case.</p>
-                <div className="bg-white/5 border border-white/10 p-5 rounded-2xl text-sm font-medium text-teal-100 w-full">
+                <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Request Received!</h3>
+                <p className="text-slate-600 mb-8 text-lg font-medium">Our medical expert will call you within <span className="text-slate-900 font-bold">15 minutes</span> to discuss your case.</p>
+                <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl text-sm font-medium text-slate-700 w-full">
                     <p>We will verify your insurance and provide a transparent cost estimate during the call.</p>
                 </div>
             </div>
@@ -87,21 +85,21 @@ export default function HeroInquiryForm() {
     }
 
     return (
-        <div className="relative bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-[2rem] shadow-premium border border-white/10 overflow-hidden group">
-            {/* Ambient Glow */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/10 blur-[60px] rounded-full group-hover:bg-teal-500/20 transition-colors duration-700 pointer-events-none" />
+        <div className="relative bg-white p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-teal-900/30 overflow-hidden group">
+            {/* Top Border Highlight */}
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-teal-400 to-teal-600" />
             
-            <div className="relative z-10">
+            <div className="relative z-10 pt-2">
                 <div className="mb-8 text-center md:text-left">
-                    <h3 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight">Get a Free Estimate</h3>
-                    <p className="text-teal-50/70 text-sm md:text-base font-medium">Top surgeons. NABH hospitals. Zero hidden costs.</p>
+                    <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-2 tracking-tight">Get a Free Estimate</h3>
+                    <p className="text-slate-500 text-sm md:text-base font-medium">Top surgeons. NABH hospitals. Zero hidden costs.</p>
                 </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     {/* Input Group: Name */}
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <User className="h-5 w-5 text-teal-400/70" />
+                            <User className="h-5 w-5 text-teal-600" />
                         </div>
                         <input 
                             type="text" 
@@ -109,7 +107,7 @@ export default function HeroInquiryForm() {
                             placeholder="Patient's Full Name" 
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-teal-400 focus:border-transparent focus:bg-white/10 outline-none transition-all text-white placeholder:text-teal-50/40 font-medium"
+                            className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
                         />
                     </div>
 
@@ -117,7 +115,7 @@ export default function HeroInquiryForm() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Phone className="h-5 w-5 text-teal-400/70" />
+                                <Phone className="h-5 w-5 text-teal-600" />
                             </div>
                             <input 
                                 type="tel" 
@@ -126,12 +124,12 @@ export default function HeroInquiryForm() {
                                 placeholder="Phone Number" 
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '').slice(0,10)})}
-                                className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-teal-400 focus:border-transparent focus:bg-white/10 outline-none transition-all text-white placeholder:text-teal-50/40 font-medium"
+                                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
                             />
                         </div>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <MapPin className="h-5 w-5 text-teal-400/70" />
+                                <MapPin className="h-5 w-5 text-teal-600" />
                             </div>
                             <input 
                                 type="text" 
@@ -139,7 +137,7 @@ export default function HeroInquiryForm() {
                                 placeholder="Your City" 
                                 value={formData.city}
                                 onChange={(e) => setFormData({...formData, city: e.target.value})}
-                                className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-teal-400 focus:border-transparent focus:bg-white/10 outline-none transition-all text-white placeholder:text-teal-50/40 font-medium"
+                                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
                             />
                         </div>
                     </div>
@@ -147,27 +145,27 @@ export default function HeroInquiryForm() {
                     {/* Input Group: Surgery Dropdown */}
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Activity className="h-5 w-5 text-teal-400/70" />
+                            <Activity className="h-5 w-5 text-teal-600" />
                         </div>
                         <select 
                             required
                             value={formData.surgeryName}
                             onChange={(e) => setFormData({...formData, surgeryName: e.target.value})}
-                            className={`w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-2xl focus:ring-2 focus:ring-teal-400 focus:border-transparent focus:bg-white/10 outline-none transition-all font-medium appearance-none ${formData.surgeryName ? 'text-white' : 'text-teal-50/40'}`}
+                            className={`w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all font-medium appearance-none shadow-sm ${formData.surgeryName ? 'text-slate-900' : 'text-slate-400'}`}
                         >
-                            <option value="" disabled className="bg-[#051c18] text-teal-50/70">Select Surgery Type</option>
+                            <option value="" disabled className="text-slate-500">Select Surgery Type</option>
                             {SURGERIES.map(s => (
-                                <option key={s} value={s} className="bg-[#051c18] text-white py-2">{s}</option>
+                                <option key={s} value={s} className="text-slate-900 py-2">{s}</option>
                             ))}
                         </select>
                         <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                            <div className="w-2 h-2 border-b-2 border-r-2 border-teal-400/70 transform rotate-45 mb-1" />
+                            <div className="w-2 h-2 border-b-2 border-r-2 border-slate-400 transform rotate-45 mb-1" />
                         </div>
                     </div>
 
                     {/* Insurance Toggle */}
                     <div className="pt-1">
-                        <label className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer hover:bg-white/10 transition-colors group/label">
+                        <label className="flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:bg-white transition-colors group/label shadow-sm">
                             <div className="relative flex items-center">
                                 <input 
                                     type="checkbox" 
@@ -175,11 +173,11 @@ export default function HeroInquiryForm() {
                                     onChange={(e) => setHasInsurance(e.target.checked)}
                                     className="peer sr-only"
                                 />
-                                <div className="w-6 h-6 border-2 border-white/20 rounded-md peer-checked:bg-teal-500 peer-checked:border-teal-500 transition-all flex items-center justify-center">
+                                <div className="w-6 h-6 border-2 border-slate-300 rounded-md peer-checked:bg-teal-600 peer-checked:border-teal-600 transition-all flex items-center justify-center bg-white">
                                     <CheckCircle className={`w-4 h-4 text-white opacity-0 peer-checked:opacity-100 transition-opacity`} />
                                 </div>
                             </div>
-                            <span className="font-medium text-teal-50/90 group-hover/label:text-white transition-colors text-sm md:text-base">I have Health Insurance</span>
+                            <span className="font-bold text-slate-700 group-hover/label:text-slate-900 transition-colors text-sm md:text-base">I have Health Insurance</span>
                         </label>
                     </div>
 
@@ -190,7 +188,7 @@ export default function HeroInquiryForm() {
                             placeholder="Insurance Provider (e.g. Star Health, HDFC)" 
                             value={formData.insuranceProvider}
                             onChange={(e) => setFormData({...formData, insuranceProvider: e.target.value})}
-                            className="w-full px-4 py-4 bg-teal-500/10 border border-teal-500/30 rounded-2xl focus:ring-2 focus:ring-teal-400 focus:border-transparent outline-none transition-all text-white placeholder:text-teal-200/50 font-medium"
+                            className="w-full px-4 py-4 bg-teal-50 border border-teal-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all text-slate-900 placeholder:text-teal-700/50 font-medium shadow-sm"
                         />
                     </div>
 
@@ -198,7 +196,7 @@ export default function HeroInquiryForm() {
                     <button 
                         type="submit" 
                         disabled={isSubmitting}
-                        className="w-full py-4 md:py-5 mt-4 bg-gradient-to-r from-teal-400 to-emerald-400 text-[#051c18] font-black text-lg rounded-2xl shadow-[0_0_20px_rgba(45,212,191,0.2)] hover:shadow-[0_0_35px_rgba(45,212,191,0.4)] hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:hover:scale-100 disabled:shadow-none"
+                        className="w-full py-4 md:py-5 mt-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-teal-500/30 hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:hover:scale-100 disabled:shadow-none"
                     >
                         {isSubmitting ? 'Securely Submitting...' : 'Find My Surgeon'}
                         {!isSubmitting && <ArrowRight className="w-5 h-5" />}
@@ -206,9 +204,9 @@ export default function HeroInquiryForm() {
                 </form>
 
                 {/* Trust Indicators */}
-                <div className="mt-6 flex items-center justify-center gap-4 text-xs font-bold text-teal-50/50 uppercase tracking-widest">
+                <div className="mt-6 flex items-center justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
                     <div className="flex items-center gap-1.5">
-                        <ShieldCheck className="w-4 h-4 text-emerald-400/70" />
+                        <ShieldCheck className="w-4 h-4 text-emerald-500" />
                         HIPAA Compliant
                     </div>
                 </div>
