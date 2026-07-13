@@ -24,33 +24,33 @@ export function Hero({ lang, dict }: HeroProps) {
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:pr-8">
 
             {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-premium">
-              <Sparkles className="w-4 h-4 text-teal-400" aria-hidden="true" />
-              <span className="text-xs md:text-sm font-bold tracking-wider text-teal-50 uppercase">
+            <div className="mb-4 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-premium">
+              <Sparkles className="w-3.5 h-3.5 text-teal-400" aria-hidden="true" />
+              <span className="text-[10px] md:text-xs font-bold tracking-wider text-teal-50 uppercase">
                 {lang === 'hi' ? 'भारत का प्रीमियम सर्जरी नेटवर्क' : "India's Elite Surgery Network"}
               </span>
             </div>
 
             {/* H1 */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-6 text-white tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.1] mb-4 text-white tracking-tight">
               {dict.title.split(' ').slice(0, 3).join(' ')}
-              <span className="block mt-2 bg-gradient-to-r from-teal-300 via-emerald-200 to-teal-400 bg-clip-text text-transparent pb-2">
+              <span className="block mt-1.5 bg-gradient-to-r from-teal-300 via-emerald-200 to-teal-400 bg-clip-text text-transparent pb-1">
                 {dict.title.split(' ').slice(3).join(' ')}
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-teal-50/70 mb-8 max-w-xl leading-relaxed font-medium">
+            <p className="text-base md:text-lg text-teal-50/70 mb-6 max-w-xl leading-relaxed font-medium">
               {dict.subtitle}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-8 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-6 w-full sm:w-auto">
               <Link
                 href={`/${lang}/surgeries`}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold text-lg rounded-2xl hover:bg-white/20 transition-all active:scale-95"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold text-base md:text-lg rounded-2xl hover:bg-white/20 transition-all active:scale-95"
               >
                 {dict.cta_find}
-                <ArrowRight className="w-5 h-5" aria-hidden="true" />
+                <ArrowRight className="w-4 h-4 md:w-5 md:h-5" aria-hidden="true" />
               </Link>
             </div>
 
