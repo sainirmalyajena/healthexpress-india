@@ -47,7 +47,7 @@ export default function HeroInquiryForm() {
                     fullName: formData.name,
                     phone: formData.phone,
                     city: formData.city,
-                    surgeryName: formData.surgeryName || 'Not Specified',
+                    surgeryId: formData.surgeryName || 'Not Specified',
                     insurance: hasInsurance ? 'YES' : 'NO',
                     description: `Homepage Hero Lead. ${hasInsurance ? 'Has Insurance: ' + formData.insuranceProvider : ''}`,
                     utmSource: 'homepage_hero',

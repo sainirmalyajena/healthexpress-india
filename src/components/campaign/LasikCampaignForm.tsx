@@ -39,7 +39,7 @@ export default function LasikCampaignForm() {
                     phone: formData.phone,
                     email: formData.email,
                     city: formData.city,
-                    surgeryName: 'LASIK Eye Surgery',
+                    surgeryId: 'LASIK Eye Surgery',
                     insurance: hasInsurance ? 'YES' : 'NO',
                     description: `Facebook LASIK Campaign Lead. ${hasInsurance ? 'Has Insurance: ' + formData.insuranceProvider : ''}`,
                     utmSource: 'facebook',
