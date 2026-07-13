@@ -20,18 +20,5 @@
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
-    },
-    {
-      "source": "/(en|hi)/surgeries/:path*",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, s-maxage=600, stale-while-revalidate=86400" }
-      ]
-    },
-    {
-      "source": "/(en|hi)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=3600" }
-      ]
-    }
   ]
 }

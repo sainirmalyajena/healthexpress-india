@@ -27,20 +27,6 @@ const nextConfig: NextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
-      {
-        // Surgery pages — cache for 10 minutes with stale-while-revalidate
-        source: '/(en|hi)/surgeries/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=86400' },
-        ],
-      },
-      {
-        // Homepage — cache for 5 minutes
-        source: '/(en|hi)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=3600' },
-        ],
-      },
     ];
   },
 
@@ -76,6 +62,4 @@ export default withSentryConfig(withAnalyzer(nextConfig), {
   project: "javascript-nextjs",
   silent: !process.env.CI,
   widenClientFileUpload: true,
-  disableLogger: true,
-  automaticVercelMonitors: true,
 });
