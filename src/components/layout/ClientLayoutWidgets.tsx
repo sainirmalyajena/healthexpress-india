@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 
 const MedBot = dynamic(() => import("@/components/ui/MedBot").then(m => m.MedBot), {
   ssr: false,
