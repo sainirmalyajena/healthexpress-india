@@ -26,20 +26,9 @@ const categories = [
   'PEDIATRIC',
   'ONCOLOGY'
 ];
-const DynamicHowItWorks = dynamic(() => import('@/components/home/HowItWorks'), {
-  ssr: true,
-  loading: () => <div className="py-24 bg-white min-h-[400px] animate-pulse"></div>
-});
-
-const DynamicTrustSection = dynamic(() => import('@/components/home/TrustSection'), {
-  ssr: true,
-  loading: () => <div className="py-32 bg-[#051c18] min-h-[600px] animate-pulse"></div>
-});
-
-const DynamicTestimonials = dynamic(() => import('@/components/home/Testimonials'), {
-  ssr: true,
-  loading: () => <div className="py-24 bg-white min-h-[400px] animate-pulse"></div>
-});
+import HowItWorks from '@/components/home/HowItWorks';
+import TrustSection from '@/components/home/TrustSection';
+import Testimonials from '@/components/home/Testimonials';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -181,9 +170,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
       {/* Lazy Loaded Sections */}
       <div className="space-y-0">
-        <DynamicHowItWorks lang={lang} dict={dict.how_it_works} />
-        <DynamicTrustSection lang={lang} dict={dict.trust} />
-        <DynamicTestimonials lang={lang} dict={dict.testimonials} />
+        <HowItWorks lang={lang} dict={dict.how_it_works} />
+        <TrustSection lang={lang} dict={dict.trust} />
+        <Testimonials lang={lang} dict={dict.testimonials} />
       </div>
 
       {/* FAQ Section */}

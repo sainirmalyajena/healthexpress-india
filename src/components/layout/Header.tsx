@@ -25,6 +25,11 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
+    // Hide main navigation on campaign landing pages
+    if (pathname?.includes('/campaign/')) {
+        return null;
+    }
+
     // Handle scroll effect
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);

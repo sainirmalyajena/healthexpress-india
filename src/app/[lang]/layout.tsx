@@ -31,16 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const isHi = lang === 'hi';
   
   const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
-  let isPrismSite = forcedBrand === 'prism';
-  
-  if (!isPrismSite) {
-    try {
-      const headersList = await headers();
-      isPrismSite = headersList.get('x-prism-site') === 'true';
-    } catch (e) {
-      console.error('Metadata headers error:', e);
-    }
-  }
+  const isPrismSite = forcedBrand === 'prism';
 
   if (isPrismSite) {
     const prismTitle = 'Prism Healthcure | Premium Ophthalmology & Eye Care';
@@ -153,23 +144,11 @@ export default async function RootLayout({
   
   const organizationSchema = generateOrganizationSchema();
   
-  // Detect if we're on the Prism domain or forced by environment variable
   const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
-  let isPrismSite = forcedBrand === 'prism';
-  let isCampaignPage = false;
+  const isPrismSite = forcedBrand === 'prism';
   
-  if (!isPrismSite) {
-    try {
-      const headersList = await headers();
-      isPrismSite = headersList.get('x-prism-site') === 'true';
-      isCampaignPage = headersList.get('x-campaign-page') === 'true';
-    } catch (e) {
-      console.error('Layout headers error:', e);
-    }
-  }
-  
-  // Campaign pages use their own minimal layout — hide all main nav
-  const hideMainNav = isPrismSite || isCampaignPage;
+  // Header and Footer visibility is now handled by the components themselves via usePathname
+  const hideMainNav = isPrismSite;
 
   try {
     return (

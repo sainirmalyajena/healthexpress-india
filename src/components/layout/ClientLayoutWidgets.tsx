@@ -19,7 +19,14 @@ interface StickyCtaDict {
     book: string;
 }
 
-export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: StickyCtaDict }) {
+export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: any }) {
+    const pathname = usePathname();
+
+    // Hide sticky widgets on campaign landing pages
+    if (pathname?.includes('/campaign/')) {
+        return null;
+    }
+
     return (
         <>
             <MedBot lang={lang} />

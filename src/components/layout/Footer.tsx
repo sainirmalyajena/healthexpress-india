@@ -1,9 +1,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, ShieldCheck } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function Footer({ lang, dict }: { lang: string; dict: any }) {
+    const pathname = usePathname();
+
+    // Hide footer on campaign landing pages
+    if (pathname?.includes('/campaign/')) {
+        return null;
+    }
+
     const currentYear = new Date().getFullYear();
 
     const footerLinks = {
