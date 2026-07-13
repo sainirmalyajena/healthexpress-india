@@ -51,11 +51,18 @@ export default function LasikCampaignForm() {
             if (response.ok) {
                 setIsSuccess(true);
             } else {
-                throw new Error('Submission failed');
+                const errorData = await response.json();
+                if (errorData.details && errorData.details.fieldErrors) {
+                    const firstError = Object.values(errorData.details.fieldErrors)[0] as string[];
+                    if (firstError && firstError.length > 0) {
+                        throw new Error(firstError[0]);
+                    }
+                }
+                throw new Error(errorData.error || 'Submission failed');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            alert("Something went wrong. Please try calling us directly.");
+            alert(error.message || "Something went wrong. Please try calling us directly.");
         } finally {
             setIsSubmitting(false);
         }
