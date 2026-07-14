@@ -2,8 +2,6 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
-// Removed Prisma import to prevent connection errors on the root page
-import dynamic from 'next/dynamic';
 import { getDictionary } from '@/get-dictionary';
 import { Hero } from '@/components/home/Hero';
 import type { Locale } from '@/i18n-config';

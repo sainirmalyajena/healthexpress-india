@@ -16,7 +16,7 @@ import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 import { getAISuggestedTerms, isLikelySymptomatic } from '@/lib/ai-search';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300; // ISR: revalidate every 5 minutes
 
 interface SearchParams {
   q?: string;
@@ -338,8 +338,8 @@ export default async function SurgeriesPage({
   const dictionary = await getDictionary(lang as Locale);
   const dict = { ...dictionary.surgeries, categories: dictionary.categories };
 
-  const allForCities = await prisma.surgery.findMany({ select: { availableCities: true } });
-  const uniqueCities = Array.from(new Set(allForCities.flatMap(s => s.availableCities))).sort();
+  // Cities are already fetched inside getSurgeries() — reuse from there
+  const { uniqueCities } = await getSurgeries(sp);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
   const collectionSchema = generateCollectionPageSchema(

@@ -6,7 +6,7 @@ import { Prisma } from '@/generated/prisma';
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 600; // ISR: revalidate every 10 minutes
 
 interface PageProps {
     params: Promise<{ lang: string }>;

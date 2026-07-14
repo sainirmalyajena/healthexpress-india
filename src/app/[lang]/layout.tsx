@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Header, Footer, ConditionalShell } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
