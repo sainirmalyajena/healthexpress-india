@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { Prisma } from '@/generated/prisma';
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
+import { generateCollectionPageSchema } from '@/lib/schema';
 
 export const revalidate = 600; // ISR: revalidate every 10 minutes
 
@@ -15,9 +16,19 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { lang } = await params;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const canonical = `${baseUrl}/${lang}/doctors`;
+    
     return {
         title: lang === 'hi' ? 'भारत में सर्वश्रेष्ठ सर्जन और डॉक्टर | HealthExpress' : 'Best Surgeons & Doctors in India | HealthExpress',
         description: lang === 'hi' ? 'अपने उपचार के लिए शीर्ष रेटेड सर्जनों और डॉक्टरों को खोजें। विशेषता, अनुभव और अस्पताल संबद्धता के आधार पर ब्राउज़ करें।' : 'Find top-rated surgeons and doctors for your treatment. Browse by specialty, experience, and hospital affiliation.',
+        alternates: {
+            canonical: canonical,
+            languages: {
+                'en-IN': `${baseUrl}/en/doctors`,
+                'hi-IN': `${baseUrl}/hi/doctors`,
+            },
+        },
     };
 }
 
@@ -57,8 +68,16 @@ export default async function DoctorsPage({
         { id: 'General Surgery', label: dictionary.categories.GENERAL_SURGERY }
     ];
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const collectionSchema = generateCollectionPageSchema(
+        dict.title,
+        dict.subtitle,
+        `${baseUrl}/doctors`
+    );
+
     return (
         <div className="min-h-screen bg-slate-50 py-12">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
                     <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl mb-4">

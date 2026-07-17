@@ -57,6 +57,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
     alternates: {
       canonical: canonical,
+      languages: {
+        'en-IN': `${baseUrl}/en/surgeries/${slug}`,
+        'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
+      },
     },
     openGraph: {
       title: `${surgery.name} – HealthExpress India`,

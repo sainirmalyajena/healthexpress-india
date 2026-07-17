@@ -315,6 +315,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     description,
     alternates: {
       canonical: canonical,
+      languages: {
+        'en-IN': `${baseUrl}/en/surgeries`,
+        'hi-IN': `${baseUrl}/hi/surgeries`,
+      },
     },
     openGraph: {
       title,

@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { leadFormSchema, LeadFormData } from '@/lib/validations';
 import { Button, Input, Select, Textarea, Checkbox } from '@/components/ui';
+import { Lock, ShieldCheck, Clock, CheckCircle2, UserCheck, Stethoscope } from 'lucide-react';
 
 interface LeadFormProps {
     surgeryId: string;
@@ -62,17 +63,64 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
 
     if (submitResult?.success) {
         return (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
-                <div className="text-5xl mb-4">✅</div>
-                <h3 className="text-xl font-semibold text-green-800 mb-2">Thank You!</h3>
-                <p className="text-green-700 mb-4">Your inquiry has been submitted successfully.</p>
-                <div className="bg-white rounded-lg p-4 inline-block">
-                    <p className="text-sm text-slate-600">Your Reference ID:</p>
-                    <p className="text-lg font-mono font-bold text-teal-600">{submitResult.referenceId}</p>
+            <div className="bg-white rounded-2xl p-6 md:p-8 text-center animate-in fade-in zoom-in duration-500">
+                {/* Success Icon */}
+                <div className="mx-auto w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6 shadow-sm border border-green-100">
+                    <CheckCircle2 className="w-10 h-10 text-green-500" />
                 </div>
-                <p className="text-sm text-green-600 mt-4">
-                    Our team will contact you within 24 hours.
+                
+                <h3 className="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
+                    Request Received Successfully!
+                </h3>
+                <p className="text-slate-600 mb-8 max-w-sm mx-auto text-sm md:text-base">
+                    Thank you for trusting HealthExpress India. Your health is our priority.
                 </p>
+
+                {/* Reference ID Pill */}
+                <div className="inline-flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 mb-10 shadow-sm">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ref ID:</span>
+                    <span className="text-lg font-mono font-bold text-teal-700 tracking-wider">{submitResult.referenceId}</span>
+                </div>
+
+                {/* What's Next Timeline */}
+                <div className="text-left bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-6 text-center">What Happens Next?</h4>
+                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-teal-200 before:to-transparent">
+                        
+                        {/* Step 1 */}
+                        <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <UserCheck className="w-4 h-4" />
+                            </div>
+                            <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                                <h5 className="font-bold text-slate-900 text-sm mb-1">Expert Review</h5>
+                                <p className="text-xs text-slate-500 leading-relaxed">A senior care coordinator is reviewing your medical requirements.</p>
+                            </div>
+                        </div>
+
+                        {/* Step 2 */}
+                        <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <Clock className="w-4 h-4" />
+                            </div>
+                            <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                                <h5 className="font-bold text-slate-900 text-sm mb-1">Priority Callback</h5>
+                                <p className="text-xs text-slate-500 leading-relaxed">You will receive a call within 24 hours to discuss options.</p>
+                            </div>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                                <Stethoscope className="w-4 h-4" />
+                            </div>
+                            <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                                <h5 className="font-bold text-slate-900 text-sm mb-1">Doctor Match</h5>
+                                <p className="text-xs text-slate-500 leading-relaxed">We will connect you with the best surgeon and hospital for your needs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -176,13 +224,40 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 error={errors.consent?.message}
             />
 
-            <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
-                Submit Inquiry
-            </Button>
+            <div className="pt-4">
+                <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full relative overflow-hidden group bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_25px_rgba(20,184,166,0.5)] transition-all duration-300 border-0 h-14 text-base font-bold" 
+                    loading={isSubmitting}
+                >
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10" />
+                    
+                    <span className="relative z-20 flex items-center justify-center gap-2">
+                        Submit Inquiry & Get Free Estimate
+                        <CheckCircle2 className="w-5 h-5 opacity-80" />
+                    </span>
+                </Button>
 
-            <p className="text-xs text-center text-slate-500">
-                Your information is secure and will only be used to assist with your healthcare needs.
-            </p>
+                {/* Trust Badges under button */}
+                <div className="mt-5 flex flex-col items-center gap-3">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+                        <Lock className="w-3.5 h-3.5 text-teal-600" />
+                        100% Secure & Confidential
+                    </div>
+                    <div className="flex items-center justify-center gap-6 text-[11px] text-slate-500 font-medium">
+                        <span className="flex items-center gap-1.5">
+                            <ShieldCheck className="w-3.5 h-3.5 text-teal-500" />
+                            Data Encrypted
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                            <Stethoscope className="w-3.5 h-3.5 text-teal-500" />
+                            NMC Verified Doctors
+                        </span>
+                    </div>
+                </div>
+            </div>
         </form>
     );
 }

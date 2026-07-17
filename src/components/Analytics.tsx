@@ -23,12 +23,12 @@ export default function Analytics() {
             {GA_ID && (
                 <>
                     <Script
-                        strategy="afterInteractive"
+                        strategy="lazyOnload"
                         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
                     />
                     <Script
                         id="gtag-init"
-                        strategy="afterInteractive"
+                        strategy="lazyOnload"
                         dangerouslySetInnerHTML={{
                             __html: `
                                 window.dataLayer = window.dataLayer || [];
@@ -47,7 +47,7 @@ export default function Analytics() {
             {FB_ID && (
                 <Script
                     id="fb-pixel"
-                    strategy="afterInteractive"
+                    strategy="lazyOnload"
                     dangerouslySetInnerHTML={{
                         __html: `
                             !function(f,b,e,v,n,t,s)

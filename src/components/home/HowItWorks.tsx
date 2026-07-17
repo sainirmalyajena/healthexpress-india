@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Phone, Building2, CheckCircle2, Sparkles } from 'lucide-react';
+import { MessageSquare, ShieldCheck, Building2, CalendarCheck, HeartHandshake, Sparkles } from 'lucide-react';
 
 interface HowItWorksProps {
     lang: string;
@@ -14,14 +14,14 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
             number: '01',
             title: dict.step1_title,
             description: dict.step1_desc,
-            icon: Search,
+            icon: MessageSquare,
             color: 'teal',
         },
         {
             number: '02',
             title: dict.step2_title,
             description: dict.step2_desc,
-            icon: Phone,
+            icon: ShieldCheck,
             color: 'gold',
         },
         {
@@ -30,6 +30,20 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
             description: dict.step3_desc,
             icon: Building2,
             color: 'emerald',
+        },
+        {
+            number: '04',
+            title: dict.step4_title,
+            description: dict.step4_desc,
+            icon: CalendarCheck,
+            color: 'blue',
+        },
+        {
+            number: '05',
+            title: dict.step5_title,
+            description: dict.step5_desc,
+            icon: HeartHandshake,
+            color: 'rose',
         },
     ];
 
@@ -57,9 +71,9 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
                 {/* Steps - Minimalist Elite Timeline */}
                 <div className="relative">
                     {/* Stealth Connector */}
-                    <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+                    <div className="hidden lg:block absolute top-[60px] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
-                    <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-8">
                         {steps.map((step, idx) => (
                             <div key={step.number} className="relative group">
                                 {/* Visual Anchor */}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
 import { getDictionary } from '@/get-dictionary';
@@ -7,7 +8,7 @@ import { Hero } from '@/components/home/Hero';
 import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui';
-import { generateFAQSchema } from '@/lib/schema';
+import { generateFAQSchema, generateLocalBusinessSchema } from '@/lib/schema';
 
 const categories = [
   'GENERAL_SURGERY',
@@ -24,9 +25,9 @@ const categories = [
   'PEDIATRIC',
   'ONCOLOGY'
 ];
-import HowItWorks from '@/components/home/HowItWorks';
-import TrustSection from '@/components/home/TrustSection';
-import Testimonials from '@/components/home/Testimonials';
+const HowItWorks = dynamic(() => import('@/components/home/HowItWorks'));
+import TrustCards from '@/components/home/TrustCards';
+const Testimonials = dynamic(() => import('@/components/home/Testimonials'));
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -92,15 +93,19 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   ];
 
   const faqSchema = generateFAQSchema(faqs);
+  const orgSchema = generateLocalBusinessSchema();
 
   return (
     <div className="min-h-screen bg-[#fdfdfd]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: `[${JSON.stringify(faqSchema)}, ${JSON.stringify(orgSchema)}]` }}
       />
       {/* Hero Section */}
       <Hero lang={lang} dict={dict.hero} />
+
+      {/* Trust Cards Section */}
+      <TrustCards lang={lang} dict={dict.trust_cards} />
 
       {/* Surgery Categories Section - Precision Grid */}
       <section className="py-12 md:py-20 bg-[#fdfdfd] relative">
@@ -169,7 +174,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       {/* Lazy Loaded Sections */}
       <div className="space-y-0">
         <HowItWorks lang={lang} dict={dict.how_it_works} />
-        <TrustSection lang={lang} dict={dict.trust} />
         <Testimonials lang={lang} dict={dict.testimonials} />
       </div>
 

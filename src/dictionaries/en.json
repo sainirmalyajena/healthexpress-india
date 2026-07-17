@@ -9,24 +9,34 @@
         "call_support": "Call Support"
     },
     "hero": {
-        "title": "Your Trusted Partner for Surgery in India",
-        "subtitle": "Connecting patients with top surgeons and accredited hospitals for affordable, high-quality medical care.",
-        "cta_find": "Find Surgery",
-        "cta_call": "Call Support"
+        "title": "Need Surgery or Hospital Admission?",
+        "subtitle": "Get end-to-end medical assistance from expert care coordinators. We handle everything from doctor consultations to hospital admission and insurance claims.",
+        "bullets": [
+            "FREE Expert Consultation",
+            "Insurance Eligibility Check",
+            "Cashless Assistance*",
+            "Trusted Hospital Network"
+        ],
+        "cta_book": "Book Consultation",
+        "cta_whatsapp": "WhatsApp Support"
     },
     "footer": {
         "disclaimer": "Medical Disclaimer: Information provided on this website is for general awareness only and is not a substitute for professional medical advice, diagnosis, or treatment.",
         "rights": "All rights reserved."
     },
     "how_it_works": {
-        "title": "Your Journey to Recovery",
-        "subtitle": "Simple steps to get the best care",
-        "step1_title": "Find Your Surgery",
-        "step1_desc": "Browse our comprehensive directory or search for the specific surgery you need.",
-        "step2_title": "Get Expert Guidance",
-        "step2_desc": "Our team connects you with the right hospital and specialist for your needs.",
-        "step3_title": "Receive Quality Care",
-        "step3_desc": "Get treated at partner hospitals with transparent pricing and support."
+        "title": "How It Works",
+        "subtitle": "Your journey to better health in 5 simple steps",
+        "step1_title": "Share Requirement",
+        "step1_desc": "Tell us about your medical needs and preferred city.",
+        "step2_title": "Insurance Check",
+        "step2_desc": "We verify your health insurance for cashless eligibility.",
+        "step3_title": "Hospital Match",
+        "step3_desc": "Get recommendations for the best hospitals and top surgeons.",
+        "step4_title": "Appointment",
+        "step4_desc": "We confirm your doctor consultation and hospital admission.",
+        "step5_title": "Treatment Support",
+        "step5_desc": "End-to-end assistance until your safe recovery at home."
     },
     "cta": {
         "title": "Need Help Choosing the Right Surgery?",
@@ -43,6 +53,16 @@
         "point3_desc": "No hidden charges",
         "point4_title": "End-to-End Support",
         "point4_desc": "Admission to recovery"
+    },
+    "trust_cards": {
+        "hospital_title": "Trusted Hospital Network",
+        "hospital_desc": "Get treated at India's top 500+ JCI & NABH accredited hospitals.",
+        "insurance_title": "Insurance Assistance",
+        "insurance_desc": "100% Cashless treatment with all major health insurance providers.",
+        "care_title": "Expert Care Coordinators",
+        "care_desc": "Dedicated support from your first call until complete recovery.",
+        "cab_title": "Cab Pickup & Drop",
+        "cab_desc": "Complimentary transportation on the day of your surgery (where available)."
     },
     "testimonials": {
         "title": "Patients Love Us",

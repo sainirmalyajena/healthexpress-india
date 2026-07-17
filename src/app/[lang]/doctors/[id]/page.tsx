@@ -3,10 +3,11 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import Image from 'next/image';
 
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
-import { generatePhysicianSchema } from '@/lib/schema';
+import { generatePhysicianSchema, generateBreadcrumbSchema } from '@/lib/schema';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,13 +36,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const doctor = await getDoctor(id);
     if (!doctor) return { title: 'Doctor Not Found' };
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const canonical = `${baseUrl}/${lang}/doctors/${id}`;
+
     return {
         title: `Dr. ${doctor.name} - ${doctor.qualification} | HealthExpress India`,
         description: doctor.about,
         alternates: {
+            canonical: canonical,
             languages: {
-                'en-IN': `/en/doctors/${id}`,
-                'hi-IN': `/hi/doctors/${id}`,
+                'en-IN': `${baseUrl}/en/doctors/${id}`,
+                'hi-IN': `${baseUrl}/hi/doctors/${id}`,
             },
         },
     };
@@ -79,6 +84,8 @@ export default async function DoctorProfilePage({ params }: PageProps) {
     const dict = dictionary.doctor_profile || {};
     const isHi = lang === 'hi';
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+
     const physicianSchema = generatePhysicianSchema({
         name: doctor.name,
         image: doctor.image,
@@ -88,15 +95,19 @@ export default async function DoctorProfilePage({ params }: PageProps) {
         accreditations: doctor.surgeries.map(s => s.name),
         hospitalName: doctor.hospital.name,
         hospitalCity: doctor.hospital.city,
-        url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com'}/${lang}/doctors/${doctor.id}`
+        url: `${baseUrl}/${lang}/doctors/${doctor.id}`
     });
+
+    const breadcrumbSchema = generateBreadcrumbSchema([
+        { name: isHi ? 'होम' : 'Home', url: `${baseUrl}/${lang}` },
+        { name: isHi ? 'डॉक्टर' : 'Doctors', url: `${baseUrl}/${lang}/doctors` },
+        { name: `Dr. ${doctor.name}`, url: `${baseUrl}/${lang}/doctors/${doctor.id}` },
+    ]);
 
     return (
         <div className="min-h-screen bg-slate-50 py-12">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(physicianSchema) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(physicianSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Back Link */}
                 <Link href={`/${lang}/doctors`} className="text-teal-600 hover:text-teal-700 text-sm font-medium mb-8 inline-flex items-center gap-1 group">
@@ -107,12 +118,14 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mt-4">
                     <div className="md:flex">
                         {/* Photo */}
-                        <div className="md:w-64 h-64 md:h-auto bg-slate-100 flex-shrink-0">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                        <div className="md:w-64 h-64 md:h-auto bg-slate-100 flex-shrink-0 relative overflow-hidden">
+                            <Image
                                 src={doctor.image}
                                 alt={doctor.name}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 256px"
+                                className="object-cover"
+                                priority
                             />
                         </div>
 

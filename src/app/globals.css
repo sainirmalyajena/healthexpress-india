@@ -183,3 +183,9 @@ section:first-of-type,
   font-weight: bold;
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
