@@ -5,7 +5,7 @@ import { cache } from 'react';
 import {
   Clock, Building2, HeartPulse, IndianRupee, ShieldCheck,
   CheckCircle2, AlertTriangle, ChevronDown, Phone, ArrowRight,
-  Star, MapPin, Stethoscope, CalendarCheck, Lock, Flame
+  Star, Stethoscope, CalendarCheck, Lock, Flame
 } from 'lucide-react';
 import { getCategoryLabel, getCategoryIcon, formatCurrency } from '@/lib/utils';
 import { LeadForm } from '@/components/forms';
@@ -142,47 +142,6 @@ function SectionHeading({
   );
 }
 
-function CityPricingTable({ cities, costMin, costMax }: { cities: string[]; costMin: number; costMax: number }) {
-  const rows = cities
-    .filter(c => CITY_COST_FACTORS[c])
-    .map(c => ({
-      city: c,
-      min: Math.round((costMin * CITY_COST_FACTORS[c]) / 1000) * 1000,
-      max: Math.round((costMax * CITY_COST_FACTORS[c]) / 1000) * 1000,
-    }))
-    .sort((a, b) => a.min - b.min);
-
-  if (rows.length === 0) return null;
-
-  return (
-    <div className="mt-5 rounded-xl overflow-hidden border border-slate-200">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="bg-slate-50 border-b border-slate-200">
-            <th className="text-left px-4 py-3 font-semibold text-slate-700">City</th>
-            <th className="text-right px-4 py-3 font-semibold text-slate-700">Min Cost</th>
-            <th className="text-right px-4 py-3 font-semibold text-slate-700">Max Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr key={row.city} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-              <td className="px-4 py-3 text-slate-700">
-                <span className="flex items-center gap-2">
-                  <MapPin className="w-3.5 h-3.5 text-teal-500 flex-shrink-0" />
-                  {row.city}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-right text-slate-900">{formatCurrency(row.min)}</td>
-              <td className="px-4 py-3 text-right font-semibold text-teal-700">{formatCurrency(row.max)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   return (
     <details className="group border border-slate-200 rounded-xl overflow-hidden">
@@ -200,15 +159,33 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function CitySurgeryDetailPage({ params }: PageProps) {
-  const { slug, lang, city: rawCity } = await params;
+  const { slug: rawSlug, lang, city: rawCity } = await params;
   const city = decodeURIComponent(rawCity).charAt(0).toUpperCase() + decodeURIComponent(rawCity).slice(1).toLowerCase();
   
-  const surgery = await getSurgery(slug);
+  // Map friendly short slugs to the full database slugs
+  const slugAliases: Record<string, string> = {
+    'lasik': 'lasik-eye-surgery',
+    'cataract': 'cataract-surgery',
+    'hernia': 'hernia-repair',
+    'gallbladder': 'gallbladder-removal-cholecystectomy',
+    'ivf': 'ivf-treatment',
+    'cabg': 'coronary-artery-bypass-grafting-cabg',
+    'knee-replacement': 'total-knee-replacement',
+    'hip-replacement': 'total-hip-replacement',
+    'piles': 'hemorrhoidectomy',
+    'appendix': 'appendectomy',
+    'rhinoplasty': 'rhinoplasty-nose-job'
+  };
+
+  const resolvedSlug = slugAliases[rawSlug.toLowerCase()] || rawSlug;
+  const surgery = await getSurgery(resolvedSlug);
+  
   if (!surgery || !CITY_COST_FACTORS[city]) notFound();
   
   // Filter doctors for this city
   if (surgery.doctors) {
-    surgery.doctors = surgery.doctors.filter((d: any) => d.hospital?.city?.toLowerCase() === city.toLowerCase() || d.cities?.some((c: string) => c.toLowerCase() === city.toLowerCase()));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    surgery.doctors = (surgery.doctors as any).filter((d: { hospital?: { city: string }, cities?: string[] }) => d.hospital?.city?.toLowerCase() === city.toLowerCase() || d.cities?.some((c: string) => c.toLowerCase() === city.toLowerCase()));
   }
   
   // Apply cost factor
