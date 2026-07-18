@@ -64,11 +64,18 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                             The premium surgical bridge connecting international standards of care with India&apos;s leading medical specialists. Experience healthcare redefined.
                         </p>
                         <div className="flex gap-5">
-                            {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (
-                                <a key={i} href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Social Link">
-                                    <Icon className="w-4 h-4" />
-                                </a>
-                            ))}
+                            <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Facebook">
+                                <Facebook className="w-4 h-4" />
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Twitter">
+                                <Twitter className="w-4 h-4" />
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Linkedin">
+                                <Linkedin className="w-4 h-4" />
+                            </a>
+                            <a href="https://www.instagram.com/healthexpressindia" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-teal-500 hover:text-white hover:border-teal-400 transition-all duration-300" aria-label="Instagram">
+                                <Instagram className="w-4 h-4" />
+                            </a>
                         </div>
                     </div>
 
@@ -120,7 +127,7 @@ export function Footer({ lang, dict }: { lang: string; dict: any }) {
                                 </div>
                                 <div>
                                     <p className="text-[10px] font-black uppercase text-teal-400/50 mb-1">Inquiries</p>
-                                    <a href="mailto:care@healthexpress.in" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">care@healthexpress.in</a>
+                                    <a href="mailto:sai@healthexpressindia.com" className="text-white font-bold text-sm hover:text-teal-400 transition-colors">sai@healthexpressindia.com</a>
                                 </div>
                             </div>
                         </div>

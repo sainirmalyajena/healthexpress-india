@@ -134,13 +134,13 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                             </div>
 
                             <div className="bg-white/80 backdrop-blur-md rounded-3xl p-6 shadow-xl border border-white/50 hover:shadow-2xl transition-all group">
-                                <a href="mailto:hello@healthexpress.in" className="flex items-center gap-5">
+                                <a href="mailto:sai@healthexpressindia.com" className="flex items-center gap-5">
                                     <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110">
                                         <Mail className="w-6 h-6" />
                                     </div>
                                     <div>
                                         <h3 className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors uppercase tracking-wider text-xs">{dict.email}</h3>
-                                        <p className="text-xl font-bold text-slate-900 break-all">hello@healthexpress.in</p>
+                                        <p className="text-xl font-bold text-slate-900 break-all">sai@healthexpressindia.com</p>
                                         <p className="text-xs text-slate-500 font-medium">{dict.email_resp}</p>
                                     </div>
                                     <ArrowRight className="ml-auto w-5 h-5 text-slate-300 group-hover:text-blue-500 transition-all group-hover:translate-x-1" />

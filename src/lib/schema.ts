@@ -30,7 +30,7 @@ export function generateOrganizationSchema(options?: OrganizationSchemaOptions) 
         contactPoint: {
             '@type': 'ContactPoint',
             telephone: options?.phone || process.env.NEXT_PUBLIC_PHONE || '+91 93078 61041',
-            email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'hello@healthexpress.in',
+            email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'sai@healthexpressindia.com',
             contactType: 'customer service',
             areaServed: 'IN',
             availableLanguage: ['en', 'hi']
@@ -163,7 +163,7 @@ export function generateLocalBusinessSchema(options?: LocalBusinessSchemaOptions
         description: options?.description || 'Healthcare coordination and surgery support services',
         url: baseUrl,
         telephone: options?.phone || process.env.NEXT_PUBLIC_PHONE || '+91 93078 61041',
-        email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'hello@healthexpress.in',
+        email: options?.email || process.env.NEXT_PUBLIC_EMAIL || 'sai@healthexpressindia.com',
         address: {
             '@type': 'PostalAddress',
             addressCountry: 'IN',
