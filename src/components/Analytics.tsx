@@ -1,6 +1,6 @@
 'use client';
 
-import Script from 'next/script';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 declare global {
     interface Window {
@@ -11,38 +11,11 @@ declare global {
 
 export default function Analytics() {
     const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-5D05QTMKBH';
-    const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
     const FB_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-
-    if (!GA_ID && !FB_ID) {
-        return null;
-    }
 
     return (
         <>
-            {GA_ID && (
-                <>
-                    <Script
-                        strategy="lazyOnload"
-                        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-                    />
-                    <Script
-                        id="gtag-init"
-                        strategy="lazyOnload"
-                        dangerouslySetInnerHTML={{
-                            __html: `
-                                window.dataLayer = window.dataLayer || [];
-                                function gtag(){dataLayer.push(arguments);}
-                                gtag('js', new Date());
-                                gtag('config', '${GA_ID}', {
-                                    page_path: window.location.pathname,
-                                });
-                                ${GTM_ID ? `gtag('config', '${GTM_ID}');` : ''}
-                            `,
-                        }}
-                    />
-                </>
-            )}
+            {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
             
             {FB_ID && (
                 <Script
