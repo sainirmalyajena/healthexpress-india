@@ -69,9 +69,9 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
                 {/* Stats Bar Integrated with Glassmorphism */}
                 <div className="glass p-10 md:p-16 rounded-[3rem] border border-white/5 mb-24 shadow-premium">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-                        <AnimatedStat end={500} suffix="+" label={lang === 'hi' ? 'पार्टनर अस्पताल' : 'Elite Hospitals'} />
-                        <AnimatedStat end={28} suffix="" label={lang === 'hi' ? 'शहर' : 'Cities'} />
-                        <AnimatedStat end={10000} suffix="+" label={lang === 'hi' ? 'सफल मरीज' : 'Patient Success'} />
+                        <AnimatedStat end={10} suffix="+" label={lang === 'hi' ? 'पार्टनर अस्पताल' : 'Elite Hospitals'} />
+                        <AnimatedStat end={2} suffix="+" label={lang === 'hi' ? 'शहर' : 'Cities'} />
+                        <AnimatedStat end={100} suffix="+" label={lang === 'hi' ? 'सफल मरीज' : 'Patient Success'} />
                         <AnimatedStat prefix="₹" end={0} suffix="" label={lang === 'hi' ? 'परामर्श' : 'Consultation'} />
                     </div>
                 </div>

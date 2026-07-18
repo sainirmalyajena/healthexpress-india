@@ -27,7 +27,6 @@ const categories = [
 ];
 const HowItWorks = dynamic(() => import('@/components/home/HowItWorks'));
 import TrustCards from '@/components/home/TrustCards';
-const Testimonials = dynamic(() => import('@/components/home/Testimonials'));
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -174,7 +173,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       {/* Lazy Loaded Sections */}
       <div className="space-y-0">
         <HowItWorks lang={lang} dict={dict.how_it_works} />
-        <Testimonials lang={lang} dict={dict.testimonials} />
       </div>
 
       {/* FAQ Section */}

@@ -30,8 +30,6 @@ export default function PrismHeader({ lang, dict }: PrismHeaderProps) {
 
   const navLinks = [
     { href: lang === 'en' ? "/en#treatments" : "/hi#treatments", label: lang === 'hi' ? 'विशेषताएं' : 'Specialties' },
-    { href: lang === 'en' ? "/en#doctors" : "/hi#doctors", label: lang === 'hi' ? 'हमारे डॉक्टर' : 'Our Doctors' },
-    { href: lang === 'en' ? "/en#testimonials" : "/hi#testimonials", label: lang === 'hi' ? 'समीक्षाएं' : 'Reviews' },
     { href: lang === 'en' ? "/en#faq" : "/hi#faq", label: "FAQ" },
     { href: lang === 'en' ? "/en#appointment" : "/hi#appointment", label: lang === 'hi' ? 'संपर्क' : 'Contact' },
   ];

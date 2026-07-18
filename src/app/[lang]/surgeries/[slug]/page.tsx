@@ -406,8 +406,8 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                     <Stethoscope className="w-6 h-6 text-teal-600" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 mb-1">Top 1% Surgeons</h4>
-                    <p className="text-sm text-slate-600 leading-relaxed">We partner exclusively with board-certified specialists with 10+ years of proven expertise in {categoryLabel}.</p>
+                    <h4 className="font-bold text-slate-900 mb-1">Access to Experienced {categoryLabel} Specialists</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">We partner exclusively with top-tier hospitals providing access to board-certified specialists with 10+ years of proven expertise in {categoryLabel}.</p>
                   </div>
                 </div>
                 
@@ -462,7 +462,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                     <li className="flex items-center gap-2 text-sm font-medium text-slate-800"><CheckCircle2 className="w-4 h-4 text-teal-600" /> Zero Wait-time on Admission</li>
                   </ul>
                   <a href="#lead-form" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-teal-200">
-                    Get Free Consultation <ArrowRight className="w-4 h-4" />
+                    Book Your FREE {surgery.name} Consultation <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
               </div>
@@ -531,6 +531,40 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                 <p className="text-xs text-red-700"><strong>{dict.note}:</strong> {dict.risk_disclaimer}</p>
               </div>
             </section>
+
+            {surgery.slug === 'lasik-eye-surgery' && (
+              <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">
+                <SectionHeading icon={Award} title="Compare Vision Correction Options" iconBg="bg-indigo-100" iconColor="text-indigo-600" />
+                <div className="overflow-x-auto mt-4 rounded-xl border border-slate-200">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-slate-50 text-slate-700 uppercase font-semibold text-xs border-b border-slate-200">
+                      <tr>
+                        <th className="px-4 py-3">Procedure</th>
+                        <th className="px-4 py-3">Recovery Time</th>
+                        <th className="px-4 py-3">Typical Cost Range</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-slate-600">
+                      <tr className="hover:bg-slate-50">
+                        <td className="px-4 py-3 font-semibold text-teal-700">LASIK</td>
+                        <td className="px-4 py-3">1–2 days</td>
+                        <td className="px-4 py-3 font-medium text-slate-900">₹40,000 – ₹1,00,000</td>
+                      </tr>
+                      <tr className="hover:bg-slate-50">
+                        <td className="px-4 py-3 font-semibold text-teal-700">SMILE</td>
+                        <td className="px-4 py-3">2–3 days</td>
+                        <td className="px-4 py-3 font-medium text-slate-900">₹80,000 – ₹1,50,000</td>
+                      </tr>
+                      <tr className="hover:bg-slate-50">
+                        <td className="px-4 py-3 font-semibold text-teal-700">PRK</td>
+                        <td className="px-4 py-3">3–7 days</td>
+                        <td className="px-4 py-3 font-medium text-slate-900">₹35,000 – ₹80,000</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
 
             {faqs?.length > 0 && (
               <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">

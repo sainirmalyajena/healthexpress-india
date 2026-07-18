@@ -47,7 +47,7 @@
     "trust": {
         "point1_title": "Privacy Protected",
         "point1_desc": "Strict confidentiality",
-        "point2_title": "500+ Hospitals",
+        "point2_title": "Premium Partner Hospitals",
         "point2_desc": "Top providers across India",
         "point3_title": "Transparent Pricing",
         "point3_desc": "No hidden charges",
@@ -56,9 +56,9 @@
     },
     "trust_cards": {
         "hospital_title": "Trusted Hospital Network",
-        "hospital_desc": "Get treated at India's top 500+ JCI & NABH accredited hospitals.",
+        "hospital_desc": "Get treated at India's premium JCI & NABH accredited hospitals.",
         "insurance_title": "Insurance Assistance",
-        "insurance_desc": "100% Cashless treatment with all major health insurance providers.",
+        "insurance_desc": "Insurance Eligibility Check & Cashless Assistance (subject to policy terms and hospital network).",
         "care_title": "Expert Care Coordinators",
         "care_desc": "Dedicated support from your first call until complete recovery.",
         "cab_title": "Cab Pickup & Drop",

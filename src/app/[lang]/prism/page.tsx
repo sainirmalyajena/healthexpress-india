@@ -140,33 +140,6 @@ export default async function PrismHealthcurePage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* ── DOCTORS ── */}
-      <section id="doctors" className="py-20 md:py-28 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-teal-700 font-bold text-sm uppercase tracking-widest">{d.expert_team}</span>
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mt-3 mb-4">{d.meet_specialists}</h2>
-            <p className="text-gray-500 text-base md:text-lg">{d.specialists_desc}</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {doctors.map((d, i) => (
-              <div key={i} className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-teal-50 transition-all duration-300 hover:-translate-y-1">
-                <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-100 to-teal-50">
-                  <img src={d.img} alt={d.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900">{d.name}</h3>
-                  <p className="text-teal-700 font-semibold text-sm mt-1">{d.role}</p>
-                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-50">
-                    <span className="text-xs font-semibold text-gray-400 bg-gray-50 px-3 py-1.5 rounded-full">{d.spec}</span>
-                    <span className="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1.5 rounded-full">{d.exp}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── WHY CHOOSE US ── */}
       <section className="py-20 md:py-28 bg-white">
@@ -199,36 +172,6 @@ export default async function PrismHealthcurePage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS ── */}
-      <section id="testimonials" className="py-20 md:py-28 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-5 md:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-teal-700 font-bold text-sm uppercase tracking-widest">{d.patient_stories}</span>
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mt-3 mb-4">{d.what_patients_say}</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <div key={i} className="bg-white p-7 md:p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow">
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6">&ldquo;{t.text}&rdquo;</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-50">
-                  <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-bold text-sm">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900 text-sm">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.location} · {t.surgery}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── FAQ ── */}
       <section id="faq" className="py-20 md:py-28 bg-white">
