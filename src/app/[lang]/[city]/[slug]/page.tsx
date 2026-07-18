@@ -22,7 +22,7 @@ import { Locale } from '@/i18n-config';
 export const revalidate = 600; // ISR: revalidate every 10 minutes
 
 interface PageProps {
-  params: Promise<{ slug: string; lang: string }>;
+  params: Promise<{ slug: string; lang: string; city: string }>;
 }
 
 const CITY_COST_FACTORS: Record<string, number> = {
@@ -44,54 +44,67 @@ const getSurgery = cache(async (slug: string) => {
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug, lang } = await params;
+  const { slug, lang, city: rawCity } = await params;
+  const city = decodeURIComponent(rawCity).charAt(0).toUpperCase() + decodeURIComponent(rawCity).slice(1).toLowerCase();
+  
+  if (!CITY_COST_FACTORS[city]) return { title: 'Not Found' };
+  
   const surgery = await getSurgery(slug);
   if (!surgery) return { title: 'Surgery Not Found' };
-  const minCost = formatCurrency(surgery.costRangeMin);
-  const maxCost = formatCurrency(surgery.costRangeMax);
+  
+  const factor = CITY_COST_FACTORS[city] || 1;
+  const minCost = formatCurrency(Math.round((surgery.costRangeMin * factor) / 1000) * 1000);
+  const maxCost = formatCurrency(Math.round((surgery.costRangeMax * factor) / 1000) * 1000);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
-  const canonical = `${baseUrl}/${lang}/surgeries/${slug}`;
+  const canonical = `${baseUrl}/${lang}/${city.toLowerCase()}/${slug}`;
 
   return {
-    title: `${surgery.name} Cost in India – ${minCost} to ${maxCost} | HealthExpress`,
-    description: `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
+    title: `${surgery.name} Cost in ${city} – ${minCost} to ${maxCost} | HealthExpress`,
+    description: `Best hospitals and top surgeons for ${surgery.name} in ${city}. The cost ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 100)}`,
     alternates: {
       canonical: canonical,
       languages: {
-        'en-IN': `${baseUrl}/en/surgeries/${slug}`,
-        'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
+        'en-IN': `${baseUrl}/en/${city.toLowerCase()}/${slug}`,
+        'hi-IN': `${baseUrl}/hi/${city.toLowerCase()}/${slug}`,
       },
     },
     openGraph: {
-      title: `${surgery.name} – HealthExpress India`,
-      description: surgery.overview.substring(0, 160),
+      title: `${surgery.name} in ${city} – HealthExpress India`,
+      description: `Best hospitals and top surgeons for ${surgery.name} in ${city}.`,
       url: canonical,
       type: 'article',
       locale: lang === 'hi' ? 'hi_IN' : 'en_IN',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${surgery.name} – HealthExpress India`,
-      description: surgery.overview.substring(0, 160),
+      title: `${surgery.name} in ${city} – HealthExpress India`,
+      description: `Best hospitals and top surgeons for ${surgery.name} in ${city}.`,
     },
     keywords: [
-      surgery.name,
-      `${surgery.name} cost India`,
-      `${surgery.name} cost`,
-      `${surgery.name} surgery price`,
-      `best hospital for ${surgery.name}`,
+      `${surgery.name} in ${city}`,
+      `${surgery.name} cost in ${city}`,
+      `${surgery.name} surgeon ${city}`,
+      `best hospital for ${surgery.name} in ${city}`,
       `${surgery.name} recovery time`,
       'affordable surgery India',
-      'medical tourism India',
-      ...surgery.availableCities.map(c => `${surgery.name} ${c}`),
     ],
   };
 }
 
 export async function generateStaticParams() {
   try {
-    const surgeries = await prisma.surgery.findMany({ select: { slug: true }, take: 100 });
-    return surgeries.flatMap(s => ['en', 'hi'].map(lang => ({ slug: s.slug, lang })));
+    const surgeries = await prisma.surgery.findMany({ select: { slug: true, availableCities: true }, take: 100 });
+    const params: { slug: string; lang: string; city: string }[] = [];
+    
+    surgeries.forEach(s => {
+      s.availableCities.forEach(city => {
+        ['en', 'hi'].forEach(lang => {
+          params.push({ slug: s.slug, lang, city: city.toLowerCase() });
+        });
+      });
+    });
+    
+    return params;
   } catch (error) {
     console.warn('Failed to fetch surgeries for static params, falling back to dynamic generation:', error);
     return [];
@@ -129,7 +142,7 @@ function SectionHeading({
   );
 }
 
-function CityPricingTable({ cities, costMin, costMax, slug, lang }: { cities: string[]; costMin: number; costMax: number; slug: string; lang: string }) {
+function CityPricingTable({ cities, costMin, costMax }: { cities: string[]; costMin: number; costMax: number }) {
   const rows = cities
     .filter(c => CITY_COST_FACTORS[c])
     .map(c => ({
@@ -155,10 +168,10 @@ function CityPricingTable({ cities, costMin, costMax, slug, lang }: { cities: st
           {rows.map((row, i) => (
             <tr key={row.city} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
               <td className="px-4 py-3 text-slate-700">
-                <Link href={`/${lang}/${row.city.toLowerCase()}/${slug}`} className="flex items-center gap-2 hover:text-teal-600 transition-colors">
+                <span className="flex items-center gap-2">
                   <MapPin className="w-3.5 h-3.5 text-teal-500 flex-shrink-0" />
-                  <span className="font-medium underline decoration-teal-200 underline-offset-4 hover:decoration-teal-500">{row.city}</span>
-                </Link>
+                  {row.city}
+                </span>
               </td>
               <td className="px-4 py-3 text-right text-slate-900">{formatCurrency(row.min)}</td>
               <td className="px-4 py-3 text-right font-semibold text-teal-700">{formatCurrency(row.max)}</td>
@@ -186,10 +199,22 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function SurgeryDetailPage({ params }: PageProps) {
-  const { slug, lang } = await params;
+export default async function CitySurgeryDetailPage({ params }: PageProps) {
+  const { slug, lang, city: rawCity } = await params;
+  const city = decodeURIComponent(rawCity).charAt(0).toUpperCase() + decodeURIComponent(rawCity).slice(1).toLowerCase();
+  
   const surgery = await getSurgery(slug);
-  if (!surgery) notFound();
+  if (!surgery || !CITY_COST_FACTORS[city]) notFound();
+  
+  // Filter doctors for this city
+  if (surgery.doctors) {
+    surgery.doctors = surgery.doctors.filter((d: any) => d.hospital?.city?.toLowerCase() === city.toLowerCase() || d.cities?.some((c: string) => c.toLowerCase() === city.toLowerCase()));
+  }
+  
+  // Apply cost factor
+  const factor = CITY_COST_FACTORS[city] || 1;
+  const cityMinCost = Math.round((surgery.costRangeMin * factor) / 1000) * 1000;
+  const cityMaxCost = Math.round((surgery.costRangeMax * factor) / 1000) * 1000;
 
   const dictionary = await getDictionary(lang as Locale);
   const dict = dictionary.detail_page;
@@ -202,8 +227,8 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
     name: surgery.name,
     description: surgery.overview,
     category: categoryLabel,
-    costMin: surgery.costRangeMin,
-    costMax: surgery.costRangeMax,
+    costMin: cityMinCost,
+    costMax: cityMaxCost,
     duration: surgery.duration,
     hospitalStay: surgery.hospitalStay,
     recovery: surgery.recovery,
@@ -259,7 +284,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
           </div>
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-3 leading-tight tracking-tight">
-            {surgery.name}
+            {surgery.name} in {city}
           </h1>
           {doctor && (
             <div className="flex items-center gap-2 text-xs text-slate-500 mb-4 bg-teal-50/50 border border-teal-100/50 rounded-full px-3 py-1.5 w-fit">
@@ -279,7 +304,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
             <StatPill icon={Clock}       label={dict.duration}      value={surgery.duration}                            />
             <StatPill icon={Building2}   label={dict.hospital_stay} value={surgery.hospitalStay}                        />
             <StatPill icon={HeartPulse}  label={dict.recovery}      value={surgery.recovery.split('.')[0]}              />
-            <StatPill icon={IndianRupee} label={dict.est_cost}       value={`${formatCurrency(surgery.costRangeMin)}+`}  highlight />
+            <StatPill icon={IndianRupee} label={dict.est_cost}       value={`${formatCurrency(cityMinCost)}+`}  highlight />
           </div>
         </div>
       </div>
@@ -302,7 +327,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                 <div className="space-y-2.5">
                   <div className="flex items-start gap-2.5">
                     <span className="text-teal-400 mt-0.5">•</span>
-                    <p><strong className="text-white">{lang === 'hi' ? 'अनुमानित लागत:' : 'Estimated Cost:'}</strong> {formatCurrency(surgery.costRangeMin)} - {formatCurrency(surgery.costRangeMax)}</p>
+                    <p><strong className="text-white">{lang === 'hi' ? 'अनुमानित लागत:' : 'Estimated Cost:'}</strong> {formatCurrency(cityMinCost)} - {formatCurrency(cityMaxCost)}</p>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <span className="text-teal-400 mt-0.5">•</span>
@@ -341,9 +366,9 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                 <div className="flex-1 bg-gradient-to-br from-teal-600 to-teal-700 text-white rounded-xl p-5">
                   <p className="text-teal-200 text-xs font-semibold uppercase tracking-wider mb-1">{dict.cost_range}</p>
                   <p className="text-3xl font-bold">
-                    {formatCurrency(surgery.costRangeMin)}
+                    {formatCurrency(cityMinCost)}
                     <span className="text-teal-300 text-xl"> – </span>
-                    {formatCurrency(surgery.costRangeMax)}
+                    {formatCurrency(cityMaxCost)}
                   </p>
                   <p className="text-teal-200 text-xs mt-2">{dict.cost_vary_note}</p>
                 </div>
@@ -356,13 +381,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                 </div>
               </div>
 
-              {surgery.availableCities.length > 0 && (
-                <>
-                  <h3 className="font-semibold text-slate-800 mt-7 mb-1 text-sm">Cost by City</h3>
-                  <p className="text-xs text-slate-500 mb-2">Estimated ranges — actual costs depend on hospital tier and case complexity.</p>
-                  <CityPricingTable cities={surgery.availableCities} costMin={surgery.costRangeMin} costMax={surgery.costRangeMax} slug={surgery.slug} lang={lang} />
-                </>
-              )}
+
 
               <div className="mt-5 flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl">
                 <ShieldCheck className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -390,7 +409,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
 
             {surgery.doctors?.length > 0 && (
               <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">
-                <SectionHeading icon={Star} title={`${dict.top_surgeons} ${surgery.name}`} />
+                <SectionHeading icon={Star} title={`${dict.top_surgeons} ${surgery.name} in ${city}`} />
                 <div className="grid md:grid-cols-2 gap-5">
                   {surgery.doctors.map(doctor => (
                     <DoctorCard key={doctor.id} doctor={doctor} lang={lang} dict={dictionary.doctor_card} />
