@@ -126,9 +126,9 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {submitResult?.success === false && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
+                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 mb-4">
                     {submitResult.message}
                 </div>
             )}
@@ -148,7 +148,7 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 <p className="font-semibold text-teal-900">{surgeryName}</p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4">
                 <Input
                     label="Full Name"
                     placeholder="Enter your full name"
@@ -167,7 +167,7 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 />
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4">
                 <Input
                     label="Email"
                     placeholder="your.email@example.com"
@@ -189,13 +189,13 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
             <Textarea
                 label="Describe Your Symptoms / Requirements"
                 placeholder="Please describe your symptoms, medical history, or any specific requirements..."
-                rows={4}
+                rows={3}
                 {...register('description')}
                 error={errors.description?.message}
                 required
             />
 
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4">
                 <Select
                     label="Do you have health insurance?"
                     options={[
@@ -228,7 +228,7 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 <Button 
                     type="submit" 
                     size="lg" 
-                    className="w-full relative overflow-hidden group bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_25px_rgba(20,184,166,0.5)] transition-all duration-300 border-0 h-14 text-base font-bold" 
+                    className="w-full relative overflow-hidden group bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_25px_rgba(20,184,166,0.5)] transition-all duration-300 border-0 h-12 md:h-14 text-base font-bold"
                     loading={isSubmitting}
                 >
                     {/* Shimmer effect */}
