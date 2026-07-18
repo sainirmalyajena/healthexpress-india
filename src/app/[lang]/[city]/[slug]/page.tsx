@@ -5,7 +5,7 @@ import { cache } from 'react';
 import {
   Clock, Building2, HeartPulse, IndianRupee, ShieldCheck,
   CheckCircle2, AlertTriangle, ChevronDown, Phone, ArrowRight,
-  Star, Stethoscope, CalendarCheck, Lock, Flame
+  Star, Stethoscope, CalendarCheck, Lock, Flame, Award, HeartHandshake, UserPlus, FileText, MapPin
 } from 'lucide-react';
 import { getCategoryLabel, getCategoryIcon, formatCurrency } from '@/lib/utils';
 import { LeadForm } from '@/components/forms';
@@ -339,32 +339,125 @@ export default async function CitySurgeryDetailPage({ params }: PageProps) {
 
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">
               <SectionHeading icon={IndianRupee} title={dict.cost_insurance} iconBg="bg-emerald-100" iconColor="text-emerald-600" />
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1 bg-gradient-to-br from-teal-600 to-teal-700 text-white rounded-xl p-5">
-                  <p className="text-teal-200 text-xs font-semibold uppercase tracking-wider mb-1">{dict.cost_range}</p>
-                  <p className="text-3xl font-bold">
-                    {formatCurrency(cityMinCost)}
-                    <span className="text-teal-300 text-xl"> – </span>
-                    {formatCurrency(cityMaxCost)}
-                  </p>
-                  <p className="text-teal-200 text-xs mt-2">{dict.cost_vary_note}</p>
+              
+              <div className="flex flex-col md:flex-row gap-5 mb-8">
+                <div className="flex-1 bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <IndianRupee className="w-24 h-24" />
+                  </div>
+                  <p className="text-teal-400 text-xs font-bold uppercase tracking-wider mb-2">Transparent Pricing in {city}</p>
+                  <h3 className="text-xl font-bold mb-1">Starting from {formatCurrency(cityMinCost)}</h3>
+                  <p className="text-slate-300 text-sm mb-6">No hidden charges. 100% transparency.</p>
+                  
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center gap-3 text-sm text-slate-200">
+                      <CheckCircle2 className="w-4 h-4 text-teal-400 flex-shrink-0" />
+                      <span>Surgeon & Anesthesia Fees</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-slate-200">
+                      <CheckCircle2 className="w-4 h-4 text-teal-400 flex-shrink-0" />
+                      <span>OT & Consumables</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-slate-200">
+                      <CheckCircle2 className="w-4 h-4 text-teal-400 flex-shrink-0" />
+                      <span>Pre-op & Post-op Consultations</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-5">
-                  <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">{dict.insurance_coverage}</p>
-                  <p className={`text-xl font-bold ${surgery.insuranceLikely ? 'text-green-600' : 'text-amber-600'}`}>
-                    {surgery.insuranceLikely ? dictionary.surgeries.usually_covered : dict.may_not_be_covered}
-                  </p>
-                  <p className="text-slate-400 text-xs mt-2">{dict.check_provider_note}</p>
+
+                <div className="flex-1 bg-white border-2 border-blue-100 rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <ShieldCheck className="w-6 h-6 text-blue-600" />
+                      <h3 className="text-lg font-bold text-slate-900">Insurance Eligibility Check</h3>
+                    </div>
+                    <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                      Are you covered for {surgery.name}? Our insurance desk handles approvals within 30 minutes. 
+                      {surgery.insuranceLikely ? ' This procedure is usually covered by major policies.' : ''}
+                    </p>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                      <span className="text-sm text-slate-700 font-medium">100% Cashless Available in {city}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-6">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                      <span className="text-sm text-slate-700 font-medium">Zero Cost EMI Options</span>
+                    </div>
+                  </div>
+                  <a href="#lead-form" className="block w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm text-center rounded-lg transition-colors border border-blue-200">
+                    Check My Insurance
+                  </a>
                 </div>
               </div>
+            </section>
 
+            <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">
+              <SectionHeading icon={Award} title={`Why Choose HealthExpress India in ${city}?`} iconBg="bg-amber-100" iconColor="text-amber-600" />
+              
+              <div className="grid sm:grid-cols-2 gap-6 mt-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center flex-shrink-0">
+                    <Stethoscope className="w-6 h-6 text-teal-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 mb-1">Top 1% Surgeons in {city}</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">We partner exclusively with board-certified specialists with 10+ years of proven expertise in {categoryLabel}.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <ShieldCheck className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 mb-1">NABH & JCI Hospitals</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">Your safety is our priority. We only work with strictly audited, accredited premium hospitals in {city}.</p>
+                  </div>
+                </div>
 
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-6 h-6 text-emerald-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 mb-1">Hassle-Free Insurance</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">Our dedicated desk handles all paperwork, ensuring smooth 100% cashless claims.</p>
+                  </div>
+                </div>
 
-              <div className="mt-5 flex items-start gap-3 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                <ShieldCheck className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-blue-800">{dict.cashless_treatment}</p>
-                  <p className="text-xs text-blue-700 mt-0.5">{dict.cashless_desc}</p>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                    <HeartHandshake className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-900 mb-1">End-to-End Care</h4>
+                    <p className="text-sm text-slate-600 leading-relaxed">Free cabs on the day of surgery, admission assistance, and post-op recovery tracking.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-2xl shadow-sm border border-teal-100 p-7 overflow-hidden relative">
+              <div className="absolute right-0 bottom-0 opacity-5">
+                <UserPlus className="w-64 h-64 -mb-10 -mr-10" />
+              </div>
+              <div className="relative z-10 flex flex-col md:flex-row gap-6 items-center">
+                <div className="flex-1">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-teal-200 rounded-full text-xs font-bold text-teal-700 uppercase tracking-wide mb-4">
+                    <Star className="w-3.5 h-3.5 fill-teal-600 text-teal-600" /> Premium Service
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-3">Your Dedicated Care Coordinator in {city}</h3>
+                  <p className="text-slate-700 leading-relaxed mb-6">
+                    Surgery can be stressful. We assign a personal care buddy to you from day one. They handle your appointments, insurance paperwork, hospital admission, and even arrange your free cab on the day of surgery.
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    <li className="flex items-center gap-2 text-sm font-medium text-slate-800"><CheckCircle2 className="w-4 h-4 text-teal-600" /> 24/7 WhatsApp Support</li>
+                    <li className="flex items-center gap-2 text-sm font-medium text-slate-800"><CheckCircle2 className="w-4 h-4 text-teal-600" /> Priority Doctor Appointments</li>
+                    <li className="flex items-center gap-2 text-sm font-medium text-slate-800"><CheckCircle2 className="w-4 h-4 text-teal-600" /> Zero Wait-time on Admission</li>
+                  </ul>
+                  <a href="#lead-form" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-teal-200">
+                    Get Free Consultation <ArrowRight className="w-4 h-4" />
+                  </a>
                 </div>
               </div>
             </section>
@@ -444,7 +537,7 @@ export default async function CitySurgeryDetailPage({ params }: PageProps) {
           </div>
 
           {/* Sticky Sidebar */}
-          <aside className="lg:col-span-1 mt-8 lg:mt-0">
+          <aside className="lg:col-span-1 mt-8 lg:mt-0" id="lead-form">
             <div className="sticky top-24 space-y-5">
 
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
