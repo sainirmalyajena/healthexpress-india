@@ -20,7 +20,7 @@ interface StickyCtaDict {
     book: string;
 }
 
-export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: any }) {
+export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Record<string, string> }) {
     const pathname = usePathname();
 
     // Hide sticky widgets on campaign landing pages

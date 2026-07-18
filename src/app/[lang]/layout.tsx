@@ -153,8 +153,7 @@ export default async function RootLayout({
   // Header and Footer visibility is now handled by the components themselves via usePathname
   const hideMainNav = isPrismSite;
 
-  try {
-    return (
+  return (
       <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
         <head>
           {/* Resource hints for external origins */}
@@ -193,22 +192,4 @@ export default async function RootLayout({
         </body>
       </html>
     );
-  } catch (error) {
-    console.error('RootLayout Render Error:', error);
-    return (
-      <html lang="en">
-        <body>
-          <main className="flex items-center justify-center min-h-screen p-4 text-center">
-            <div>
-              <h1 className="text-2xl font-bold mb-4">{isPrismSite ? 'Prism Healthcure' : 'HealthExpress India'}</h1>
-              <p>We are currently updating our systems. Please check back in a few minutes.</p>
-              <a href={`tel:${isPrismSite ? '9307861041' : '9307861041'}`} className="mt-4 inline-block text-teal-600 font-bold">
-                Call Support: 93078-61041
-              </a>
-            </div>
-          </main>
-        </body>
-      </html>
-    );
-  }
 }

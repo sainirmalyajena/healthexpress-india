@@ -40,8 +40,8 @@ export default function AppointmentForm() {
       
       setSuccess(true);
       reset();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }

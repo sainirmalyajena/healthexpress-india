@@ -25,10 +25,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
-    // Hide main navigation on campaign landing pages
-    if (pathname?.includes('/campaign/')) {
-        return null;
-    }
+
 
     // Handle scroll effect
     useEffect(() => {
@@ -56,6 +53,11 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
         segments[1] = locale;
         return segments.join('/');
     };
+
+    // Hide main navigation on campaign landing pages
+    if (pathname?.includes('/campaign/')) {
+        return null;
+    }
 
     return (
         <header

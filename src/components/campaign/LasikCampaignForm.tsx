@@ -23,8 +23,8 @@ export default function LasikCampaignForm() {
 
         try {
             // Track lead event via Pixel
-            if (typeof window !== 'undefined' && (window as any).fbq) {
-                (window as any).fbq('track', 'Lead', {
+            if (typeof window !== 'undefined' && (window as unknown as Record<string, Function>).fbq) {
+                (window as unknown as Record<string, Function>).fbq('track', 'Lead', {
                     content_name: 'LASIK Campaign',
                     city: formData.city
                 });
@@ -60,9 +60,10 @@ export default function LasikCampaignForm() {
                 }
                 throw new Error(errorData.error || 'Submission failed');
             }
-        } catch (error: any) {
-            console.error(error);
-            alert(error.message || "Something went wrong. Please try calling us directly.");
+        } catch (error: unknown) {
+            const err = error as Error;
+            console.error(err);
+            alert(err.message || "Something went wrong. Please try calling us directly.");
         } finally {
             setIsSubmitting(false);
         }

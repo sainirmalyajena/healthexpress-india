@@ -48,9 +48,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
     const locales = ['en', 'hi'];
 
-    // 1. Get all surgeries
+    // 1. Get all surgeries with their available cities
     const surgeries = await prisma.surgery.findMany({
-        select: { slug: true, updatedAt: true },
+        select: { slug: true, updatedAt: true, availableCities: true },
     });
 
     // 2. Get all active doctors
@@ -122,15 +122,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         });
     });
 
-    // 5. Generate surgery detail pages
+    // 5. Generate surgery detail pages & city-specific landing pages
     surgeries.forEach(surgery => {
         locales.forEach(locale => {
+            // Main surgery page
             sitemapEntries.push({
                 url: `${baseUrl}/${locale}/surgeries/${surgery.slug}`,
                 lastModified: surgery.updatedAt,
                 changeFrequency: 'weekly',
                 priority: 0.8,
             });
+
+            // City-specific landing pages
+            if (surgery.availableCities && Array.isArray(surgery.availableCities)) {
+                surgery.availableCities.forEach(city => {
+                    sitemapEntries.push({
+                        url: `${baseUrl}/${locale}/${city.toLowerCase()}/${surgery.slug}`,
+                        lastModified: surgery.updatedAt,
+                        changeFrequency: 'weekly',
+                        priority: 0.9, // Higher priority for local SEO
+                    });
+                });
+            }
         });
     });
 
