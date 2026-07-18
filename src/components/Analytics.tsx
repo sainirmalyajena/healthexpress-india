@@ -10,7 +10,7 @@ declare global {
 }
 
 export default function Analytics() {
-    const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+    const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-5D05QTMKBH';
     const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
     const FB_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
