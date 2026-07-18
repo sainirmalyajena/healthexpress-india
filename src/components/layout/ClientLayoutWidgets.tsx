@@ -15,12 +15,12 @@ const StickyMobileCTA = dynamic(() => import("@/components/layout").then(m => m.
   ssr: false,
 });
 
-interface StickyCtaDict {
+export interface StickyCtaDict {
     call: string;
     book: string;
 }
 
-export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Record<string, string> }) {
+export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: StickyCtaDict }) {
     const pathname = usePathname();
 
     // Hide sticky widgets on campaign landing pages
