@@ -19,14 +19,14 @@ export function Hero({ lang, dict }: HeroProps) {
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[60%] bg-emerald-600/15 blur-[100px] rounded-full" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20 mt-12 md:mt-0">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 items-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12 mt-8 md:mt-0">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
 
           {/* Left Column - Copy */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:pr-8">
 
             {/* Badge */}
-            <div className="mb-4 inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-premium">
+            <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-premium">
               <Sparkles className="w-3.5 h-3.5 text-teal-400" aria-hidden="true" />
               <span className="text-[10px] md:text-xs font-bold tracking-wider text-teal-50 uppercase">
                 {lang === 'hi' ? 'भारत का प्रीमियम सर्जरी नेटवर्क' : "India's Elite Surgery Network"}
@@ -34,19 +34,19 @@ export function Hero({ lang, dict }: HeroProps) {
             </div>
 
             {/* H1 */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.1] mb-4 text-white tracking-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.1] mb-3 text-white tracking-tight">
               {dict.title.split(' ').slice(0, 3).join(' ')}
               <span className="block mt-1.5 bg-gradient-to-r from-teal-300 via-emerald-200 to-teal-400 bg-clip-text text-transparent pb-1">
                 {dict.title.split(' ').slice(3).join(' ')}
               </span>
             </h1>
 
-            <p className="text-base md:text-lg text-teal-50/70 mb-6 max-w-xl leading-relaxed font-medium">
+            <p className="text-sm md:text-base text-teal-50/70 mb-5 max-w-xl leading-relaxed font-medium">
               {dict.subtitle}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-8 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 mb-6 w-full sm:w-auto">
               <button
                 onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-teal-400 to-teal-600 border border-teal-300/30 text-white font-bold text-base md:text-lg rounded-2xl hover:scale-[1.02] transition-all active:scale-95 shadow-[0_0_20px_rgba(45,212,191,0.3)] lg:hidden"
@@ -69,7 +69,7 @@ export function Hero({ lang, dict }: HeroProps) {
             </div>
 
             {/* Value Proposition Bullets */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {dict.bullets?.map((text: string, idx: number) => (
                 <div key={idx} className="flex items-start gap-3 text-teal-50/90 text-sm md:text-base font-medium">
                   <CheckCircle className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" aria-hidden="true" />

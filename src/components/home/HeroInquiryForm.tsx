@@ -93,17 +93,17 @@ export default function HeroInquiryForm() {
     }
 
     return (
-        <div className="relative bg-white p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-teal-900/30 overflow-hidden group">
+        <div className="relative bg-white p-5 md:p-6 rounded-[2rem] shadow-2xl shadow-teal-900/30 overflow-hidden group">
             {/* Top Border Highlight */}
             <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-teal-400 to-teal-600" />
             
             <div className="relative z-10 pt-2">
-                <div className="mb-8 text-center md:text-left">
+                <div className="mb-5 text-center md:text-left">
                     <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-2 tracking-tight">Get a Free Estimate</h3>
                     <p className="text-slate-500 text-sm md:text-base font-medium">Top surgeons. NABH hospitals. Zero hidden costs.</p>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Input Group: Name */}
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -115,12 +115,12 @@ export default function HeroInquiryForm() {
                             placeholder="Patient's Full Name" 
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
+                            className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
                         />
                     </div>
 
                     {/* Input Group: Phone & City */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <Phone className="h-5 w-5 text-teal-600" />
@@ -132,7 +132,7 @@ export default function HeroInquiryForm() {
                                 placeholder="Phone Number" 
                                 value={formData.phone}
                                 onChange={(e) => setFormData({...formData, phone: e.target.value.replace(/\D/g, '').slice(0,10)})}
-                                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
+                                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
                             />
                         </div>
                         <div className="relative">
@@ -145,7 +145,7 @@ export default function HeroInquiryForm() {
                                 placeholder="Your City" 
                                 value={formData.city}
                                 onChange={(e) => setFormData({...formData, city: e.target.value})}
-                                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
+                                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-sm"
                             />
                         </div>
                     </div>
@@ -159,7 +159,7 @@ export default function HeroInquiryForm() {
                             required
                             value={formData.surgeryName}
                             onChange={(e) => setFormData({...formData, surgeryName: e.target.value})}
-                            className={`w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all font-medium appearance-none shadow-sm ${formData.surgeryName ? 'text-slate-900' : 'text-slate-400'}`}
+                            className={`w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-teal-500 focus:border-transparent focus:bg-white outline-none transition-all font-medium appearance-none shadow-sm ${formData.surgeryName ? 'text-slate-900' : 'text-slate-400'}`}
                         >
                             <option value="" disabled className="text-slate-500">Select Surgery Type</option>
                             {SURGERIES.map(s => (
@@ -173,7 +173,7 @@ export default function HeroInquiryForm() {
 
                     {/* Insurance Toggle */}
                     <div className="pt-1">
-                        <label className="flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:bg-white transition-colors group/label shadow-sm">
+                        <label className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:bg-white transition-colors group/label shadow-sm">
                             <div className="relative flex items-center">
                                 <input 
                                     type="checkbox" 
