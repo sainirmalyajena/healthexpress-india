@@ -4,7 +4,6 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 
 declare global {
     interface Window {
-        dataLayer: unknown[];
         gtag: (...args: unknown[]) => void;
     }
 }
