@@ -144,16 +144,14 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
 
             <div className="grid sm:grid-cols-2 gap-3">
                 <Input
-                    label="Full Name"
-                    placeholder="Enter your full name"
+                    placeholder="Full Name *"
                     {...register('fullName')}
                     error={errors.fullName?.message}
                     required
                 />
 
                 <Input
-                    label="Phone Number"
-                    placeholder="+91 XXXXX XXXXX"
+                    placeholder="Phone Number (+91) *"
                     type="tel"
                     {...register('phone')}
                     error={errors.phone?.message}
@@ -163,16 +161,14 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
 
             <div className="grid sm:grid-cols-2 gap-4">
                 <Input
-                    label="Email"
-                    placeholder="your.email@example.com"
+                    placeholder="Email Address"
                     type="email"
                     {...register('email')}
                     error={errors.email?.message}
                 />
 
                 <Input
-                    label="City"
-                    placeholder="Your city"
+                    placeholder="City *"
                     {...register('city')}
                     error={errors.city?.message}
                     required
@@ -180,38 +176,35 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
             </div>
 
             <Textarea
-                label="Describe Your Symptoms / Requirements"
-                placeholder="Please describe your symptoms..."
+                placeholder="Describe your symptoms or requirements *"
                 rows={2}
                 {...register('description')}
                 error={errors.description?.message}
                 required
             />
 
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-3">
                 <Select
-                    label="Do you have health insurance?"
                     options={[
                         { value: 'YES', label: 'Yes, I have insurance' },
                         { value: 'NO', label: 'No, I will pay directly' },
                         { value: 'NOT_SURE', label: 'Not sure / Need guidance' },
                     ]}
-                    placeholder="Select an option"
+                    placeholder="Health Insurance?"
                     {...register('insurance')}
                     error={errors.insurance?.message}
                     required
                 />
 
                 <Input
-                    label="Preferred Callback Time"
-                    placeholder="e.g., Morning 10-12 PM"
+                    placeholder="Preferred Callback Time"
                     {...register('callbackTime')}
                     error={errors.callbackTime?.message}
                 />
             </div>
 
             <Checkbox
-                label="I agree to be contacted by HealthExpress regarding my inquiry. I understand that my information will be kept confidential."
+                label={<span className="text-[10px] leading-tight text-slate-500">I agree to be contacted by HealthExpress. My information is confidential.</span>}
                 {...register('consent')}
                 error={errors.consent?.message}
             />
