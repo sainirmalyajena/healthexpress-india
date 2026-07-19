@@ -50,6 +50,10 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
 
             if (response.ok) {
                 setSubmitResult({ success: true, referenceId: result.referenceId });
+                // Trigger Meta Pixel Lead Event
+                if (typeof window !== 'undefined' && (window as any).fbq) {
+                    (window as any).fbq('track', 'Lead');
+                }
                 reset();
             } else {
                 setSubmitResult({ success: false, message: result.error || 'Something went wrong' });
