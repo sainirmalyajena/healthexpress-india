@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, LoginFormData } from '@/lib/validations';
 import { Button, Input } from '@/components/ui';
@@ -26,19 +27,19 @@ export default function AdminLoginPage() {
         setError('');
 
         try {
-            const response = await fetch('/api/dashboard/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+            const result = await signIn('admin-login', {
+                email: data.email,
+                password: data.password,
+                redirect: false,
             });
 
-            const result = await response.json();
-
-            if (response.ok) {
-                router.push('/dashboard');
+            if (result?.ok && !result?.error) {
+                // Get locale from pathname (e.g. /en/dashboard/login -> en)
+                const currentLocale = window.location.pathname.split('/')[1] || 'en';
+                router.push(`/${currentLocale}/dashboard`);
                 router.refresh();
             } else {
-                setError(result.error || 'Invalid credentials');
+                setError('Invalid credentials');
             }
         } catch {
             setError('Network error. Please try again.');
@@ -95,8 +96,8 @@ export default function AdminLoginPage() {
                     </form>
 
                     <div className="mt-6 text-center text-sm text-slate-500">
-                        <p>Demo credentials:</p>
-                        <p className="font-mono text-xs mt-1">admin@healthexpress.in / admin123</p>
+                        <p>Credentials updated for security:</p>
+                        <p className="font-mono text-xs mt-1 text-slate-800 font-bold">admin@healthexpress.in / HealthExpress@2026</p>
                     </div>
                 </div>
             </div>

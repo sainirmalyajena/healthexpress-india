@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 export default function PartnerLoginPage() {
     const router = useRouter();
@@ -16,19 +17,18 @@ export default function PartnerLoginPage() {
         setError('');
 
         try {
-            const res = await fetch('/api/partner/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+            const result = await signIn('partner-login', {
+                email,
+                password,
+                redirect: false,
             });
 
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(data.error || 'Login failed');
+            if (result?.error) {
+                throw new Error('Invalid credentials');
             }
 
-            router.push('/partner/dashboard');
+            const currentLocale = window.location.pathname.split('/')[1] || 'en';
+            router.push(`/${currentLocale}/partner/dashboard`);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Login failed');
         } finally {
