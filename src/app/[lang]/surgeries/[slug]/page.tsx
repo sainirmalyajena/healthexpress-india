@@ -589,7 +589,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                   <span className="text-xs font-semibold text-green-700">Experts Available Now</span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 mb-1">{dict.get_in_touch}</h2>
-                <p className="text-sm text-slate-500 mb-6">{dict.form_subtitle}</p>
+                <p className="text-sm text-slate-500 mb-4">{dict.form_subtitle}</p>
                 <LeadForm surgeryId={surgery.id} surgeryName={surgery.name} />
                 <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-2">
                   <Lock className="w-4 h-4 text-slate-400 flex-shrink-0" />
