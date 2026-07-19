@@ -73,9 +73,9 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
             )}
         >
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16 md:h-20">
+                <div className="flex items-center justify-between gap-4 xl:gap-8 h-16 md:h-20">
                     {/* Logo */}
-                    <Link href={`/${lang}`} className="flex items-center gap-3 group">
+                    <Link href={`/${lang}`} className="flex items-center gap-3 group shrink-0">
                         <div className="relative w-10 h-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-premium rounded-xl">
                             <Image
                                 src="/logo.png"
@@ -93,7 +93,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden xl:flex items-center gap-6 2xl:gap-8">
+                    <div className="hidden xl:flex items-center gap-5 2xl:gap-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
@@ -114,7 +114,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                     </div>
 
                     {/* Language Switcher & CTA */}
-                    <div className="hidden xl:flex items-center gap-8">
+                    <div className="hidden xl:flex items-center gap-4 2xl:gap-8 shrink-0">
                         {/* Language Toggle - Premium Pill */}
                         <div className={cn("flex items-center backdrop-blur-md rounded-2xl p-1 shadow-inner", isHome ? "bg-white/5 border border-white/10" : "bg-slate-100/80 border border-slate-200/50")}>
                             <Link
