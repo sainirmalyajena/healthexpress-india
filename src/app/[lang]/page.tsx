@@ -203,8 +203,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       </section>
 
       {/* Cinematic Bottom CTA */}
-      <section className="py-16 md:py-24 bg-[#fdfdfd] px-4">
-        <div className="max-w-6xl mx-auto rounded-[4rem] bg-slate-900 p-12 md:p-24 text-center text-white shadow-premium relative overflow-hidden">
+      <section className="py-10 md:py-16 bg-[#fdfdfd] px-4">
+        <div className="max-w-6xl mx-auto rounded-[3rem] bg-slate-900 p-8 md:p-12 text-center text-white shadow-premium relative overflow-hidden">
           {/* Visual Accents */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold-600/5 rounded-full blur-[90px] translate-y-1/3 -translate-x-1/4" />
@@ -218,10 +218,10 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               {lang === 'hi' ? 'मुफ़्त परामर्श' : 'Immediate Access'}
             </div>
 
-            <h2 className="text-4xl md:text-7xl font-black mb-8 leading-[1.05] tracking-tighter">
+            <h2 className="text-3xl md:text-5xl font-black mb-6 leading-[1.05] tracking-tighter">
               {dict.cta.title}
             </h2>
-            <p className="text-slate-400 mb-14 max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
+            <p className="text-slate-400 mb-10 max-w-2xl mx-auto text-base md:text-lg font-medium leading-relaxed">
               {dict.cta.subtitle}
             </p>
 

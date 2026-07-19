@@ -43,7 +43,7 @@ export default function TrustCards({ dict }: TrustCardsProps) {
     ];
 
     return (
-        <section className="py-12 md:py-20 bg-white relative z-20 -mt-8 md:-mt-12">
+        <section className="pb-12 md:pb-20 relative z-20 -mt-16 md:-mt-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {cards.map((card, i) => (

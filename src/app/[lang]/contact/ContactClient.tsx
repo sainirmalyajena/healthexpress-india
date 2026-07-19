@@ -71,7 +71,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
     return (
         <div className="min-h-screen bg-slate-50 overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-teal-700 via-teal-800 to-slate-900 text-white pt-24 pb-32 md:pb-40 overflow-hidden">
+            <section className="relative bg-gradient-to-br from-teal-700 via-teal-800 to-slate-900 text-white pt-16 pb-24 md:pb-32 overflow-hidden">
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
                 
@@ -90,7 +90,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
             </section>
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 md:-mt-24 pb-24 relative z-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 md:-mt-20 pb-16 relative z-20">
                 <div className="grid lg:grid-cols-12 gap-8 items-start">
                     
                     {/* Left Column: Direct Contact & Trust */}
