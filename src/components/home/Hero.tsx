@@ -19,7 +19,7 @@ export function Hero({ lang, dict }: HeroProps) {
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[60%] bg-emerald-600/15 blur-[100px] rounded-full" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-12 pb-24 lg:pb-32 mt-8 md:mt-0">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-12 pb-32 lg:pb-48 mt-8 md:mt-0">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
 
           {/* Left Column - Copy */}

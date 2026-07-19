@@ -73,7 +73,7 @@ section:first-of-type,
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #e2e8f0;
