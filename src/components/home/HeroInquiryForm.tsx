@@ -6,6 +6,7 @@ import { User, Phone, MapPin, Activity, ShieldCheck, ArrowRight, CheckCircle } f
 export default function HeroInquiryForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [trackingId, setTrackingId] = useState('');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -57,6 +58,8 @@ export default function HeroInquiryForm() {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                setTrackingId(data.referenceId || `HE-${Math.floor(100000 + Math.random() * 900000)}`);
                 setIsSuccess(true);
             } else {
                 const errorData = await response.json();
@@ -85,10 +88,22 @@ export default function HeroInquiryForm() {
                     <CheckCircle className="w-10 h-10 text-teal-600" />
                 </div>
                 <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Request Received!</h3>
-                <p className="text-slate-600 mb-8 text-lg font-medium">Our medical expert will call you within <span className="text-slate-900 font-bold">15 minutes</span> to discuss your case.</p>
-                <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl text-sm font-medium text-slate-700 w-full">
-                    <p>We will verify your insurance and provide a transparent cost estimate during the call.</p>
+                <p className="text-slate-600 mb-6 text-lg font-medium">Our medical expert will call you within <span className="text-slate-900 font-bold">15 minutes</span> to discuss your case.</p>
+                <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl text-sm font-medium text-slate-700 w-full mb-6">
+                    <p className="mb-2">Your Tracking ID:</p>
+                    <p className="text-2xl font-black text-teal-600 tracking-wider font-mono">{trackingId}</p>
                 </div>
+                <button
+                    onClick={() => {
+                        setIsSuccess(false);
+                        setTrackingId('');
+                        setFormData({ name: '', phone: '', city: '', surgeryName: '', insuranceProvider: '' });
+                        setHasInsurance(false);
+                    }}
+                    className="mt-auto px-6 py-3 border-2 border-teal-600 text-teal-700 font-bold rounded-xl hover:bg-teal-50 transition-colors w-full"
+                >
+                    Submit Another Request
+                </button>
             </div>
         );
     }
