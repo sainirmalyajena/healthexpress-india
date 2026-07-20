@@ -2,7 +2,17 @@ import Image from 'next/image';
 import { ShieldCheck, Eye, Clock, CheckCircle } from 'lucide-react';
 import LasikCampaignForm from '@/components/campaign/LasikCampaignForm';
 
-export default function LasikCampaignPage() {
+export default async function LasikCampaignPage({
+    searchParams
+}: {
+    searchParams: Promise<{ city?: string }>
+}) {
+    const { city } = await searchParams;
+    
+    // Capitalize the first letter of the city if provided
+    const formattedCity = city ? city.charAt(0).toUpperCase() + city.slice(1) : null;
+    const locationText = formattedCity ? `${formattedCity}'s` : "India's";
+
     return (
         <div className="bg-[#051c18] min-h-screen">
             {/* Hero Section */}
@@ -26,7 +36,7 @@ export default function LasikCampaignPage() {
                             </h1>
                             
                             <p className="text-xl text-teal-50/80 mb-10 max-w-lg leading-relaxed">
-                                Say goodbye to glasses forever. Experience painless, bladeless LASIK by India's top ophthalmologists.
+                                Say goodbye to glasses forever. Experience painless, bladeless LASIK by {locationText} top ophthalmologists.
                             </p>
                             
                             <div className="space-y-4 mb-10">
