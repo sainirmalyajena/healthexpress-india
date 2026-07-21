@@ -29,7 +29,7 @@ export function Hero({ lang }: HeroProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/${lang}/surgeries?search=${encodeURIComponent(query.trim())}`);
+      router.push(`/${lang}/surgeries?q=${encodeURIComponent(query.trim())}`);
     }
   };
 
@@ -88,7 +88,7 @@ export function Hero({ lang }: HeroProps) {
           {popularSearches.map((s) => (
             <Link
               key={s}
-              href={`/${lang}/surgeries?search=${encodeURIComponent(s)}`}
+              href={`/${lang}/surgeries?q=${encodeURIComponent(s)}`}
               className="px-3 py-1.5 bg-white border border-slate-200 hover:border-teal-300 hover:bg-teal-50 text-slate-600 hover:text-teal-700 text-xs font-semibold rounded-full transition-all"
             >
               {s}
