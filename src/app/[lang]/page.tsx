@@ -128,12 +128,12 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
             </Link>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 md:gap-4">
+          <div className="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 md:gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {categories.map((category, index) => (
               <Link
                 key={category}
                 href={`/${lang}/surgeries?category=${category}`}
-                className="group flex flex-col items-center justify-center gap-2.5 py-5 px-2 bg-white rounded-2xl border border-slate-100 hover:border-teal-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center"
+                className="snap-center shrink-0 w-28 sm:w-auto group flex flex-col items-center justify-center gap-2.5 py-5 px-2 bg-white rounded-2xl border border-slate-100 hover:border-teal-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center"
               >
                 {/* Icon */}
                 <div

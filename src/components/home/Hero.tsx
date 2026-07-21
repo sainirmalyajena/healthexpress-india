@@ -67,9 +67,7 @@ export function Hero({ lang }: HeroProps) {
             <Search className="absolute left-5 w-5 h-5 text-slate-400" />
             <input
               type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search surgeries, e.g. LASIK, Knee Replacement, Hernia..."
+              placeholder="Search surgeries (e.g. LASIK, Hernia)..."
               className="w-full pl-14 pr-4 py-4 md:py-5 text-base text-slate-800 placeholder-slate-400 bg-transparent outline-none rounded-2xl font-medium"
             />
             <button
@@ -96,46 +94,46 @@ export function Hero({ lang }: HeroProps) {
           ))}
         </div>
 
-        {/* Quick Service Cards — MediBuddy style */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 mb-10">
+        {/* Quick Service Cards — MediBuddy style (Horizontally scrollable on mobile) */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-6 gap-3 md:gap-4 mb-10 pb-4 -mx-4 px-4 md:mx-0 md:px-0 hide-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {quickServices.map((s) => (
             <Link
               key={s.label}
               href={`/${lang}${s.href}`}
-              className={`group flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-2xl border ${s.color} transition-all duration-200 hover:-translate-y-1 hover:shadow-md`}
+              className={`snap-center shrink-0 w-28 md:w-auto group flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-2xl border ${s.color} transition-all duration-200 hover:-translate-y-1 hover:shadow-md`}
             >
-              <span className="text-2xl md:text-3xl leading-none group-hover:scale-110 transition-transform duration-200">{s.icon}</span>
-              <span className="text-[11px] md:text-xs font-bold text-slate-700 text-center leading-tight">{s.label}</span>
+              <span className="text-3xl md:text-3xl leading-none group-hover:scale-110 transition-transform duration-200">{s.icon}</span>
+              <span className="text-xs font-bold text-slate-700 text-center leading-tight">{s.label}</span>
             </Link>
           ))}
         </div>
 
         {/* Social Proof Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-10 py-6 border-t border-slate-100">
-          <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 md:flex md:flex-row items-center justify-center gap-6 md:gap-10 py-6 border-t border-slate-100">
+          <div className="flex flex-col md:flex-row items-center gap-2 text-center md:text-left">
             <div className="flex -space-x-2">
               {['bg-teal-400', 'bg-blue-400', 'bg-pink-400', 'bg-amber-400'].map((c, i) => (
                 <div key={i} className={`w-8 h-8 rounded-full ${c} border-2 border-white flex items-center justify-center text-white text-xs font-bold`}>{['R','S','P','A'][i]}</div>
               ))}
             </div>
-            <p className="text-sm font-semibold text-slate-700">10,000+ Happy Patients</p>
+            <p className="text-xs md:text-sm font-semibold text-slate-700">10,000+ Happy Patients</p>
           </div>
           <div className="hidden md:block w-px h-8 bg-slate-200" />
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col md:flex-row items-center gap-2 text-center md:text-left">
             <div className="flex">
               {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
             </div>
-            <p className="text-sm font-semibold text-slate-700">4.9/5 Average Rating</p>
+            <p className="text-xs md:text-sm font-semibold text-slate-700">4.9/5 Average Rating</p>
           </div>
           <div className="hidden md:block w-px h-8 bg-slate-200" />
-          <div className="flex items-center gap-2">
-            <Shield className="w-4 h-4 text-teal-600" />
-            <p className="text-sm font-semibold text-slate-700">500+ NABH-Accredited Hospitals</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 text-center md:text-left">
+            <Shield className="w-5 h-5 md:w-4 md:h-4 text-teal-600" />
+            <p className="text-xs md:text-sm font-semibold text-slate-700">500+ NABH Hospitals</p>
           </div>
           <div className="hidden md:block w-px h-8 bg-slate-200" />
-          <a href="tel:9307861041" className="flex items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 transition-colors">
-            <Phone className="w-4 h-4 text-teal-600" />
-            <p className="text-sm font-bold text-teal-700">93078-61041</p>
+          <a href="tel:9307861041" className="flex flex-col md:flex-row items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 transition-colors mx-auto md:mx-0">
+            <Phone className="w-4 h-4 text-teal-600 hidden md:block" />
+            <p className="text-sm font-bold text-teal-700">Call: 93078-61041</p>
           </a>
         </div>
       </div>

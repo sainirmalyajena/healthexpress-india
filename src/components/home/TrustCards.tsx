@@ -49,15 +49,15 @@ export default function TrustCards({ dict }: TrustCardsProps) {
                     {stats.map((stat, i) => (
                         <div
                             key={i}
-                            className="group flex items-center gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300"
+                            className="group flex flex-col md:flex-row items-center gap-3 md:gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300 text-center md:text-left"
                         >
                             <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                                 <stat.icon className={`w-6 h-6 ${stat.color}`} strokeWidth={2} />
                             </div>
                             <div>
                                 <p className={`text-xl font-black ${stat.color}`}>{stat.value}</p>
-                                <p className="text-sm font-bold text-slate-800 leading-tight">{stat.label}</p>
-                                <p className="text-xs text-slate-400 font-medium leading-tight hidden md:block">{stat.desc}</p>
+                                <p className="text-sm font-bold text-slate-800 leading-tight mt-0.5">{stat.label}</p>
+                                <p className="text-xs text-slate-400 font-medium leading-tight hidden md:block mt-1">{stat.desc}</p>
                             </div>
                         </div>
                     ))}
