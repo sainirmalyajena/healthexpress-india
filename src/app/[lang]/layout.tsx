@@ -8,6 +8,7 @@ import "@/app/globals.css";
 import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { ClientLayoutWidgets } from "@/components/layout/ClientLayoutWidgets";
 
 const inter = Inter({ 
@@ -209,6 +210,7 @@ export default async function RootLayout({
           )}
 
           <SpeedInsights />
+          <VercelAnalytics />
         </body>
       </html>
     );
