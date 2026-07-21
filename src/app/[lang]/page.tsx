@@ -6,7 +6,7 @@ import { CategoryIcon } from '@/components/ui/CategoryIcon';
 import { getDictionary } from '@/get-dictionary';
 import { Hero } from '@/components/home/Hero';
 import type { Locale } from '@/i18n-config';
-import { ArrowRight, Phone, Sparkles } from 'lucide-react';
+import { ArrowRight, Phone } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { generateFAQSchema, generateLocalBusinessSchema } from '@/lib/schema';
 
@@ -95,7 +95,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const orgSchema = generateLocalBusinessSchema();
 
   return (
-    <div className="min-h-screen bg-[#fdfdfd]">
+    <div className="min-h-screen bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: `[${JSON.stringify(faqSchema)}, ${JSON.stringify(orgSchema)}]` }}
@@ -106,63 +106,46 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       {/* Trust Cards Section */}
       <TrustCards lang={lang} dict={dict.trust_cards} />
 
-      {/* Surgery Categories Section - Precision Grid */}
-      <section className="py-12 md:py-20 bg-[#fdfdfd] relative">
+      {/* Surgery Categories Section */}
+      <section className="py-12 md:py-16 bg-slate-50 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Section header */}
-          <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-bold uppercase tracking-widest mb-6">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {lang === 'hi' ? 'सर्जरी श्रेणियां' : 'Specialized Care'}
-                </div>
-                <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-none tracking-tight">
-                  {lang === 'hi' ? 'अपनी सर्जरी खोजें' : 'Expertise Across Specialties.'}
-                </h2>
-                <p className="text-slate-500 text-lg md:text-xl font-medium">
-                  {lang === 'hi' ? 'हम सभी प्रमुख सर्जरी प्रकारों में आपकी मदद करते हैं' : 'World-class surgical care across all major disciplines.'}
-                </p>
+          <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1">Browse by Specialty</p>
+              <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+                {lang === 'hi' ? 'अपनी सर्जरी खोजें' : 'All Surgical Specialties'}
+              </h2>
             </div>
             <Link
                 href={`/${lang}/surgeries`}
-                className="group flex items-center gap-4 text-teal-600 font-black text-xs uppercase tracking-[0.3em] hover:text-teal-900 transition-colors"
+                className="flex items-center gap-2 text-sm text-teal-600 font-bold hover:text-teal-800 transition-colors"
             >
-                {lang === 'hi' ? 'सभी देखें' : 'View Full Directory'}
-                <div className="w-10 h-10 rounded-full border border-teal-100 flex items-center justify-center group-hover:bg-teal-50 transition-all">
-                    <ArrowRight className="w-4 h-4" />
-                </div>
+                {lang === 'hi' ? 'सभी देखें' : 'View All Surgeries'}
+                <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3 md:gap-4">
             {categories.map((category, index) => (
               <Link
                 key={category}
                 href={`/${lang}/surgeries?category=${category}`}
-                className="group relative h-48 md:h-56 bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-premium hover:-translate-y-2 transition-all duration-500 flex flex-col items-center justify-center text-center overflow-hidden"
+                className="group flex flex-col items-center justify-center gap-2.5 py-5 px-2 bg-white rounded-2xl border border-slate-100 hover:border-teal-200 hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center"
               >
-                {/* Elite Hover Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                
-                {/* Icon with Dynamic Color */}
+                {/* Icon */}
                 <div
-                  className="relative w-16 h-16 mb-6 rounded-2xl flex items-center justify-center text-white transition-transform duration-500 group-hover:scale-110 shadow-lg"
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110 shadow-md"
                   style={{
                     background: `hsl(${(index * 43) % 360}, 65%, 55%)`,
-                    boxShadow: `0 12px 24px -8px hsla(${(index * 43) % 360}, 65%, 55%, 0.4)`
                   }}
                 >
-                  <CategoryIcon category={category} className="w-8 h-8" />
+                  <CategoryIcon category={category} className="w-6 h-6" />
                 </div>
                 
-                <span className="relative text-sm md:text-base font-black text-slate-800 tracking-tight leading-tight group-hover:text-teal-700 transition-colors">
+                <span className="text-[11px] md:text-xs font-bold text-slate-700 group-hover:text-teal-700 transition-colors leading-tight">
                   {getCategoryLabel(category, dict.categories)}
-                </span>
-                
-                {/* Subsidiary detail */}
-                <span className="relative mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                    Explore
                 </span>
               </Link>
             ))}

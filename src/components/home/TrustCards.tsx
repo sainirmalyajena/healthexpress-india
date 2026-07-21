@@ -7,58 +7,58 @@ interface TrustCardsProps {
 }
 
 export default function TrustCards({ dict }: TrustCardsProps) {
-    const cards = [
+    const stats = [
         {
             icon: Building2,
-            title: dict.hospital_title,
+            value: '500+',
+            label: dict.hospital_title,
             desc: dict.hospital_desc,
-            color: 'from-blue-400 to-blue-600',
+            color: 'text-blue-600',
             bg: 'bg-blue-50',
-            text: 'text-blue-600',
         },
         {
             icon: ShieldCheck,
-            title: dict.insurance_title,
+            value: '₹0',
+            label: dict.insurance_title,
             desc: dict.insurance_desc,
-            color: 'from-teal-400 to-teal-600',
+            color: 'text-teal-600',
             bg: 'bg-teal-50',
-            text: 'text-teal-600',
         },
         {
             icon: UserCheck,
-            title: dict.care_title,
+            value: '10K+',
+            label: dict.care_title,
             desc: dict.care_desc,
-            color: 'from-indigo-400 to-indigo-600',
+            color: 'text-indigo-600',
             bg: 'bg-indigo-50',
-            text: 'text-indigo-600',
         },
         {
             icon: Car,
-            title: dict.cab_title,
+            value: '100%',
+            label: dict.cab_title,
             desc: dict.cab_desc,
-            color: 'from-amber-400 to-amber-600',
+            color: 'text-amber-600',
             bg: 'bg-amber-50',
-            text: 'text-amber-600',
         }
     ];
 
     return (
-        <section className="pb-12 md:pb-20 relative z-20 -mt-12 md:-mt-20">
-            {/* Seamless bridge to Hero */}
-            <div className="absolute top-0 inset-x-0 h-1/2 bg-[#022c22] -z-10" aria-hidden="true" />
-            
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {cards.map((card, i) => (
-                        <div 
-                            key={i} 
-                            className="group bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300"
+        <section className="py-10 bg-white border-b border-slate-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                    {stats.map((stat, i) => (
+                        <div
+                            key={i}
+                            className="group flex items-center gap-4 p-4 md:p-5 bg-white rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all duration-300"
                         >
-                            <div className={`w-14 h-14 rounded-2xl ${card.bg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                                <card.icon className={`w-7 h-7 ${card.text}`} strokeWidth={2} />
+                            <div className={`w-12 h-12 rounded-2xl ${stat.bg} flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                <stat.icon className={`w-6 h-6 ${stat.color}`} strokeWidth={2} />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">{card.title}</h3>
-                            <p className="text-slate-600 text-sm leading-relaxed font-medium">{card.desc}</p>
+                            <div>
+                                <p className={`text-xl font-black ${stat.color}`}>{stat.value}</p>
+                                <p className="text-sm font-bold text-slate-800 leading-tight">{stat.label}</p>
+                                <p className="text-xs text-slate-400 font-medium leading-tight hidden md:block">{stat.desc}</p>
+                            </div>
                         </div>
                     ))}
                 </div>
