@@ -76,18 +76,22 @@ export default async function DoctorsPage({
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 py-12">
+        <div className="min-h-screen bg-slate-50">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12">
-                    <h1 className="text-3xl font-bold text-slate-900 sm:text-4xl mb-4">
+            
+            {/* Page Header */}
+            <div className="bg-white border-b border-slate-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
+                    <h1 className="text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl tracking-tight mb-4 leading-tight">
                         {dict.title}
                     </h1>
-                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                    <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
                         {dict.subtitle}
                     </p>
                 </div>
+            </div>
 
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Filters */}
                 <div className="bg-white p-4 rounded-xl shadow-sm mb-8 flex flex-wrap gap-4 justify-center">
                     {specialtiesList.map(s => (

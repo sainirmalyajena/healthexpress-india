@@ -93,17 +93,17 @@ export default function PartnersPage() {
     return (
         <div className="min-h-screen bg-slate-50">
             {/* Hero Section */}
-            <div className="bg-gradient-to-br from-teal-600 to-teal-800 text-white">
+            <div className="bg-white border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
                     <div className="max-w-3xl">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight text-slate-900 leading-tight">
                             Partner with India&apos;s Leading Healthcare Platform
                         </h1>
-                        <p className="text-xl text-teal-100 mb-8">
+                        <p className="text-lg md:text-xl text-slate-500 leading-relaxed font-medium mb-8">
                             Join 500+ hospital partners and grow your patient base with guaranteed referrals,
                             transparent pricing, and dedicated support.
                         </p>
-                        <a href="#register" className="inline-block bg-white text-teal-700 font-semibold px-8 py-4 rounded-lg hover:bg-teal-50 transition-colors">
+                        <a href="#register" className="inline-block bg-teal-600 text-white font-semibold px-8 py-4 rounded-xl hover:bg-teal-700 transition-colors shadow-sm">
                             Become a Partner Hospital →
                         </a>
                     </div>

@@ -5,6 +5,7 @@ import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
 import { getDictionary } from '@/get-dictionary';
 import { Hero } from '@/components/home/Hero';
+import { FAQAccordion } from '@/components/home/FAQAccordion';
 import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone } from 'lucide-react';
 import { Button } from '@/components/ui';
@@ -169,19 +170,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
               {lang === 'hi' ? 'HealthExpress India के बारे में सभी आवश्यक जानकारी यहाँ पाएं' : 'Find answers to common questions about HealthExpress India'}
             </p>
           </div>
-          <div className="space-y-6">
-            {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-3 flex items-start gap-3">
-                  <span className="text-teal-500 font-extrabold">Q.</span>
-                  {faq.question}
-                </h3>
-                <p className="text-slate-600 leading-relaxed text-sm md:text-base pl-7">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
+            <FAQAccordion faqs={faqs} />
         </div>
       </section>
 

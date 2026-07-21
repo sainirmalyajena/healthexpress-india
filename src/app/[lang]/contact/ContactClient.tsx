@@ -71,18 +71,15 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
     return (
         <div className="min-h-screen bg-slate-50 overflow-x-hidden">
             {/* Hero Section */}
-            <section className="relative bg-gradient-to-br from-teal-700 via-teal-800 to-slate-900 text-white pt-16 pb-24 md:pb-32 overflow-hidden">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-                
+            <section className="relative bg-white border-b border-slate-200 pt-16 pb-24 md:pb-32 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div
                         className="text-center max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom"
                     >
-                        <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight leading-tight">
+                        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight text-slate-900 leading-tight">
                             {dict.header_title}
                         </h1>
-                        <p className="text-lg md:text-xl text-teal-100/90 leading-relaxed">
+                        <p className="text-lg md:text-xl text-slate-500 leading-relaxed font-medium">
                             {dict.header_subtitle}
                         </p>
                     </div>

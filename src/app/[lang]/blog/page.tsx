@@ -24,19 +24,22 @@ export default async function BlogPage({ params }: { params: Promise<{ lang: str
     const dict = dictionary.blog || {}; // Fallback if missing
 
     return (
-        <div className="min-h-screen bg-slate-50 py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <h1 className="text-4xl font-bold text-slate-900 mb-4 font-sans">
+        <div className="min-h-screen bg-slate-50">
+            {/* Page Header */}
+            <div className="bg-white border-b border-slate-200">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
+                    <h1 className="text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl tracking-tight mb-4 leading-tight font-sans">
                         {lang === 'hi' ? 'चिकित्सा अंतर्दृष्टि और रिकवरी गाइड' : 'Medical Insights & Recovery Guides'}
                     </h1>
-                    <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+                    <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
                         {lang === 'hi'
                             ? 'आपकी सर्जिकल यात्रा को आत्मविश्वास के साथ नेविगेट करने में मदद करने के लिए विशेषज्ञ सलाह और रिकवरी टाइमलाइन।'
                             : 'Expert advice, recovery timelines, and healthcare tips to help you navigate your surgical journey with confidence.'}
                     </p>
                 </div>
+            </div>
 
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {posts.length > 0 ? (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
