@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { DoctorCard } from '@/components/doctors/DoctorCard';
+import { DoctorEnquiryForm } from '@/components/doctors/DoctorEnquiryForm';
 import { Metadata } from 'next';
 import { Prisma } from '@/generated/prisma';
 import { getDictionary } from '@/get-dictionary';
@@ -91,44 +92,55 @@ export default async function DoctorsPage({
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Filters */}
-                <div className="bg-white p-4 rounded-xl shadow-sm mb-8 flex flex-wrap gap-4 justify-center">
-                    {specialtiesList.map(s => (
-                        <Link
-                            key={s.id}
-                            href={`/${lang}/doctors?specialty=${s.id}`}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${specialty === s.id
-                                ? 'bg-teal-600 text-white'
-                                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                                }`}
-                        >
-                            {s.label}
-                        </Link>
-                    ))}
-                    <Link
-                        href={`/${lang}/doctors`}
-                        className="px-4 py-2 rounded-full text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    >
-                        {dict.clear_filters}
-                    </Link>
-                </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+                <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                    
+                    {/* Left Column: Directory */}
+                    <div className="lg:col-span-8">
+                        {/* Filters */}
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 mb-8 flex flex-wrap gap-3">
+                            {specialtiesList.map(s => (
+                                <Link
+                                    key={s.id}
+                                    href={`/${lang}/doctors?specialty=${s.id}`}
+                                    className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${specialty === s.id
+                                        ? 'bg-teal-600 text-white shadow-md'
+                                        : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200'
+                                        }`}
+                                >
+                                    {s.label}
+                                </Link>
+                            ))}
+                            <Link
+                                href={`/${lang}/doctors`}
+                                className="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all border border-transparent"
+                            >
+                                {dict.clear_filters}
+                            </Link>
+                        </div>
 
-                {/* Grid */}
-                {doctors.length > 0 ? (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {doctors.map((doctor) => (
-                            <DoctorCard key={doctor.id} doctor={doctor} lang={lang} dict={dictionary.doctor_card} />
-                        ))}
+                        {/* Grid */}
+                        {doctors.length > 0 ? (
+                            <div className="grid sm:grid-cols-2 gap-6">
+                                {doctors.map((doctor) => (
+                                    <DoctorCard key={doctor.id} doctor={doctor} lang={lang} dict={dictionary.doctor_card} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                                <p className="text-slate-500 text-lg font-medium">{dict.no_doctors_found}</p>
+                                <Link href={`/${lang}/doctors`} className="text-teal-600 font-bold hover:underline mt-3 inline-block">
+                                    {dict.view_all_doctors}
+                                </Link>
+                            </div>
+                        )}
                     </div>
-                ) : (
-                    <div className="text-center py-12">
-                        <p className="text-slate-500 text-lg">{dict.no_doctors_found}</p>
-                        <Link href={`/${lang}/doctors`} className="text-teal-600 font-medium hover:underline mt-2 inline-block">
-                            {dict.view_all_doctors}
-                        </Link>
+
+                    {/* Right Column: Sticky Form */}
+                    <div className="lg:col-span-4 mt-8 lg:mt-0">
+                        <DoctorEnquiryForm lang={lang} />
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );
