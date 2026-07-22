@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { User } from 'lucide-react';
 
 interface DoctorProps {
     id: string;
@@ -20,16 +21,22 @@ export function DoctorCard({ doctor, lang, dict }: { doctor: DoctorProps; lang: 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow">
             <div className="flex flex-col sm:flex-row">
-                <div className="sm:w-32 h-32 sm:h-auto relative bg-slate-100 flex-shrink-0">
-                    <Image
-                        src={doctor.image}
-                        alt={doctor.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 128px"
-                        loading="lazy"
-                    />
-                </div>
+                {doctor.image ? (
+                    <div className="sm:w-32 h-32 sm:h-auto relative bg-slate-100 flex-shrink-0">
+                        <Image
+                            src={doctor.image}
+                            alt={doctor.name}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 640px) 100vw, 128px"
+                            loading="lazy"
+                        />
+                    </div>
+                ) : (
+                    <div className="sm:w-32 h-32 sm:h-auto bg-slate-50 flex items-center justify-center flex-shrink-0 border-r border-slate-100">
+                        <User className="w-12 h-12 text-slate-300" />
+                    </div>
+                )}
                 <div className="p-4 flex-1">
                     <div className="flex justify-between items-start">
                         <div>
