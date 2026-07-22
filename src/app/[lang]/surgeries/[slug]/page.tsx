@@ -31,6 +31,18 @@ const CITY_COST_FACTORS: Record<string, number> = {
   Jaipur: 0.90, Lucknow: 0.88,
 };
 
+const getCategoryImage = (category: string) => {
+  const map: Record<string, string> = {
+    OPHTHALMOLOGY: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop',
+    CARDIAC: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop',
+    ORTHOPEDICS: 'https://images.unsplash.com/photo-1579684453423-f84349ef60b0?q=80&w=2000&auto=format&fit=crop',
+    NEURO: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=2000&auto=format&fit=crop',
+    ONCOLOGY: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=80&w=2000&auto=format&fit=crop',
+    GENERAL_SURGERY: 'https://images.unsplash.com/photo-1551076805-e166946e0e11?q=80&w=2000&auto=format&fit=crop',
+  };
+  return map[category] || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop';
+};
+
 const getSurgery = cache(async (slug: string) => {
   try {
     return await prisma.surgery.findUnique({
@@ -243,43 +255,57 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Page Hero */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
-          <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="text-2xl" aria-hidden="true">{getCategoryIcon(surgery.category)}</span>
-            <span className="text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">
-              {categoryLabel}
-            </span>
-            {surgery.insuranceLikely && (
-              <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-3 py-1 rounded-full flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> {dict.insurance_likely}
+      {/* Page Hero - Stunning Visual Banner */}
+      <div className="relative bg-slate-900 border-b border-teal-900/50 overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={getCategoryImage(surgery.category)} 
+            alt={`${surgery.name} in India`}
+            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent md:w-3/4" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+          <div className="max-w-3xl">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <span className="text-2xl drop-shadow-md" aria-hidden="true">{getCategoryIcon(surgery.category)}</span>
+              <span className="text-xs font-bold text-teal-300 bg-teal-900/50 border border-teal-400/30 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-sm">
+                {categoryLabel}
               </span>
-            )}
-          </div>
-
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-3 leading-tight tracking-tight">
-            {surgery.name}
-          </h1>
-          {doctor && (
-            <div className="flex items-center gap-2 text-xs text-slate-500 mb-4 bg-teal-50/50 border border-teal-100/50 rounded-full px-3 py-1.5 w-fit">
-              <span className="text-xs">⚕️</span>
-              <span>{lang === 'hi' ? 'चिकित्सा विशेषज्ञ द्वारा समीक्षित और सत्यापित: ' : 'Reviewed & Verified by '}</span>
-              <Link href={`/${lang}/doctors/${doctor.id}`} className="font-semibold text-teal-700 hover:text-teal-900 underline">
-                Dr. {doctor.name}
-              </Link>
-              <span>({doctor.qualification})</span>
+              {surgery.insuranceLikely && (
+                <span className="text-xs font-bold text-emerald-300 bg-emerald-900/50 border border-emerald-400/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 backdrop-blur-sm shadow-sm">
+                  <ShieldCheck className="w-3.5 h-3.5" /> {dict.insurance_likely}
+                </span>
+              )}
             </div>
-          )}
-          <p className="text-base md:text-lg text-slate-600 max-w-2xl leading-relaxed mb-8">
-            {surgery.overview.split('.')[0]}.
-          </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatPill icon={Clock}       label={dict.duration}      value={surgery.duration}                            />
-            <StatPill icon={Building2}   label={dict.hospital_stay} value={surgery.hospitalStay}                        />
-            <StatPill icon={HeartPulse}  label={dict.recovery}      value={surgery.recovery.split('.')[0]}              />
-            <StatPill icon={IndianRupee} label={dict.est_cost}       value={`${formatCurrency(surgery.costRangeMin)}+`}  highlight />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-[1.1] tracking-tight drop-shadow-lg">
+              {surgery.name}
+            </h1>
+            
+            {doctor && (
+              <div className="flex items-center gap-2 text-xs text-slate-300 mb-6 bg-slate-800/50 border border-slate-600/50 rounded-full px-4 py-2 w-fit backdrop-blur-sm">
+                <span className="text-sm">⚕️</span>
+                <span className="font-medium">{lang === 'hi' ? 'चिकित्सा विशेषज्ञ द्वारा समीक्षित: ' : 'Medically Reviewed by '}</span>
+                <Link href={`/${lang}/doctors/${doctor.id}`} className="font-bold text-teal-400 hover:text-teal-300 transition-colors underline decoration-teal-400/30 underline-offset-2">
+                  Dr. {doctor.name}
+                </Link>
+              </div>
+            )}
+            
+            <p className="text-lg md:text-xl text-slate-300 max-w-2xl leading-relaxed mb-10 font-medium drop-shadow-md">
+              {surgery.overview.split('.')[0]}.
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <StatPill icon={Clock}       label={dict.duration}      value={surgery.duration}                            />
+              <StatPill icon={Building2}   label={dict.hospital_stay} value={surgery.hospitalStay}                        />
+              <StatPill icon={HeartPulse}  label={dict.recovery}      value={surgery.recovery.split('.')[0]}              />
+              <StatPill icon={IndianRupee} label={dict.est_cost}       value={`${formatCurrency(surgery.costRangeMin)}+`}  highlight />
+            </div>
           </div>
         </div>
       </div>
