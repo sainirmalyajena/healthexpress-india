@@ -2,16 +2,17 @@
 
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
+const StickyMobileCTA = dynamic(() => import("@/components/layout/StickyMobileCTA").then(m => m.StickyMobileCTA), {
+  ssr: false,
+});
 
 const MedBot = dynamic(() => import("@/components/ui/MedBot").then(m => m.MedBot), {
   ssr: false,
 });
 
 const WhatsAppButton = dynamic(() => import("@/components/ui/WhatsAppButton").then(m => m.WhatsAppButton), {
-  ssr: false,
-});
-
-const StickyMobileCTA = dynamic(() => import("@/components/layout").then(m => m.StickyMobileCTA), {
   ssr: false,
 });
 
@@ -22,6 +23,13 @@ export interface StickyCtaDict {
 
 export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: StickyCtaDict }) {
     const pathname = usePathname();
+    const [showDeferredWidgets, setShowDeferredWidgets] = useState(false);
+
+    // Defer heavy widgets (MedBot, WhatsApp) by 5 seconds to avoid blocking hydration
+    useEffect(() => {
+        const timer = setTimeout(() => setShowDeferredWidgets(true), 5000);
+        return () => clearTimeout(timer);
+    }, []);
 
     // Hide sticky widgets on campaign landing pages
     if (pathname?.includes('/campaign/')) {
@@ -30,9 +38,13 @@ export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Sticky
 
     return (
         <>
-            <MedBot lang={lang} />
-            <WhatsAppButton />
             <StickyMobileCTA lang={lang} dict={dict} />
+            {showDeferredWidgets && (
+                <>
+                    <MedBot lang={lang} />
+                    <WhatsAppButton />
+                </>
+            )}
         </>
     );
 }

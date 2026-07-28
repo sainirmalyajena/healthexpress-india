@@ -60,6 +60,7 @@ const nextConfig: NextConfig = {
       'lucide-react',
       'react-icons',
       'recharts',
+      'date-fns',
     ],
   },
 };
@@ -69,4 +70,6 @@ export default withSentryConfig(withAnalyzer(nextConfig), {
   project: "javascript-nextjs",
   silent: !process.env.CI,
   widenClientFileUpload: true,
+  disableLogger: true,
+  hideSourceMaps: true,
 });

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cache } from 'react';
 import {
   Clock, Building2, HeartPulse, IndianRupee, ShieldCheck,
@@ -33,14 +34,14 @@ const CITY_COST_FACTORS: Record<string, number> = {
 
 const getCategoryImage = (category: string) => {
   const map: Record<string, string> = {
-    OPHTHALMOLOGY: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2000&auto=format&fit=crop',
-    CARDIAC: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=80&w=2000&auto=format&fit=crop',
-    ORTHOPEDICS: 'https://images.unsplash.com/photo-1579684453423-f84349ef60b0?q=80&w=2000&auto=format&fit=crop',
-    NEURO: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=2000&auto=format&fit=crop',
-    ONCOLOGY: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=80&w=2000&auto=format&fit=crop',
-    GENERAL_SURGERY: 'https://images.unsplash.com/photo-1551076805-e166946e0e11?q=80&w=2000&auto=format&fit=crop',
+    OPHTHALMOLOGY: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=60&w=1200&auto=format&fit=crop',
+    CARDIAC: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?q=60&w=1200&auto=format&fit=crop',
+    ORTHOPEDICS: 'https://images.unsplash.com/photo-1579684453423-f84349ef60b0?q=60&w=1200&auto=format&fit=crop',
+    NEURO: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?q=60&w=1200&auto=format&fit=crop',
+    ONCOLOGY: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=60&w=1200&auto=format&fit=crop',
+    GENERAL_SURGERY: 'https://images.unsplash.com/photo-1551076805-e166946e0e11?q=60&w=1200&auto=format&fit=crop',
   };
-  return map[category] || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop';
+  return map[category] || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=60&w=1200&auto=format&fit=crop';
 };
 
 const getSurgery = cache(async (slug: string) => {
@@ -259,10 +260,14 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
       <div className="relative bg-slate-900 border-b border-teal-900/50 overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
+          <Image 
             src={getCategoryImage(surgery.category)} 
             alt={`${surgery.name} in India`}
-            className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+            fill
+            sizes="100vw"
+            quality={60}
+            priority
+            className="object-cover opacity-30 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent md:w-3/4" />
