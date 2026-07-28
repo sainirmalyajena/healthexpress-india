@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-const StickyMobileCTA = dynamic(() => import("@/components/layout/StickyMobileCTA").then(m => m.StickyMobileCTA), {
+const StickyMobileCTA = dynamic(() => import("@/components/layout/StickyMobileCTA"), {
   ssr: false,
 });
 
