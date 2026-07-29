@@ -31,17 +31,17 @@ export async function POST(request: Request) {
           data: {
             fullName: name,
             phone: mobile,
-            description: `Prism Appointment: ${service}`,
-            city: 'Unknown', // From Prism form, city is not currently captured
+            description: `HealthExpress Appointment: ${service}`,
+            city: 'Unknown', // From form, city is not currently captured
             surgeryId: surgery.id,
-            sourcePage: 'Prism Landing Page',
-            referenceId: `PRISM-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+            sourcePage: 'HealthExpress Landing Page',
+            referenceId: `HE-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
             status: 'NEW'
           }
         });
       }
     } catch (dbError) {
-      console.error('Failed to save Prism lead to local DB:', dbError);
+      console.error('Failed to save lead to local DB:', dbError);
       // We don't block the CRM submission if local DB fails
     }
 
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       data: {
         Name: name,
         Mobile: mobile,
-        LeadSource: "Prism Healthcure Website",
+        LeadSource: "HealthExpress India Website",
         Requirements: service,
       }
     };

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Header, Footer, ConditionalShell } from "@/components/layout";
+import { Header, Footer } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
 import { Inter, Outfit } from 'next/font/google';
@@ -32,50 +32,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   const isHi = lang === 'hi';
-  
-  const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
-  const isPrismSite = forcedBrand === 'prism';
-
-  if (isPrismSite) {
-    const prismTitle = 'Prism Healthcure | Premium Ophthalmology & Eye Care';
-    const prismDesc = 'Advanced eye treatments including Cataract, LASIK, and Retina care by top ophthalmologists. Book your consultation today.';
-    const prismBaseUrl = 'https://prismhealthcure.com';
-    
-    return {
-      title: prismTitle,
-      description: prismDesc,
-      metadataBase: new URL(prismBaseUrl),
-      alternates: {
-        canonical: `${prismBaseUrl}/${lang}`,
-        languages: {
-          'en-IN': `${prismBaseUrl}/en`,
-          'hi-IN': `${prismBaseUrl}/hi`,
-        },
-      },
-      openGraph: {
-        title: prismTitle,
-        description: prismDesc,
-        url: `${prismBaseUrl}/${lang}`,
-        siteName: 'Prism Healthcure',
-        images: [{ url: '/prism-logo.jpg', width: 1200, height: 630, alt: 'Prism Healthcure' }],
-        type: 'website',
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: prismTitle,
-        description: prismDesc,
-      },
-      icons: {
-        icon: '/prism-logo.jpg',
-        apple: '/prism-logo.jpg',
-      },
-      robots: {
-        index: true,
-        follow: true,
-      }
-    };
-  }
-
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
 
   return {
@@ -147,45 +103,29 @@ export default async function RootLayout({
   
   const organizationSchema = generateOrganizationSchema();
   
-  const forcedBrand = process.env.NEXT_PUBLIC_SITE_BRAND;
-  const isPrismSite = forcedBrand === 'prism';
-  
-  // Header and Footer visibility is now handled by the components themselves via usePathname
-  const hideMainNav = isPrismSite;
-
   return (
       <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
         <head>
           {/* Resource hints for external origins */}
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-          {!isPrismSite && (
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify(organizationSchema)
-              }}
-            />
-          )}
-
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationSchema)
+            }}
+          />
         </head>
-        <body className={`min-h-screen flex flex-col ${hideMainNav ? '' : 'pb-[80px] md:pb-0'} overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
+        <body className={`min-h-screen flex flex-col pb-[80px] md:pb-0 overflow-x-hidden font-sans antialiased text-slate-900 selection:bg-teal-900 selection:text-white`}>
 
           <Analytics />
           
-          {/* Only show HealthExpress Header/Footer/Sticky on main pages (not Prism or Campaign) */}
-          {!hideMainNav && (
-            <Header lang={lang} dict={dictionary.navigation} />
-          )}
+          <Header lang={lang} dict={dictionary.navigation} />
 
           <main className="flex-1">{children}</main>
 
-          {!hideMainNav && (
-            <>
-              <Footer lang={lang} dict={dictionary.footer} />
-              <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
-            </>
-          )}
+          <Footer lang={lang} dict={dictionary.footer} />
+          <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
 
           <SpeedInsights />
         </body>
