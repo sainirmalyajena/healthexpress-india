@@ -66,7 +66,7 @@ Guidelines:
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         message: textContent,
-                        link: \`https://healthexpressindia.com/en/surgeries/\${randomSurgery.slug}\`,
+                        link: `https://healthexpressindia.com/en/surgeries/${randomSurgery.slug}`,
                         access_token: process.env.META_ACCESS_TOKEN
                     })
                 });
@@ -74,7 +74,7 @@ Guidelines:
                 if (fbData.error) throw new Error(fbData.error.message);
                 fbSuccess = true;
             } catch (err: any) {
-                apiErrors.push(\`FB Error: \${err.message}\`);
+                apiErrors.push(`FB Error: ${err.message}`);
             }
         } else {
             apiErrors.push('Missing FACEBOOK_PAGE_ID or META_ACCESS_TOKEN');
@@ -84,7 +84,7 @@ Guidelines:
         if (process.env.INSTAGRAM_ACCOUNT_ID && process.env.META_ACCESS_TOKEN) {
             try {
                 // Step 5a: Create Container
-                const igContainerRes = await fetch(\`https://graph.facebook.com/v19.0/\${process.env.INSTAGRAM_ACCOUNT_ID}/media\`, {
+                const igContainerRes = await fetch(`https://graph.facebook.com/v19.0/${process.env.INSTAGRAM_ACCOUNT_ID}/media`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -97,7 +97,7 @@ Guidelines:
                 if (containerData.error) throw new Error(containerData.error.message);
 
                 // Step 5b: Publish Container
-                const igPublishRes = await fetch(\`https://graph.facebook.com/v19.0/\${process.env.INSTAGRAM_ACCOUNT_ID}/media_publish\`, {
+                const igPublishRes = await fetch(`https://graph.facebook.com/v19.0/${process.env.INSTAGRAM_ACCOUNT_ID}/media_publish`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -109,7 +109,7 @@ Guidelines:
                 if (publishData.error) throw new Error(publishData.error.message);
                 igSuccess = true;
             } catch (err: any) {
-                apiErrors.push(\`IG Error: \${err.message}\`);
+                apiErrors.push(`IG Error: ${err.message}`);
             }
         } else {
             apiErrors.push('Missing INSTAGRAM_ACCOUNT_ID');
