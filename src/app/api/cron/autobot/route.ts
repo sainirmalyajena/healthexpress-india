@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const prisma = new PrismaClient();
 
 // Ensure the endpoint is dynamic and not cached
 export const dynamic = 'force-dynamic';
