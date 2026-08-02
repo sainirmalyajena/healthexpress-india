@@ -161,7 +161,7 @@ export default function DemoVoiceAgent() {
                                 <div className="flex flex-col items-center gap-4 w-full">
                                     <button 
                                         onClick={toggleListening}
-                                        className={\`w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all \${isListening ? 'bg-red-500 animate-pulse text-white' : 'bg-blue-600 text-white hover:bg-blue-700'}\`}
+                                        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all ${isListening ? 'bg-red-500 animate-pulse text-white' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
                                     >
                                         {isListening ? <Mic className="w-8 h-8" /> : <MicOff className="w-8 h-8" />}
                                     </button>
