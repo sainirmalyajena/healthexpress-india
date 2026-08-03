@@ -8,7 +8,7 @@ export async function POST(request: Request) {
         const { message, history } = await request.json();
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
 
         const prompt = `
 You are Sarah, a professional and empathetic medical receptionist at HealthExpress India.
