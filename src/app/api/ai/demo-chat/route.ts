@@ -55,7 +55,7 @@ Sarah:`;
                     patientName: patientName,
                     patientPhone: patientPhone,
                     appointmentDate: appointmentDate,
-                    reason: \`Voice AI Booking for \${dateStr}\`,
+                    reason: `Voice AI Booking for ${dateStr}`,
                     status: 'SCHEDULED'
                 }
             });
@@ -67,7 +67,7 @@ Sarah:`;
                 await sendEmail({
                     to: adminEmail,
                     ...emailTemplates.adminInquiry({
-                        referenceId: \`AI-\${Date.now().toString().slice(-6)}\`,
+                        referenceId: `AI-${Date.now().toString().slice(-6)}`,
                         fullName: patientName,
                         phone: patientPhone,
                         city: 'Unknown (Voice Agent)',
