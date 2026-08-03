@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { prisma } from '@/lib/prisma';
+import { sendEmail, emailTemplates } from '@/lib/mailer';
 
 export async function POST(request: Request) {
     try {
@@ -16,11 +17,12 @@ Your goal is to book an OPD appointment for them.
 
 Follow these rules STRICTLY:
 1. Speak in short, conversational sentences as if you are on a voice call.
-2. If they haven't given a date/time yet, politely ask them when they would like to come in.
-3. If they give a date or time, YOU MUST output EXACTLY this special code block at the very end of your message to trigger the booking system:
-[BOOKING_TRIGGER: <date>]
-Example: "Great, I have booked your appointment for tomorrow! [BOOKING_TRIGGER: tomorrow]"
-4. Be polite and helpful.
+2. You must collect their FULL NAME, PHONE NUMBER, and PREFERRED DATE/TIME for the appointment.
+3. If they just say "yes" to booking, politely ask for their name and phone number first. Do not book until you have all 3 pieces of information.
+4. Once you have their Name, Phone Number, and Date/Time, YOU MUST output EXACTLY this special code block at the very end of your message to trigger the booking system:
+[BOOKING_TRIGGER: <FullName> | <PhoneNumber> | <DateAndTime>]
+Example: "Great, John! I have booked your appointment for tomorrow at 10 AM. [BOOKING_TRIGGER: John Doe | 9876543210 | tomorrow at 10 AM]"
+5. Be polite and helpful.
 
 Here is the conversation history:
 ${history.map((h: any) => `${h.role}: ${h.text}`).join('\n')}
@@ -30,14 +32,17 @@ Sarah:`;
         const result = await model.generateContent(prompt);
         let aiResponse = result.response.text();
 
-        // Check for booking trigger
-        const bookingMatch = aiResponse.match(/\[BOOKING_TRIGGER:\s*(.+?)\]/);
+        // Check for booking trigger with piping format
+        const bookingMatch = aiResponse.match(/\[BOOKING_TRIGGER:\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\]/);
         let booked = false;
 
         if (bookingMatch) {
-            const dateStr = bookingMatch[1];
+            const patientName = bookingMatch[1].trim();
+            const patientPhone = bookingMatch[2].trim();
+            const dateStr = bookingMatch[3].trim();
+            
             // Remove the trigger from the spoken text
-            aiResponse = aiResponse.replace(/\[BOOKING_TRIGGER:\s*(.+?)\]/, '').trim();
+            aiResponse = aiResponse.replace(/\[BOOKING_TRIGGER:.*?\]/, '').trim();
             
             let appointmentDate = new Date();
             if (dateStr.toLowerCase().includes('tomorrow')) {
@@ -47,14 +52,32 @@ Sarah:`;
             // Save to database
             await prisma.appointment.create({
                 data: {
-                    patientName: 'Demo Patient',
-                    patientPhone: '0000000000',
+                    patientName: patientName,
+                    patientPhone: patientPhone,
                     appointmentDate: appointmentDate,
-                    reason: 'Demo Consultation from Voice Agent',
+                    reason: \`Voice AI Booking for \${dateStr}\`,
                     status: 'SCHEDULED'
                 }
             });
             booked = true;
+
+            // Send Admin Email
+            const adminEmail = process.env.ADMIN_EMAIL || 'info@healthexpressindia.com';
+            try {
+                await sendEmail({
+                    to: adminEmail,
+                    ...emailTemplates.adminInquiry({
+                        referenceId: \`AI-\${Date.now().toString().slice(-6)}\`,
+                        fullName: patientName,
+                        phone: patientPhone,
+                        city: 'Unknown (Voice Agent)',
+                        surgeryName: 'OPD Consultation',
+                        sourcePage: 'AI Voice Demo',
+                    }),
+                });
+            } catch (e) {
+                console.error("Failed to send admin email on AI booking", e);
+            }
         }
 
         return NextResponse.json({
