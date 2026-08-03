@@ -14,12 +14,20 @@ export default function DemoVoiceAgent() {
     const recognitionRef = useRef<any>(null);
     const synthesisRef = useRef<SpeechSynthesis>(null);
 
+    const transcriptRef = useRef('');
+    const isListeningRef = useRef(false);
+
+    useEffect(() => {
+        transcriptRef.current = transcript;
+        isListeningRef.current = isListening;
+    }, [transcript, isListening]);
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             synthesisRef.current = window.speechSynthesis;
             // @ts-ignore
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (SpeechRecognition) {
+            if (SpeechRecognition && !recognitionRef.current) {
                 recognitionRef.current = new SpeechRecognition();
                 recognitionRef.current.continuous = false;
                 recognitionRef.current.interimResults = true;
@@ -30,17 +38,17 @@ export default function DemoVoiceAgent() {
                     setTranscript(result);
                 };
 
-                recognitionRef.current.onend = async () => {
-                    if (isListening && transcript.trim() !== '') {
+                recognitionRef.current.onend = () => {
+                    if (isListeningRef.current && transcriptRef.current.trim() !== '') {
                         setIsListening(false);
-                        await handleSend(transcript);
-                    } else if (isListening) {
-                        recognitionRef.current?.start(); // Restart if no input
+                        handleSend(transcriptRef.current);
+                    } else if (isListeningRef.current) {
+                        try { recognitionRef.current?.start(); } catch (e) {}
                     }
                 };
             }
         }
-    }, [isListening, transcript]);
+    }, []);
 
     const toggleListening = () => {
         if (isListening) {
