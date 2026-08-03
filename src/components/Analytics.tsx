@@ -17,6 +17,24 @@ export default function Analytics() {
         <>
             {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
             
+            <Script
+                id="google-ads"
+                strategy="afterInteractive"
+                src={`https://www.googletagmanager.com/gtag/js?id=AW-16966558904`}
+            />
+            <Script
+                id="google-ads-config"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'AW-16966558904');
+                    `,
+                }}
+            />
+
             {FB_ID && (
                 <Script
                     id="fb-pixel"
