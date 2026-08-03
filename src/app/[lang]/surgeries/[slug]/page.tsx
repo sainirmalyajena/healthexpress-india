@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${surgery.name} Cost in India – ${minCost} to ${maxCost} | HealthExpress`,
-    description: `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
+    description: surgery.metaDescription || `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
     alternates: {
       canonical: canonical,
       languages: {

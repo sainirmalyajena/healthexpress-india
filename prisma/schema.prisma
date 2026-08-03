@@ -29,6 +29,7 @@ model Surgery {
   symptoms        String[]
   availableCities String[] @default([])
   faqs            Json     @default("[]")
+  metaDescription String?  @db.Text
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   leads           Lead[]
