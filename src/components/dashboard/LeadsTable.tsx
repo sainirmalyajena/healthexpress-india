@@ -26,6 +26,11 @@ interface Lead {
     discountedCost: number | null;
     isEmergency: boolean;
     hasCard: boolean;
+    utmSource: string | null;
+    utmCampaign: string | null;
+    utmMedium: string | null;
+    sourcePage: string | null;
+    description: string | null;
 }
 
 interface Hospital {

@@ -22,6 +22,11 @@ interface Lead {
     notes?: string | null;
     hospital?: { name: string } | null;
     surgery: { name: string } | null;
+    utmSource?: string | null;
+    utmCampaign?: string | null;
+    utmMedium?: string | null;
+    sourcePage?: string | null;
+    description?: string | null;
 }
 
 interface CaseManagerModalProps {
@@ -87,7 +92,25 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
                     </button>
                 </div>
 
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+                    
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm">
+                        <h4 className="font-semibold text-slate-900 mb-2">Lead Intelligence</h4>
+                        <div className="space-y-2 text-slate-600">
+                            <p><span className="font-medium text-slate-700">Source:</span> {lead.utmSource ? (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+                                    Ads ({lead.utmSource}) {lead.utmCampaign && `- ${lead.utmCampaign}`}
+                                </span>
+                            ) : (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">Organic (SEO)</span>
+                            )}</p>
+                            <p><span className="font-medium text-slate-700">Entry Page:</span> <code className="text-xs bg-slate-200 px-1 py-0.5 rounded">{lead.sourcePage || '/'}</code></p>
+                            {lead.description && (
+                                <p><span className="font-medium text-slate-700">Inquiry:</span> {lead.description}</p>
+                            )}
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                         <div className="col-span-2">
                             <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
