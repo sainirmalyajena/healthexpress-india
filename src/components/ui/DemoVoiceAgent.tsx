@@ -31,6 +31,7 @@ export default function DemoVoiceAgent() {
                 recognitionRef.current = new SpeechRecognition();
                 recognitionRef.current.continuous = false;
                 recognitionRef.current.interimResults = true;
+                recognitionRef.current.lang = 'hi-IN'; // Better support for English & Hindi mix
                 
                 recognitionRef.current.onresult = (event: any) => {
                     const current = event.resultIndex;
@@ -93,8 +94,15 @@ export default function DemoVoiceAgent() {
         if (!synthesisRef.current) return;
         
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.voice = synthesisRef.current.getVoices().find(v => v.name.includes('Female') || v.name.includes('Google US English')) || null;
-        utterance.rate = 1.0;
+        const voices = synthesisRef.current.getVoices();
+        
+        // Prioritize Indian Female voices, then Hindi voices, then any female
+        utterance.voice = voices.find(v => v.lang.includes('en-IN') && v.name.includes('Female')) 
+            || voices.find(v => v.lang.includes('hi-IN')) 
+            || voices.find(v => v.name.includes('Female')) 
+            || voices[0];
+            
+        utterance.rate = 0.95; // Slightly slower for better empathy and pronunciation
         
         utterance.onend = () => {
             setIsSpeaking(false);
