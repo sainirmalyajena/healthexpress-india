@@ -8,7 +8,7 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     
     const baseUrl = isPrismDomain 
         ? 'https://prismhealthcure.com' 
-        : (process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com');
+        : (process.env.NEXT_PUBLIC_APP_URL || 'https://www.healthexpressindia.com');
 
     return {
         rules: [

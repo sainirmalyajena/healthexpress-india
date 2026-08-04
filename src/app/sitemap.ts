@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     // Default HealthExpress Sitemap logic...
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.healthexpressindia.com';
     const locales = ['en', 'hi'];
 
     // 1. Get all surgeries with their available cities
