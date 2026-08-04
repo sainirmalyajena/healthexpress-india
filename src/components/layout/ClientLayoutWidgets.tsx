@@ -45,9 +45,9 @@ export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Sticky
             <StickyMobileCTA lang={lang} dict={dict} />
             {showDeferredWidgets && (
                 <>
-                    <DemoVoiceAgent />
-                    <MedBot lang={lang} />
                     <WhatsAppButton />
+                    {/* Render voice agent only on root domains if needed, or everywhere */}
+                    <DemoVoiceAgent />
                 </>
             )}
         </>
