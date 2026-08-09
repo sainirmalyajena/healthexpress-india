@@ -34,11 +34,21 @@ export default function HeroInquiryForm() {
         setIsSubmitting(true);
 
         try {
-            if (typeof window !== 'undefined' && (window as unknown as Record<string, Function>).fbq) {
-                (window as unknown as Record<string, Function>).fbq('track', 'Lead', {
-                    content_name: 'Hero Form Lead',
-                    city: formData.city
-                });
+            if (typeof window !== 'undefined') {
+                if ((window as any).fbq) {
+                    (window as any).fbq('track', 'Lead', {
+                        content_name: 'Hero Form Lead',
+                        city: formData.city
+                    });
+                }
+                if ((window as any).gtag) {
+                    (window as any).gtag('event', 'conversion', { 'send_to': 'AW-16966558904' });
+                    (window as any).gtag('event', 'form_submission', { 
+                        form_name: 'hero_inquiry_form',
+                        city: formData.city,
+                        surgery_name: formData.surgeryName 
+                    });
+                }
             }
 
             const response = await fetch('/api/leads', {

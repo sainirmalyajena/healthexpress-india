@@ -50,9 +50,16 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
 
             if (response.ok) {
                 setSubmitResult({ success: true, referenceId: result.referenceId });
-                // Trigger Meta Pixel Lead Event
-                if (typeof window !== 'undefined' && (window as any).fbq) {
-                    (window as any).fbq('track', 'Lead');
+                // Trigger Meta Pixel & Google Ads Lead Event
+                if (typeof window !== 'undefined') {
+                    if ((window as any).fbq) (window as any).fbq('track', 'Lead');
+                    if ((window as any).gtag) {
+                        (window as any).gtag('event', 'conversion', { 'send_to': 'AW-16966558904' });
+                        (window as any).gtag('event', 'form_submission', { 
+                            form_name: 'surgery_lead_form',
+                            surgery_name: data.surgeryName 
+                        });
+                    }
                 }
                 reset();
             } else {
