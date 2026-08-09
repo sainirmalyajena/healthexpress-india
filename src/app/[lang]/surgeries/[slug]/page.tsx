@@ -267,6 +267,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
             sizes="100vw"
             quality={60}
             priority
+            fetchPriority="high"
             className="object-cover opacity-30 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent" />

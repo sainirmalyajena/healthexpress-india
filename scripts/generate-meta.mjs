@@ -17,7 +17,7 @@ async function sleep(ms) {
 }
 
 async function generateMetaDescription(surgery) {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
     const prompt = `You are a medical SEO expert in India. 
 Write a highly-clickable, persuasive Meta Description (under 155 characters) for the following surgery page to maximize Click-Through Rate (CTR).
 Include words like "affordable", "cost", "cashless insurance" or "top doctors" where appropriate.

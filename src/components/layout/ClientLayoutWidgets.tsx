@@ -29,10 +29,33 @@ export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Sticky
     const pathname = usePathname();
     const [showDeferredWidgets, setShowDeferredWidgets] = useState(false);
 
-    // Defer heavy widgets (MedBot, WhatsApp) by 5 seconds to avoid blocking hydration
     useEffect(() => {
-        const timer = setTimeout(() => setShowDeferredWidgets(true), 5000);
-        return () => clearTimeout(timer);
+        const handleInteraction = () => {
+            setShowDeferredWidgets(true);
+            // Clean up event listeners after first interaction
+            window.removeEventListener('scroll', handleInteraction);
+            window.removeEventListener('mousemove', handleInteraction);
+            window.removeEventListener('touchstart', handleInteraction);
+            window.removeEventListener('keydown', handleInteraction);
+        };
+
+        // Fallback: If no interaction within 7 seconds, load anyway
+        const timer = setTimeout(() => {
+            handleInteraction();
+        }, 7000);
+
+        window.addEventListener('scroll', handleInteraction, { passive: true });
+        window.addEventListener('mousemove', handleInteraction, { passive: true });
+        window.addEventListener('touchstart', handleInteraction, { passive: true });
+        window.addEventListener('keydown', handleInteraction, { passive: true });
+
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('scroll', handleInteraction);
+            window.removeEventListener('mousemove', handleInteraction);
+            window.removeEventListener('touchstart', handleInteraction);
+            window.removeEventListener('keydown', handleInteraction);
+        };
     }, []);
 
     // Hide sticky widgets on campaign landing pages
