@@ -18,7 +18,8 @@ export async function GET(request: Request) {
 
     const APP_ID = process.env.META_APP_ID;
     const APP_SECRET = process.env.META_APP_SECRET;
-    const redirectUri = `${url.origin}/api/social/callback`;
+    // Hardcode the redirect URI to guarantee exact match
+    const redirectUri = 'https://healthexpressindia.com/api/social/callback';
 
     try {
         // 1. Exchange code for Short-Lived User Token

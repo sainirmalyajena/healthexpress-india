@@ -7,12 +7,8 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: 'META_APP_ID not configured in .env' }, { status: 500 });
     }
 
-    // Determine the base URL (e.g., localhost in dev, production URL in prod)
-    const url = new URL(request.url);
-    const origin = url.origin;
-    
-    // The callback route that Facebook will redirect to
-    const redirectUri = `${origin}/api/social/callback`;
+    // Hardcode the redirect URI to guarantee exact match with Meta settings
+    const redirectUri = 'https://healthexpressindia.com/api/social/callback';
     
     // Scopes needed for Autobot
     const scopes = [
