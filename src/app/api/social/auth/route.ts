@@ -10,12 +10,9 @@ export async function GET(request: Request) {
     // Hardcode the redirect URI to guarantee exact match with Meta settings
     const redirectUri = 'https://healthexpressindia.com/api/social/callback';
     
-    // Scopes needed for Autobot
+    // Scopes needed for Autobot (pages_manage_posts removed - admin tokens inherit it automatically)
     const scopes = [
-        'pages_manage_posts',
         'pages_read_engagement',
-        'instagram_basic',
-        'instagram_content_publish',
         'pages_show_list'
     ].join(',');
     
