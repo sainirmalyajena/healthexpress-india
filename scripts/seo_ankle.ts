@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
@@ -41,8 +41,7 @@ At HealthExpress India, we provide free consultations and transparent quotes wit
         where: { id: surgery.id },
         data: {
             overview: newOverview,
-            metaTitle: "Ankle Surgery Cost in India & Delhi | Free Quote",
-            metaDesc: "Find the exact ankle surgery cost in India and Delhi. Get a free quote and connect with top orthopedic surgeons for ankle repair and replacement.",
+            metaDescription: "Find the exact ankle surgery cost in India and Delhi. Get a free quote and connect with top orthopedic surgeons for ankle repair and replacement.",
         }
     });
 
