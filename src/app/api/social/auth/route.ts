@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-    const APP_ID = process.env.META_APP_ID;
+    const APP_ID = '2311401052938093'; // Temporarily hardcoded
     
     if (!APP_ID) {
         return NextResponse.json({ error: 'META_APP_ID not configured in .env' }, { status: 500 });

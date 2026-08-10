@@ -16,8 +16,8 @@ export async function GET(request: Request) {
         return NextResponse.redirect(`${url.origin}/en/admin/social?error=no_code`);
     }
 
-    const APP_ID = process.env.META_APP_ID;
-    const APP_SECRET = process.env.META_APP_SECRET;
+    const APP_ID = '2311401052938093'; // Temporarily hardcoded
+    const APP_SECRET = '170926fb980bd8603ad6aa4abf2f957e'; // Temporarily hardcoded
     // Hardcode the redirect URI to guarantee exact match
     const redirectUri = 'https://healthexpressindia.com/api/social/callback';
 
