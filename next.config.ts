@@ -7,7 +7,7 @@ const withAnalyzer = withBundleAnalyzer({
   openAnalyzer: true,
 });
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   // No serverExternalPackages needed — handled by transpilePackages already
 
   // Add aggressive HTTP caching headers to static assets and pages
@@ -71,5 +71,4 @@ export default withSentryConfig(withAnalyzer(nextConfig), {
   silent: !process.env.CI,
   widenClientFileUpload: true,
   disableLogger: true,
-  hideSourceMaps: true,
 });

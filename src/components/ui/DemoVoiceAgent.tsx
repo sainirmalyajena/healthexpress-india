@@ -62,7 +62,7 @@ export default function DemoVoiceAgent() {
         }
     };
 
-    const handleSend = async (text: string) => {
+    async function handleSend(text: string) {
         if (!text.trim()) return;
         
         setIsSpeaking(true);
