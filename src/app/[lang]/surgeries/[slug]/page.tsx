@@ -421,8 +421,13 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                       <span className="text-sm text-slate-700 font-medium">Zero Cost EMI Options</span>
                     </div>
                   </div>
-                  <a href="#lead-form" className="block w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm text-center rounded-lg transition-colors border border-blue-200">
-                    Check My Insurance
+                  <a 
+                    href={`https://wa.me/919307861041?text=${encodeURIComponent(`Hi HealthExpress, I want to check my insurance eligibility and cashless options for ${surgery.name}.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm text-center rounded-lg transition-colors border border-blue-200"
+                  >
+                    Check My Insurance on WhatsApp
                   </a>
                 </div>
               </div>
