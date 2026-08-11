@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 import withBundleAnalyzer from "@next/bundle-analyzer";
+import withPWAInit from "@ducanh2912/next-pwa";
 
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development",
+  register: true,
+  skipWaiting: true,
+});
 const withAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
   openAnalyzer: true,
@@ -65,7 +72,7 @@ const nextConfig = {
   },
 };
 
-export default withSentryConfig(withAnalyzer(nextConfig), {
+export default withSentryConfig(withAnalyzer(withPWA(nextConfig)), {
   org: "healthexpress-india",
   project: "javascript-nextjs",
   silent: !process.env.CI,

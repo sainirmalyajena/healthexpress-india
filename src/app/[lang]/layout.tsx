@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Header, Footer } from "@/components/layout";
 import Analytics from "@/components/Analytics";
 import { generateOrganizationSchema } from "@/lib/schema";
@@ -28,6 +28,14 @@ const outfit = Outfit({
 export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'hi' }];
 }
+
+export const viewport: Viewport = {
+  themeColor: "#0d9488",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
