@@ -19,7 +19,7 @@ import { prisma } from '@/lib/prisma';
 import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 
-export const revalidate = 600; // ISR: revalidate every 10 minutes
+export const revalidate = 86400; // ISR: revalidate once a day
 
 interface PageProps {
   params: Promise<{ slug: string; lang: string; city: string }>;

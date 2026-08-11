@@ -10,9 +10,9 @@ datasource db {
 }
 
 model Surgery {
-  id              String   @id @default(cuid())
+  id              String       @id @default(cuid())
   name            String
-  slug            String   @unique
+  slug            String       @unique
   category        Category
   overview        String
   indications     String
@@ -25,16 +25,16 @@ model Surgery {
   postOpCare      String
   costRangeMin    Int
   costRangeMax    Int
-  insuranceLikely Boolean  @default(false)
+  insuranceLikely Boolean      @default(false)
   symptoms        String[]
-  availableCities String[] @default([])
-  faqs            Json     @default("[]")
-  metaDescription String?  @db.Text
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  availableCities String[]     @default([])
+  faqs            Json         @default("[]")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  metaDescription String?
   leads           Lead[]
-  doctors         Doctor[]
   socialPosts     SocialPost[]
+  doctors         Doctor[]     @relation("DoctorToSurgery")
 }
 
 model Hospital {
@@ -48,8 +48,8 @@ model Hospital {
   status          String   @default("ACTIVE")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  leads           Lead[]
   doctors         Doctor[]
+  leads           Lead[]
 }
 
 model Doctor {
@@ -66,10 +66,10 @@ model Doctor {
   status         String    @default("ACTIVE")
   availability   Json      @default("{}")
   hospitalId     String
-  hospital       Hospital  @relation(fields: [hospitalId], references: [id])
-  surgeries      Surgery[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  hospital       Hospital  @relation(fields: [hospitalId], references: [id])
+  surgeries      Surgery[] @relation("DoctorToSurgery")
 }
 
 model Lead {
@@ -86,7 +86,7 @@ model Lead {
   isEmergency    Boolean         @default(false)
   callbackTime   String?
   status         LeadStatus      @default(NEW)
-  notes          String?         // Internal notes for ops team
+  notes          String?
   originalCost   Float?
   discountedCost Float?
   revenue        Float?
@@ -97,16 +97,16 @@ model Lead {
   utmTerm        String?
   utmContent     String?
   referenceId    String          @unique
-  otp            String?         // For patient login
+  otp            String?
   otpExpires     DateTime?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
+  rating         Int?
+  feedback       String?
+  documents      Document[]
   hospital       Hospital?       @relation(fields: [hospitalId], references: [id])
   surgery        Surgery?        @relation(fields: [surgeryId], references: [id])
-  documents      Document[]
-  rating         Int?            // Patient satisfaction rating (1-5)
-  feedback       String?         // Detailed patient feedback
-  
+
   @@index([status])
   @@index([createdAt])
   @@index([city])
@@ -115,11 +115,11 @@ model Lead {
 model Document {
   id        String   @id @default(cuid())
   name      String
-  type      String   // e.g., 'PDF', 'IMAGE'
-  url       String   // Supabase Storage URL
+  type      String
+  url       String
   leadId    String
-  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -131,7 +131,73 @@ model User {
   createdAt    DateTime @default(now())
 }
 
+model PartnerRequest {
+  id                 String        @id @default(cuid())
+  hospitalName       String
+  registrationNumber String
+  city               String
+  state              String
+  pincode            String
+  contactPerson      String
+  designation        String
+  email              String
+  phone              String
+  website            String?
+  hospitalType       String[]
+  specialties        String[]
+  bedCapacity        Int
+  icuBeds            Int?
+  hasOT              Boolean
+  yearsInOperation   Int
+  isNABH             Boolean       @default(false)
+  isJCI              Boolean       @default(false)
+  isISO              Boolean       @default(false)
+  has24x7Emergency   Boolean       @default(false)
+  hasAmbulance       Boolean       @default(false)
+  hasPharmacy        Boolean       @default(false)
+  hasDiagnosticLab   Boolean       @default(false)
+  hasBloodBank       Boolean       @default(false)
+  partnershipReason  String
+  monthlyPatients    Int?
+  insuranceTieups    String?
+  status             PartnerStatus @default(PENDING)
+  referenceId        String        @unique
+  comments           String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
 
+model SocialPost {
+  id           String    @id @default(cuid())
+  content      String
+  platform     String
+  status       String    @default("PENDING")
+  publishedAt  DateTime?
+  surgeryId    String?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  surgery      Surgery?  @relation(fields: [surgeryId], references: [id])
+}
+
+model Appointment {
+  id              String   @id @default(cuid())
+  patientName     String
+  patientPhone    String
+  appointmentDate DateTime
+  reason          String?
+  status          String   @default("SCHEDULED")
+  callTranscript  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
 
 enum Category {
   GENERAL_SURGERY
@@ -171,89 +237,4 @@ enum PartnerStatus {
   APPROVED
   REJECTED
   ONBOARDED
-}
-
-model PartnerRequest {
-  id                String        @id @default(cuid())
-  
-  // Basic Info
-  hospitalName      String
-  registrationNumber String
-  city              String
-  state             String
-  pincode           String
-  
-  // Contact
-  contactPerson     String
-  designation       String
-  email             String
-  phone             String
-  website           String?
-  
-  // Hospital Details
-  hospitalType      String[]
-  specialties       String[]
-  bedCapacity       Int
-  icuBeds           Int?
-  hasOT             Boolean
-  yearsInOperation  Int
-  
-  // Accreditation
-  isNABH            Boolean       @default(false)
-  isJCI             Boolean       @default(false)
-  isISO             Boolean       @default(false)
-  
-  // Facilities
-  has24x7Emergency  Boolean       @default(false)
-  hasAmbulance      Boolean       @default(false)
-  hasPharmacy       Boolean       @default(false)
-  hasDiagnosticLab  Boolean       @default(false)
-  hasBloodBank      Boolean       @default(false)
-  
-  // Additional
-  partnershipReason String
-  monthlyPatients   Int?
-  insuranceTieups   String?
-  
-  // Status tracking
-  status            PartnerStatus @default(PENDING)
-  referenceId       String        @unique
-  comments          String?
-  
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
-}
-
-model SocialPost {
-  id              String   @id @default(cuid())
-  content         String   @db.Text
-  platform        String   // e.g., "Facebook", "Instagram", "Twitter", "LinkedIn"
-  status          String   @default("PENDING") // PENDING, PUBLISHED, FAILED
-  publishedAt     DateTime?
-  surgeryId       String?
-  surgery         Surgery?  @relation(fields: [surgeryId], references: [id])
-  errorMessage    String?  @db.Text
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-}
-
-model Appointment {
-  id              String   @id @default(cuid())
-  patientName     String
-  patientPhone    String
-  appointmentDate DateTime
-  reason          String?
-  status          String   @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
-  callTranscript  String?  @db.Text
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-}
-
-model SystemSetting {
-  id String @id @default(cuid())
-  key String @unique
-  value String @db.Text
-  updatedAt DateTime @updatedAt
 }

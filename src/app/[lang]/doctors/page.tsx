@@ -8,7 +8,7 @@ import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 import { generateCollectionPageSchema } from '@/lib/schema';
 
-export const revalidate = 600; // ISR: revalidate every 10 minutes
+export const revalidate = 86400; // ISR: revalidate once a day
 
 interface PageProps {
     params: Promise<{ lang: string }>;

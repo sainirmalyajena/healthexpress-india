@@ -16,7 +16,7 @@ import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 import { getAISuggestedTerms, isLikelySymptomatic } from '@/lib/ai-search';
 
-export const revalidate = 300; // ISR: revalidate every 5 minutes
+export const revalidate = 86400; // ISR: revalidate once a day
 
 interface SearchParams {
   q?: string;
