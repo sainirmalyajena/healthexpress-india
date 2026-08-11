@@ -147,9 +147,9 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
             {submitResult?.success === false && (
-                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 mb-4">
+                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 mb-3">
                     {submitResult.message}
                 </div>
             )}
