@@ -15,6 +15,7 @@ interface LeadFormProps {
 export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitResult, setSubmitResult] = useState<{ success: boolean; referenceId?: string; message?: string } | null>(null);
+    const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
 
     const {
         register,
@@ -36,12 +37,21 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
         setIsSubmitting(true);
         setSubmitResult(null);
 
+        // Format custom answers
+        let finalDescription = data.description;
+        const customKeys = Object.keys(customAnswers).filter(k => customAnswers[k] && customAnswers[k].trim() !== '');
+        if (customKeys.length > 0) {
+            const extraDetails = customKeys.map(k => `${k}: ${customAnswers[k]}`).join('\n');
+            finalDescription = `${data.description}\n\n--- Additional Medical Info ---\n${extraDetails}`;
+        }
+
         try {
             const response = await fetch('/api/leads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...data,
+                    description: finalDescription,
                     sourcePage: window.location.href,
                 }),
             });
@@ -143,6 +153,73 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                     {submitResult.message}
                 </div>
             )}
+
+            {/* Dynamic Custom Fields based on Surgery Type */}
+            {(() => {
+                const lowerName = surgeryName.toLowerCase();
+                
+                if (lowerName.includes('lasik') || lowerName.includes('eye') || lowerName.includes('cataract') || lowerName.includes('ophthalmology')) {
+                    return (
+                        <div className="grid sm:grid-cols-2 gap-3 p-4 bg-teal-50/50 rounded-xl border border-teal-100 mb-4">
+                            <div className="col-span-full">
+                                <p className="text-sm font-semibold text-teal-800 flex items-center gap-2">
+                                    <Stethoscope className="w-4 h-4" />
+                                    Medical Details (Optional)
+                                </p>
+                            </div>
+                            <Input
+                                placeholder="Right Eye Power (e.g. -2.5)"
+                                value={customAnswers['Right Eye Power'] || ''}
+                                onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Right Eye Power': e.target.value }))}
+                            />
+                            <Input
+                                placeholder="Left Eye Power (e.g. -2.0)"
+                                value={customAnswers['Left Eye Power'] || ''}
+                                onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Left Eye Power': e.target.value }))}
+                            />
+                        </div>
+                    );
+                }
+                
+                if (lowerName.includes('ortho') || lowerName.includes('knee') || lowerName.includes('hip') || lowerName.includes('joint')) {
+                    return (
+                        <div className="grid sm:grid-cols-2 gap-3 p-4 bg-teal-50/50 rounded-xl border border-teal-100 mb-4">
+                            <div className="col-span-full">
+                                <p className="text-sm font-semibold text-teal-800 flex items-center gap-2">
+                                    <Stethoscope className="w-4 h-4" />
+                                    Joint Pain Details (Optional)
+                                </p>
+                            </div>
+                            <Select
+                                options={[
+                                    { value: 'Left Knee', label: 'Left Knee' },
+                                    { value: 'Right Knee', label: 'Right Knee' },
+                                    { value: 'Both Knees', label: 'Both Knees' },
+                                    { value: 'Hip Joint', label: 'Hip Joint' },
+                                    { value: 'Shoulder', label: 'Shoulder' },
+                                    { value: 'Other', label: 'Other Joint' }
+                                ]}
+                                placeholder="Which joint is affected?"
+                                value={customAnswers['Affected Joint'] || ''}
+                                onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Affected Joint': e.target.value }))}
+                            />
+                            <Select
+                                options={[
+                                    { value: '< 6 months', label: 'Less than 6 months' },
+                                    { value: '6-12 months', label: '6 to 12 months' },
+                                    { value: '1-3 years', label: '1 to 3 years' },
+                                    { value: '> 3 years', label: 'More than 3 years' }
+                                ]}
+                                placeholder="Pain duration?"
+                                value={customAnswers['Pain Duration'] || ''}
+                                onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Pain Duration': e.target.value }))}
+                            />
+                        </div>
+                    );
+                }
+                
+                return null;
+            })()}
 
             {/* Hidden fields */}
             <input type="hidden" {...register('surgeryId')} />
