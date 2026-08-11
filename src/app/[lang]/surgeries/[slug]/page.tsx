@@ -117,12 +117,12 @@ function StatPill({
   icon: Icon, label, value, highlight,
 }: { icon: React.ElementType; label: string; value: string; highlight?: boolean }) {
   return (
-    <div className={`flex flex-col gap-1 p-4 rounded-xl ${highlight ? 'bg-teal-600 text-white' : 'bg-slate-50'}`}>
-      <div className={`flex items-center gap-1.5 text-xs font-medium ${highlight ? 'text-teal-100' : 'text-slate-500'}`}>
-        <Icon className="w-3.5 h-3.5" />
-        {label}
+    <div className={`flex flex-col gap-1 p-3 sm:p-4 rounded-xl ${highlight ? 'bg-teal-600 text-white' : 'bg-slate-50'}`}>
+      <div className={`flex items-center gap-1.5 text-[11px] sm:text-xs font-medium ${highlight ? 'text-teal-100' : 'text-slate-500'}`}>
+        <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+        <span className="truncate">{label}</span>
       </div>
-      <p className={`text-lg font-bold leading-tight ${highlight ? 'text-white' : 'text-slate-900'}`}>
+      <p className={`text-base sm:text-lg font-bold leading-tight ${highlight ? 'text-white' : 'text-slate-900'} truncate`}>
         {value}
       </p>
     </div>
@@ -288,12 +288,12 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
               )}
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-[1.1] tracking-tight drop-shadow-lg">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-tight tracking-tight drop-shadow-lg break-words">
               {surgery.name}
             </h1>
             
             {doctor && (
-              <div className="flex items-center gap-2 text-xs text-slate-300 mb-6 bg-slate-800/50 border border-slate-600/50 rounded-full px-4 py-2 w-fit backdrop-blur-sm">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300 mb-6 bg-slate-800/50 border border-slate-600/50 rounded-xl px-4 py-2 w-fit backdrop-blur-sm leading-relaxed">
                 <span className="text-sm">⚕️</span>
                 <span className="font-medium">{lang === 'hi' ? 'चिकित्सा विशेषज्ञ द्वारा समीक्षित: ' : 'Medically Reviewed by '}</span>
                 <Link href={`/${lang}/doctors/${doctor.id}`} className="font-bold text-teal-400 hover:text-teal-300 transition-colors underline decoration-teal-400/30 underline-offset-2">
