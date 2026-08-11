@@ -4,14 +4,14 @@ import LeadConfirmationEmail from '@/emails/LeadConfirmation';
 import AdminNotificationEmail from '@/emails/AdminNotification';
 import * as React from 'react';
 
-// Configure Zoho SMTP transporter
+// Configure SMTP transporter (Titan Mail / GoDaddy)
 const transporter = nodemailer.createTransport({
-    host: process.env.ZOHO_SERVER || 'smtp.zoho.in',
-    port: Number(process.env.ZOHO_PORT) || 587,
-    secure: false, // true for 465, false for other ports
+    host: process.env.SMTP_SERVER || 'smtp.titan.email',
+    port: Number(process.env.SMTP_PORT) || 465,
+    secure: true, // true for 465, false for 587
     auth: {
-        user: process.env.ZOHO_USER,
-        pass: process.env.ZOHO_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     },
 });
 
@@ -27,8 +27,8 @@ export async function sendEmail({
     text: string;
 }) {
     // Fallback if SMTP not configured
-    if (!process.env.ZOHO_PASS) {
-        console.log('--- MOCK EMAIL (Zoho Credentials Missing) ---');
+    if (!process.env.SMTP_PASS) {
+        console.log('--- MOCK EMAIL (SMTP Credentials Missing) ---');
         console.log(`To: ${to}`);
         console.log(`Subject: ${subject}`);
         console.log(`Body: ${text}`);
@@ -40,7 +40,7 @@ export async function sendEmail({
         const html = await render(react);
 
         const info = await transporter.sendMail({
-            from: process.env.ZOHO_SENDER || 'HealthExpress India <healthexpressindia@healthexpressindia.com>',
+            from: process.env.SMTP_SENDER || 'HealthExpress India <sai@healthexpressindia.com>',
             to,
             subject,
             text,
@@ -50,7 +50,7 @@ export async function sendEmail({
         console.log('Email sent: %s', info.messageId);
         return info;
     } catch (error) {
-        console.error('Error sending email via Zoho SMTP:', error);
+        console.error('Error sending email via SMTP:', error);
         throw error;
     }
 }
