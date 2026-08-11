@@ -160,20 +160,20 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 
                 if (lowerName.includes('lasik') || lowerName.includes('eye') || lowerName.includes('cataract') || lowerName.includes('ophthalmology')) {
                     return (
-                        <div className="grid sm:grid-cols-2 gap-3 p-4 bg-teal-50/50 rounded-xl border border-teal-100 mb-4">
+                        <div className="grid grid-cols-2 gap-2.5 p-3 bg-teal-50/50 rounded-xl border border-teal-100 mb-3">
                             <div className="col-span-full">
-                                <p className="text-sm font-semibold text-teal-800 flex items-center gap-2">
-                                    <Stethoscope className="w-4 h-4" />
-                                    Medical Details (Optional)
+                                <p className="text-[13px] font-semibold text-teal-800 flex items-center gap-1.5">
+                                    <Stethoscope className="w-3.5 h-3.5" />
+                                    Medical Details
                                 </p>
                             </div>
                             <Input
-                                placeholder="Right Eye Power (e.g. -2.5)"
+                                placeholder="Right Eye (e.g. -2.5)"
                                 value={customAnswers['Right Eye Power'] || ''}
                                 onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Right Eye Power': e.target.value }))}
                             />
                             <Input
-                                placeholder="Left Eye Power (e.g. -2.0)"
+                                placeholder="Left Eye (e.g. -2.0)"
                                 value={customAnswers['Left Eye Power'] || ''}
                                 onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Left Eye Power': e.target.value }))}
                             />
@@ -183,34 +183,34 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 
                 if (lowerName.includes('ortho') || lowerName.includes('knee') || lowerName.includes('hip') || lowerName.includes('joint')) {
                     return (
-                        <div className="grid sm:grid-cols-2 gap-3 p-4 bg-teal-50/50 rounded-xl border border-teal-100 mb-4">
+                        <div className="grid grid-cols-2 gap-2.5 p-3 bg-teal-50/50 rounded-xl border border-teal-100 mb-3">
                             <div className="col-span-full">
-                                <p className="text-sm font-semibold text-teal-800 flex items-center gap-2">
-                                    <Stethoscope className="w-4 h-4" />
-                                    Joint Pain Details (Optional)
+                                <p className="text-[13px] font-semibold text-teal-800 flex items-center gap-1.5">
+                                    <Stethoscope className="w-3.5 h-3.5" />
+                                    Joint Pain Details
                                 </p>
                             </div>
                             <Select
                                 options={[
                                     { value: 'Left Knee', label: 'Left Knee' },
                                     { value: 'Right Knee', label: 'Right Knee' },
-                                    { value: 'Both Knees', label: 'Both Knees' },
-                                    { value: 'Hip Joint', label: 'Hip Joint' },
+                                    { value: 'Both Knees', label: 'Both' },
+                                    { value: 'Hip Joint', label: 'Hip' },
                                     { value: 'Shoulder', label: 'Shoulder' },
-                                    { value: 'Other', label: 'Other Joint' }
+                                    { value: 'Other', label: 'Other' }
                                 ]}
-                                placeholder="Which joint is affected?"
+                                placeholder="Affected Joint?"
                                 value={customAnswers['Affected Joint'] || ''}
                                 onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Affected Joint': e.target.value }))}
                             />
                             <Select
                                 options={[
-                                    { value: '< 6 months', label: 'Less than 6 months' },
-                                    { value: '6-12 months', label: '6 to 12 months' },
-                                    { value: '1-3 years', label: '1 to 3 years' },
-                                    { value: '> 3 years', label: 'More than 3 years' }
+                                    { value: '< 6 months', label: '< 6 months' },
+                                    { value: '6-12 months', label: '6-12 months' },
+                                    { value: '1-3 years', label: '1-3 years' },
+                                    { value: '> 3 years', label: '> 3 years' }
                                 ]}
-                                placeholder="Pain duration?"
+                                placeholder="Duration?"
                                 value={customAnswers['Pain Duration'] || ''}
                                 onChange={(e) => setCustomAnswers(prev => ({ ...prev, 'Pain Duration': e.target.value }))}
                             />
@@ -230,16 +230,15 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 <input type="text" {...register('website')} tabIndex={-1} autoComplete="off" />
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5">
                 <Input
                     placeholder="Full Name *"
                     {...register('fullName')}
                     error={errors.fullName?.message}
                     required
                 />
-
                 <Input
-                    placeholder="Phone Number (+91) *"
+                    placeholder="Phone Number *"
                     type="tel"
                     {...register('phone')}
                     error={errors.phone?.message}
@@ -247,14 +246,13 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 />
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-2.5">
                 <Input
-                    placeholder="Email Address"
+                    placeholder="Email (Optional)"
                     type="email"
                     {...register('email')}
                     error={errors.email?.message}
                 />
-
                 <Input
                     placeholder="City *"
                     {...register('city')}
@@ -264,28 +262,28 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
             </div>
 
             <Textarea
-                placeholder="Describe your symptoms or requirements *"
-                rows={2}
+                placeholder="Describe your symptoms *"
+                rows={1}
                 {...register('description')}
                 error={errors.description?.message}
                 required
             />
 
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5">
                 <Select
                     options={[
-                        { value: 'YES', label: 'Yes, I have insurance' },
-                        { value: 'NO', label: 'No, I will pay directly' },
-                        { value: 'NOT_SURE', label: 'Not sure / Need guidance' },
+                        { value: 'YES', label: 'Yes, Insurance' },
+                        { value: 'NO', label: 'No Insurance' },
+                        { value: 'NOT_SURE', label: 'Not Sure' },
                     ]}
-                    placeholder="Health Insurance?"
+                    placeholder="Insurance?"
                     {...register('insurance')}
                     error={errors.insurance?.message}
                     required
                 />
 
                 <Input
-                    placeholder="Preferred Callback Time"
+                    placeholder="Callback Time"
                     {...register('callbackTime')}
                     error={errors.callbackTime?.message}
                 />
