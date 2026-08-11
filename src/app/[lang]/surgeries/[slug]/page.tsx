@@ -312,6 +312,13 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
               <StatPill icon={HeartPulse}  label={dict.recovery}      value={surgery.recovery.split('.')[0]}              />
               <StatPill icon={IndianRupee} label={dict.est_cost}       value={`${formatCurrency(surgery.costRangeMin)}+`}  highlight />
             </div>
+
+            {/* Mobile Jump to Form CTA */}
+            <div className="mt-8 lg:hidden">
+              <a href="#lead-form" className="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 hover:bg-teal-600 text-white font-bold rounded-xl shadow-lg shadow-teal-900/20 transition-colors">
+                Book FREE Consultation <ArrowRight className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -677,13 +684,36 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
       </div>
 
       <div className="bg-slate-100 border-t border-slate-200 mt-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6">
           <p className="text-xs text-slate-500 leading-relaxed">
             <strong className="text-slate-600">⚕️ Medical Disclaimer:</strong>{' '}
             {dictionary.footer.disclaimer.includes(':')
               ? dictionary.footer.disclaimer.split(':').slice(1).join(':').trim()
               : dictionary.footer.disclaimer}
           </p>
+        </div>
+      </div>
+
+      {/* Mobile Sticky Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 p-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] md:hidden">
+        <div className="flex gap-3 max-w-md mx-auto">
+          <a
+            href="tel:+919307861041"
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-50 text-blue-700 font-bold rounded-xl border border-blue-200"
+          >
+            <Phone className="w-4 h-4" /> Call Now
+          </a>
+          <a
+            href={`https://wa.me/919307861041?text=${whatsappMsg}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-[1.5] flex items-center justify-center gap-2 py-3 bg-green-500 text-white font-bold rounded-xl shadow-sm"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="white" aria-hidden="true">
+              <path d="M12.0117 2C6.50574 2 2.02344 6.47837 2.02344 11.9841C2.02344 13.7485 2.48297 15.4678 3.37032 17.009L2 22L7.12596 20.6559C8.61867 21.4672 10.3061 21.8973 12.0117 21.8973H12.0159C17.5218 21.8973 22.0041 17.4189 22.0041 11.913C22.0041 9.25621 20.9723 6.7728 19.0988 4.8993C17.2253 3.0258 14.7171 2 12.0117 2ZM17.4299 14.8804C17.1329 14.7317 15.672 14.0135 15.3995 13.9142C15.127 13.815 14.9288 13.8646 14.7306 14.1624C14.5323 14.4594 13.9623 15.1287 13.7889 15.327C13.6154 15.5252 13.4419 15.55 13.1448 15.4013C12.8478 15.2524 11.8896 14.9388 10.7516 13.9242C9.86422 13.1325 9.26514 12.155 8.96807 11.6591C8.671 11.1632 8.93661 10.8878 9.08518 10.74C9.21855 10.6074 9.38202 10.3941 9.53059 10.2206C9.67917 10.0471 9.72877 9.92316 9.82796 9.72477C9.92715 9.52638 9.87755 9.35286 9.80315 9.20405C9.72875 9.05525 9.13426 7.59247 8.88636 6.9967C8.63845 6.42555 8.39055 6.50058 8.19236 6.50058C7.82065 6.47513 7.62247 6.47513C7.10234 6.54955 6.82998 6.84662C6.55747 7.1437 5.78913 7.86221 5.78913 9.32788C5.78913 10.7925 6.85478 12.204 7.00335 12.4023C7.15191 12.6005 9.08331 15.5752 12.0315 16.848C12.7335 17.1517 13.2801 17.3331 13.7088 17.4691C14.5422 17.7336 15.2973 17.6957 15.8926 17.6067C16.5529 17.5079 17.9252 16.7753 18.2223 15.9324C18.5193 15.0895 18.5193 14.3713 18.4449 14.2474C18.3705 14.1235 18.1724 14.0535 17.8753 13.9048L17.4299 14.8804Z" />
+            </svg>
+            WhatsApp
+          </a>
         </div>
       </div>
     </div>
