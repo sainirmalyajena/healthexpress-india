@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
             });
 
             await sendEmail({
-                to: process.env.OPS_EMAIL || 'healthexpressindia@healthexpressindia.com',
+                to: process.env.OPS_EMAIL || 'sai@healthexpressindia.com',
                 ...adminTemplate,
             });
         } catch (emailErr) {
