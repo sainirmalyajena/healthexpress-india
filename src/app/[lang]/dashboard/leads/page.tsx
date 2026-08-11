@@ -6,6 +6,8 @@ import { LeadStatus, Prisma } from '@/generated/prisma';
 import LeadsTable from '@/components/dashboard/LeadsTable';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 
+export const dynamic = 'force-dynamic';
+
 interface SearchParams {
     status?: string;
     surgery?: string;

@@ -9,6 +9,8 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 
 import { Prisma } from '@/generated/prisma';
 
+export const dynamic = 'force-dynamic';
+
 async function getAnalytics(range: string = 'all') {
     const where: Prisma.LeadWhereInput = {};
 
