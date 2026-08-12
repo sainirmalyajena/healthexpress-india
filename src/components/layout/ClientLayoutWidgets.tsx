@@ -16,9 +16,7 @@ const WhatsAppButton = dynamic(() => import("@/components/ui/WhatsAppButton").th
   ssr: false,
 });
 
-const DemoVoiceAgent = dynamic(() => import("@/components/ui/DemoVoiceAgent"), {
-  ssr: false,
-});
+
 
 export interface StickyCtaDict {
     call: string;
@@ -69,8 +67,7 @@ export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Sticky
             {showDeferredWidgets && (
                 <>
                     <WhatsAppButton />
-                    {/* Render voice agent only on root domains if needed, or everywhere */}
-                    <DemoVoiceAgent />
+
                 </>
             )}
         </>
