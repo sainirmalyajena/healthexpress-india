@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { lang } = await params;
     return {
         title: lang === 'hi' ? 'गोपनीयता नीति | HealthExpress' : 'Privacy Policy | HealthExpress India',
-        description: lang === 'hi' ? 'HealthExpress India की गोपनीयता नीति। जानें कि हम आपके डेटा को कैसे एकत्र, उपयोग और सुरक्षित रखते हैं।' : 'Privacy Policy for HealthExpress India. Learn how we collect, use, and protect your data.',
+        description: lang === 'hi' ? 'HealthExpress India की गोपनीयता नीति (DPDP अनुपालन)। जानें कि हम आपके डेटा को कैसे सुरक्षित रखते हैं।' : 'Privacy Policy for HealthExpress India compliant with DPDP Act 2023. Learn how we collect, use, and protect your data.',
     };
 }
 
@@ -20,17 +20,15 @@ const PrivacyEN = () => (
 
         <div className="space-y-8 text-slate-700 leading-relaxed">
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Overview</h2>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">1. Overview & DPDP Compliance</h2>
                 <p>
-                    At HealthExpress India, we value your privacy and are committed to protecting your personal information.
-                    This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website
-                    or use our services to find surgery and hospitalization support.
+                    HealthExpress India acts as a <strong>Data Fiduciary</strong> under the Digital Personal Data Protection (DPDP) Act, 2023. We are committed to processing your digital personal data lawfully, fairly, and transparently. This policy outlines how we collect, use, and protect your personal information when you use our services.
                 </p>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">2. Information We Collect</h2>
-                <p>We may collect personal information that you voluntarily provide to us when you inquire about our services, such as:</p>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">2. Notice & Consent</h2>
+                <p>We will only process your personal data after providing you with a clear notice and obtaining your explicit, informed consent. We collect information such as:</p>
                 <ul className="list-disc pl-5 mt-2 space-y-1">
                     <li>Name, email address, and phone number.</li>
                     <li>Medical history, symptoms, or surgery requirements (only what you choose to share).</li>
@@ -39,46 +37,41 @@ const PrivacyEN = () => (
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">3. How We Use Your Information</h2>
-                <p>We use the information we collect to:</p>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">3. Purpose Limitation</h2>
+                <p>Your data is collected <strong>strictly</strong> for the following purposes:</p>
                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>Connect you with relevant doctors, surgeons, and hospitals.</li>
-                    <li>Provide cost estimates and facilitate hospital admissions.</li>
-                    <li>Communicate with you regarding your inquiry (via Phone, WhatsApp, or Email).</li>
-                    <li>Improve our website and services.</li>
+                    <li>Connecting you with relevant doctors, surgeons, and hospitals for treatment.</li>
+                    <li>Providing cost estimates and facilitating hospital admissions.</li>
+                    <li>Communicating with you regarding your inquiry.</li>
                 </ul>
+                <p className="mt-2 text-sm text-slate-500 italic">We do not sell your personal data to third-party marketers or data brokers.</p>
             </section>
 
             <section>
                 <h2 className="text-xl font-semibold text-slate-900 mb-3">4. Information Sharing</h2>
                 <p>
-                    We may share your basic contact and medical details with our partner hospitals and surgeons <strong>only</strong> for the purpose
-                    of facilitating your treatment. We do not sell your data to third-party marketers.
+                    To facilitate your treatment, your data may be shared with our verified Data Processors, including partner hospitals and surgeons. All our partners are bound by strict confidentiality and data protection obligations as mandated by the DPDP Act.
                 </p>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">5. Data Security</h2>
-                <p>
-                    We use administrative, technical, and physical security measures to help protect your personal information.
-                    However, please be aware that no electronic transmission over the internet or information storage technology can be guaranteed to be 100% secure.
-                </p>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">5. Your Rights as a Data Principal</h2>
+                <p>Under the DPDP Act, you have the right to:</p>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
+                    <li><strong>Right to Information:</strong> Request a summary of the personal data we process and the identities of all Data Processors we share it with.</li>
+                    <li><strong>Right to Correction & Erasure:</strong> Request the correction of inaccurate data or the deletion of your data when it is no longer necessary for the stated purpose.</li>
+                    <li><strong>Right to Withdraw Consent:</strong> You may withdraw your consent at any time. However, this may affect our ability to provide medical coordination services.</li>
+                </ul>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">6. User Rights</h2>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">6. Grievance Redressal</h2>
                 <p>
-                    You have the right to request access to the personal information we hold about you, request corrections, or request deletion of your data.
-                    Keep in mind that deleting your data may affect our ability to assist with your medical coordination.
-                </p>
-            </section>
-
-            <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">7. Contact Us</h2>
-                <p>
-                    If you have questions or comments about this Privacy Policy, please contact us at:<br />
-                    <strong>Email:</strong> hello@healthexpress.in<br />
-                    <strong>Phone:</strong> +91 93078 61041
+                    If you wish to exercise any of your rights or have a grievance regarding your personal data, please contact our Grievance Officer:<br /><br />
+                    <strong>Grievance Officer:</strong> HealthExpress India Legal Team<br />
+                    <strong>Email:</strong> grievance@healthexpressindia.com<br />
+                    <strong>Phone:</strong> +91 93078 61041<br />
+                    <strong>Address:</strong> C-120, 2nd Floor, Lajpat Nagar 1, New Delhi - 110024
                 </p>
             </section>
         </div>
@@ -92,15 +85,15 @@ const PrivacyHI = () => (
 
         <div className="space-y-8 text-slate-700 leading-relaxed">
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">1. अवलोकन</h2>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">1. अवलोकन और DPDP अनुपालन</h2>
                 <p>
-                    HealthExpress India में, हम आपकी गोपनीयता को महत्व देते हैं और आपकी व्यक्तिगत जानकारी की सुरक्षा के लिए प्रतिबद्ध हैं। यह गोपनीयता नीति बताती है कि जब आप हमारी वेबसाइट पर जाते हैं या सर्जरी और अस्पताल में भर्ती सहायता खोजने के लिए हमारी सेवाओं का उपयोग करते हैं, तो हम आपकी जानकारी को कैसे एकत्र, उपयोग, प्रकट और सुरक्षित रखते हैं।
+                    HealthExpress India, डिजिटल व्यक्तिगत डेटा संरक्षण (DPDP) अधिनियम, 2023 के तहत <strong>डेटा फिड्यूशियरी</strong> के रूप में कार्य करता है। हम आपके डिजिटल व्यक्तिगत डेटा को कानूनी, निष्पक्ष और पारदर्शी रूप से संसाधित करने के लिए प्रतिबद्ध हैं।
                 </p>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">2. जानकारी जो हम एकत्र करते हैं</h2>
-                <p>हम व्यक्तिगत जानकारी एकत्र कर सकते हैं जो आप स्वेच्छा से हमें प्रदान करते हैं जब आप हमारी सेवाओं के बारे में पूछताछ करते हैं, जैसे:</p>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">2. सूचना और सहमति</h2>
+                <p>हम आपको स्पष्ट सूचना प्रदान करने और आपकी स्पष्ट सहमति प्राप्त करने के बाद ही आपके व्यक्तिगत डेटा को संसाधित करेंगे। हम निम्नलिखित जानकारी एकत्र करते हैं:</p>
                 <ul className="list-disc pl-5 mt-2 space-y-1">
                     <li>नाम, ईमेल पता और फ़ोन नंबर।</li>
                     <li>चिकित्सा इतिहास, लक्षण, या सर्जरी की आवश्यकताएं (केवल वह जो आप साझा करना चुनते हैं)।</li>
@@ -109,43 +102,39 @@ const PrivacyHI = () => (
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">3. हम आपकी जानकारी का उपयोग कैसे करते हैं</h2>
-                <p>हम एकत्र की गई जानकारी का उपयोग निम्न के लिए करते हैं:</p>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">3. उद्देश्य की सीमा</h2>
+                <p>आपका डेटा <strong>सख्ती से</strong> निम्नलिखित उद्देश्यों के लिए एकत्र किया जाता है:</p>
                 <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>आपको प्रासंगिक डॉक्टरों, सर्जनों और अस्पतालों से जोड़ना।</li>
+                    <li>उपचार के लिए आपको प्रासंगिक डॉक्टरों, सर्जनों और अस्पतालों से जोड़ना।</li>
                     <li>लागत अनुमान प्रदान करना और अस्पताल में प्रवेश की सुविधा प्रदान करना।</li>
-                    <li>आपकी पूछताछ के संबंध में आपसे संवाद करना (फ़ोन, व्हाट्सएप या ईमेल के माध्यम से)।</li>
-                    <li>हमारी वेबसाइट और सेवाओं में सुधार करना।</li>
+                    <li>आपकी पूछताछ के संबंध में आपसे संवाद करना।</li>
                 </ul>
             </section>
 
             <section>
                 <h2 className="text-xl font-semibold text-slate-900 mb-3">4. सूचना साझाकरण</h2>
                 <p>
-                    हम आपकी बुनियादी संपर्क और चिकित्सा विवरण हमारे साथी अस्पतालों और सर्जनों के साथ <strong>केवल</strong> आपके उपचार की सुविधा के उद्देश्य से साझा कर सकते हैं। हम आपका डेटा तीसरे पक्ष के विपणक को नहीं बेचते हैं।
+                    आपके उपचार की सुविधा के लिए, आपका डेटा हमारे सत्यापित डेटा प्रोसेसर, जिसमें साथी अस्पताल और सर्जन शामिल हैं, के साथ साझा किया जा सकता है।
                 </p>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">5. डेटा सुरक्षा</h2>
-                <p>
-                    हम आपकी व्यक्तिगत जानकारी को सुरक्षित रखने में मदद करने के लिए प्रशासनिक, तकनीकी और भौतिक सुरक्षा उपायों का उपयोग करते हैं। हालांकि, कृपया ध्यान रखें कि इंटरनेट पर कोई भी इलेक्ट्रॉनिक ट्रांसमिशन या सूचना भंडारण तकनीक 100% सुरक्षित होने की गारंटी नहीं दी जा सकती है।
-                </p>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">5. डेटा प्रिंसिपल के रूप में आपके अधिकार</h2>
+                <p>DPDP अधिनियम के तहत, आपको निम्नलिखित अधिकार प्राप्त हैं:</p>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
+                    <li><strong>सूचना का अधिकार:</strong> उस व्यक्तिगत डेटा का सारांश मांगना जिसे हम संसाधित करते हैं।</li>
+                    <li><strong>सुधार और मिटाने का अधिकार:</strong> गलत डेटा में सुधार या अपने डेटा को हटाने का अनुरोध करना।</li>
+                    <li><strong>सहमति वापस लेने का अधिकार:</strong> आप किसी भी समय अपनी सहमति वापस ले सकते हैं।</li>
+                </ul>
             </section>
 
             <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">6. उपयोगकर्ता अधिकार</h2>
+                <h2 className="text-xl font-semibold text-slate-900 mb-3">6. शिकायत निवारण</h2>
                 <p>
-                    आपके पास हमारे द्वारा रखी गई व्यक्तिगत जानकारी तक पहुँच का अनुरोध करने, सुधार का अनुरोध करने या अपने डेटा को हटाने का अनुरोध करने का अधिकार है। ध्यान रखें कि आपका डेटा हटाने से हमारी चिकित्सा समन्वय में सहायता करने की क्षमता प्रभावित हो सकती है।
-                </p>
-            </section>
-
-            <section>
-                <h2 className="text-xl font-semibold text-slate-900 mb-3">7. हमसे संपर्क करें</h2>
-                <p>
-                    यदि आपके पास इस गोपनीयता नीति के बारे में प्रश्न या टिप्पणियां हैं, तो कृपया हमसे संपर्क करें:<br />
-                    <strong>ईमेल:</strong> hello@healthexpress.in<br />
-                    <strong>फ़ोन:</strong> +91 93078 61041
+                    यदि आप अपने किसी भी अधिकार का प्रयोग करना चाहते हैं या अपने व्यक्तिगत डेटा के संबंध में कोई शिकायत है, तो कृपया हमारे शिकायत अधिकारी से संपर्क करें:<br /><br />
+                    <strong>शिकायत अधिकारी:</strong> HealthExpress India Legal Team<br />
+                    <strong>ईमेल:</strong> grievance@healthexpressindia.com<br />
+                    <strong>फ़ोन:</strong> +91 93078 61041<br />
                 </p>
             </section>
         </div>

@@ -334,12 +334,30 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                     ))}
                                                 </div>
                                             </div>
+                                            <div className="pt-2">
+                                                <label className="flex items-start gap-3 cursor-pointer group">
+                                                    <div className="relative flex items-center justify-center mt-0.5">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            name="consent" 
+                                                            required
+                                                            className="w-5 h-5 border-2 border-slate-300 rounded peer accent-teal-600 transition-all cursor-pointer" 
+                                                        />
+                                                    </div>
+                                                    <span className="text-sm font-medium text-slate-600 leading-relaxed">
+                                                        {lang === 'hi' 
+                                                            ? <>मैं HealthExpress India को <Link href={`/${lang}/privacy`} className="text-teal-600 hover:text-teal-700 underline font-bold" target="_blank">गोपनीयता नीति</Link> के अनुसार मेरे चिकित्सा उपचार के समन्वय के लिए मेरा व्यक्तिगत डेटा एकत्र करने की सहमति देता/देती हूँ।</>
+                                                            : <>I consent to HealthExpress India collecting my personal data to coordinate my medical treatment as per the <Link href={`/${lang}/privacy`} className="text-teal-600 hover:text-teal-700 underline font-bold" target="_blank">Privacy Policy</Link>.</>
+                                                        }
+                                                    </span>
+                                                </label>
+                                            </div>
 
-                                                <button
-                                                    type="submit"
-                                                    disabled={loading}
-                                                    className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold py-4 px-8 rounded-xl hover:from-teal-700 hover:to-teal-800 shadow-xl shadow-teal-600/20 hover:shadow-teal-600/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 active:scale-95 flex items-center justify-center gap-3 text-base mt-2"
-                                                >
+                                            <button
+                                                type="submit"
+                                                disabled={loading}
+                                                className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold py-4 px-8 rounded-xl hover:from-teal-700 hover:to-teal-800 shadow-xl shadow-teal-600/20 hover:shadow-teal-600/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 active:scale-95 flex items-center justify-center gap-3 text-base mt-2"
+                                            >
                                                 {loading ? (
                                                     <>
                                                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -353,9 +371,6 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                 )}
                                             </button>
 
-                                            <p className="text-xs text-slate-400 text-center font-medium leading-relaxed max-w-sm mx-auto">
-                                                {dict.consent_prefix} <Link href={`/${lang}/terms`} className="text-teal-600 hover:text-teal-700 underline underline-offset-4 decoration-teal-600/30 font-bold">{dict.terms}</Link> & <Link href={`/${lang}/privacy`} className="text-teal-600 hover:text-teal-700 underline underline-offset-4 decoration-teal-600/30 font-bold">{dict.privacy_policy}</Link>
-                                            </p>
                                         </form>
 
                                         <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">

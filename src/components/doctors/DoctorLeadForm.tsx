@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { trackFormSubmission } from '@/components/Analytics';
 
@@ -111,9 +112,24 @@ export function DoctorLeadForm({ doctorName }: DoctorLeadFormProps) {
                         </>
                     )}
                 </button>
-                <p className="text-[10px] text-slate-400 text-center font-medium leading-relaxed mt-4">
-                    By submitting, you agree to our Terms and Privacy Policy. A representative will contact you to confirm the time.
-                </p>
+                <div className="pt-2">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                        <div className="relative flex items-center justify-center mt-0.5">
+                            <input 
+                                type="checkbox" 
+                                name="consent" 
+                                required
+                                className="w-5 h-5 border-2 border-slate-300 rounded peer accent-teal-600 transition-all cursor-pointer" 
+                            />
+                        </div>
+                        <span className="text-sm font-medium text-slate-600 leading-relaxed">
+                            {lang === 'hi' 
+                                ? <>मैं HealthExpress India को <Link href={`/${lang}/privacy`} className="text-teal-600 hover:text-teal-700 underline font-bold" target="_blank">गोपनीयता नीति</Link> के अनुसार मेरे चिकित्सा उपचार के समन्वय के लिए मेरा व्यक्तिगत डेटा एकत्र करने की सहमति देता/देती हूँ।</>
+                                : <>I consent to HealthExpress India collecting my personal data to coordinate my medical treatment as per the <Link href={`/${lang}/privacy`} className="text-teal-600 hover:text-teal-700 underline font-bold" target="_blank">Privacy Policy</Link>.</>
+                            }
+                        </span>
+                    </label>
+                </div>
             </form>
         </div>
     );

@@ -8,6 +8,7 @@ import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientLayoutWidgets } from "@/components/layout/ClientLayoutWidgets";
+import { CookieConsent } from "@/components/layout/CookieConsent";
 import { headers } from "next/headers";
 
 const inter = Inter({ 
@@ -142,6 +143,7 @@ export default async function RootLayout({
             </>
           )}
 
+          <CookieConsent lang={lang} />
           <SpeedInsights />
         </body>
       </html>
