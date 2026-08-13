@@ -3,6 +3,7 @@ import { leadFormSchema } from '@/lib/validations';
 import { generateReferenceId, extractUTMParams } from '@/lib/utils';
 import { prisma } from '@/lib/prisma';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { sendLeadFollowUp } from '@/lib/whatsapp';
 
 export const dynamic = 'force-dynamic';
 
@@ -180,6 +181,14 @@ export async function POST(request: NextRequest) {
             });
         } catch (emailErr) {
             console.error('Email error:', emailErr);
+        }
+
+        // WhatsApp Follow up (Fire & Forget)
+        if (data.phone) {
+            // we don't await this so it doesn't block the UI response
+            sendLeadFollowUp(data.phone, data.fullName, surgery.name).catch(err => {
+                console.error('Failed to send automated WhatsApp:', err);
+            });
         }
 
         return NextResponse.json({ success: true, referenceId });

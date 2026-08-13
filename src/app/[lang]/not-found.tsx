@@ -59,8 +59,8 @@ export default function NotFound() {
                             <FiHelpCircle size={20} />
                         </div>
                         <div>
-                            <div className="font-semibold text-slate-900">Our Doctors / हमारे डॉक्टर</div>
-                            <div className="text-sm text-slate-500">Meet our specialists / विशेषज्ञों से मिलें</div>
+                            <div className="font-semibold text-slate-900">Partner Doctors / पार्टनर डॉक्टर</div>
+                            <div className="text-sm text-slate-500">View specialists at partner hospitals / पार्टनर अस्पतालों के विशेषज्ञ देखें</div>
                         </div>
                     </Link>
 

@@ -248,7 +248,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                         id="name" 
                                                         name="name" 
                                                         required 
-                                                        className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium" 
+                                                        className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium text-sm" 
                                                         placeholder={dict.name_placeholder} 
                                                     />
                                                 </div>
@@ -259,7 +259,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                         id="phone" 
                                                         name="phone" 
                                                         required 
-                                                        className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium" 
+                                                        className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium text-sm" 
                                                         placeholder="+91 91234 56789" 
                                                     />
                                                 </div>
@@ -272,7 +272,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                         type="text" 
                                                         id="city" 
                                                         name="city" 
-                                                        className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium" 
+                                                        className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium text-sm" 
                                                         placeholder={dict.city_placeholder} 
                                                     />
                                                 </div>
@@ -282,7 +282,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                         <select 
                                                             id="time" 
                                                             name="time" 
-                                                            className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 appearance-none font-medium cursor-pointer"
+                                                            className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 appearance-none font-medium cursor-pointer text-sm"
                                                         >
                                                             <option value="">{dict.time_any}</option>
                                                             <option value="morning">{dict.time_morning}</option>
@@ -303,7 +303,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                         type="text" 
                                                         id="surgery" 
                                                         name="surgery" 
-                                                        className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium" 
+                                                        className="w-full px-4 py-3.5 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 font-medium text-sm" 
                                                         placeholder={dict.surgery_placeholder} 
                                                     />
                                                     <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -335,11 +335,11 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                                 </div>
                                             </div>
 
-                                            <button
-                                                type="submit"
-                                                disabled={loading}
-                                                className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold py-5 px-8 rounded-2xl hover:from-teal-700 hover:to-teal-800 shadow-xl shadow-teal-600/20 hover:shadow-teal-600/40 hover:-translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 active:scale-95 flex items-center justify-center gap-3 text-lg"
-                                            >
+                                                <button
+                                                    type="submit"
+                                                    disabled={loading}
+                                                    className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold py-4 px-8 rounded-xl hover:from-teal-700 hover:to-teal-800 shadow-xl shadow-teal-600/20 hover:shadow-teal-600/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0 active:scale-95 flex items-center justify-center gap-3 text-base mt-2"
+                                                >
                                                 {loading ? (
                                                     <>
                                                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -361,8 +361,8 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                         <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                                             <div>
                                                 <h3 className="font-bold text-slate-900 mb-1">{dict.general_inquiry}</h3>
-                                                <a href="mailto:hello@healthexpress.in" className="text-sm text-teal-600 hover:text-teal-700 font-bold font-mono">
-                                                    hello@healthexpress.in
+                                                <a href="mailto:sai@healthexpressindia.com" className="text-sm text-teal-600 hover:text-teal-700 font-bold font-mono">
+                                                    sai@healthexpressindia.com
                                                 </a>
                                             </div>
                                             <div className="flex -space-x-3">

@@ -96,7 +96,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    'text-[13px] font-bold uppercase tracking-widest transition-all relative py-2',
+                                    'whitespace-nowrap text-[13px] font-bold uppercase tracking-widest transition-all relative py-2',
                                     isActive(link.href)
                                         ? 'text-teal-900'
                                         : 'text-slate-500 hover:text-teal-900'

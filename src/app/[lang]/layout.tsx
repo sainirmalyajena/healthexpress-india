@@ -8,6 +8,7 @@ import { getDictionary } from "@/get-dictionary";
 import { type Locale } from "@/i18n-config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ClientLayoutWidgets } from "@/components/layout/ClientLayoutWidgets";
+import { headers } from "next/headers";
 
 const inter = Inter({ 
   subsets: ['latin'], 
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       description: isHi ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें।" : "Find the right surgery at the right hospital across India.",
       images: [
         {
-          url: "/og-image.png",
+          url: "/logo.png",
           width: 1200,
           height: 630,
           alt: "HealthExpress India",
@@ -109,6 +110,8 @@ export default async function RootLayout({
     dictionary = await getDictionary('en');
   }
   
+  const headersList = await headers();
+  const isCampaignPage = headersList.get('x-campaign-page') === 'true';
   const organizationSchema = generateOrganizationSchema();
   
   return (
@@ -128,12 +131,16 @@ export default async function RootLayout({
 
           <Analytics />
           
-          <Header lang={lang} dict={dictionary.navigation} />
+          {!isCampaignPage && <Header lang={lang} dict={dictionary.navigation} />}
 
           <main className="flex-1">{children}</main>
 
-          <Footer lang={lang} dict={dictionary.footer} />
-          <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
+          {!isCampaignPage && (
+            <>
+              <Footer lang={lang} dict={dictionary.footer} />
+              <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
+            </>
+          )}
 
           <SpeedInsights />
         </body>
