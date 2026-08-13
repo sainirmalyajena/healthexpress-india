@@ -28,6 +28,7 @@ const categories = [
 ];
 const HowItWorks = dynamic(() => import('@/components/home/HowItWorks'));
 import TrustCards from '@/components/home/TrustCards';
+import { AITriageWidget } from '@/components/ai/AITriageWidget';
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -106,6 +107,15 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
       {/* Trust Cards Section */}
       <TrustCards lang={lang} dict={dict.trust_cards} />
+
+      {/* AI Triage Widget */}
+      <section className="py-12 md:py-16 bg-white relative overflow-hidden">
+          <div className="absolute top-1/2 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+              <AITriageWidget lang={lang} />
+          </div>
+      </section>
 
       {/* Surgery Categories Section */}
       <section className="py-12 md:py-16 bg-slate-50 border-y border-slate-100">
