@@ -15,106 +15,83 @@ export default function HowItWorks({ lang, dict }: HowItWorksProps) {
             title: dict.step1_title,
             description: dict.step1_desc,
             icon: MessageSquare,
-            color: 'teal',
         },
         {
             number: '02',
             title: dict.step2_title,
             description: dict.step2_desc,
             icon: ShieldCheck,
-            color: 'gold',
         },
         {
             number: '03',
             title: dict.step3_title,
             description: dict.step3_desc,
             icon: Building2,
-            color: 'emerald',
         },
         {
             number: '04',
             title: dict.step4_title,
             description: dict.step4_desc,
             icon: CalendarCheck,
-            color: 'blue',
         },
         {
             number: '05',
             title: dict.step5_title,
             description: dict.step5_desc,
             icon: HeartHandshake,
-            color: 'rose',
         },
     ];
 
     return (
-        <section className="py-16 md:py-20 bg-[#fdfdfd] relative overflow-hidden">
-            {/* Background Sophistication */}
-            <div className="absolute inset-0 opacity-40">
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-teal-50 rounded-full blur-[120px]" />
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gold-50 rounded-full blur-[100px]" />
-            </div>
-
+        <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 {/* Section Header */}
-                <div className="text-center mb-20 md:mb-28">
-                    <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-slate-900/5 border border-slate-900/10 text-slate-600 text-xs font-black uppercase tracking-[0.3em] mb-6">
-                        <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+                <div className="text-center mb-16 md:mb-20">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-sm font-bold uppercase tracking-wider mb-6">
+                        <Sparkles className="w-4 h-4" />
                         {lang === 'hi' ? 'प्रक्रिया' : 'The Experience'}
                     </div>
-                    <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-none tracking-tight">
+                    <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">
                         {dict.title}
                     </h2>
-                    <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto font-medium">{dict.subtitle}</p>
+                    <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+                        {dict.subtitle}
+                    </p>
                 </div>
 
-                {/* Steps - Minimalist Elite Timeline */}
+                {/* Steps Timeline */}
                 <div className="relative">
-                    {/* Stealth Connector */}
-                    <div className="hidden lg:block absolute top-[60px] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+                    {/* Connector Line */}
+                    <div className="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-slate-200" />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 lg:gap-6">
                         {steps.map((step, idx) => (
-                            <div key={step.number} className="relative group">
+                            <div key={step.number} className="relative group text-center">
                                 {/* Visual Anchor */}
-                                <div className="flex flex-col items-center mb-10">
-                                   <div className="relative">
-                                      <div className="absolute inset-0 bg-teal-500/20 blur-xl rounded-full scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                                      <div className={`relative w-24 h-24 rounded-[2rem] bg-white border border-slate-100 shadow-premium flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3`}>
-                                         <step.icon className={`w-10 h-10 ${idx === 1 ? 'text-gold-500' : 'text-teal-600'}`} />
-                                         <div className="absolute -top-3 -right-3 w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center text-white text-xs font-black shadow-lg">
-                                            {step.number}
-                                         </div>
+                                <div className="flex flex-col items-center mb-8 relative z-10">
+                                   <div className="w-24 h-24 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center transition-transform duration-300 group-hover:shadow-md group-hover:-translate-y-1 relative">
+                                      <step.icon className="w-8 h-8 text-teal-600" />
+                                      <div className="absolute -top-3 -right-3 w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md ring-4 ring-slate-50">
+                                         {step.number}
                                       </div>
                                    </div>
                                 </div>
 
                                 {/* Content Card */}
-                                <div className="text-center px-4">
-                                   <div className="text-[10px] font-black text-teal-600 uppercase tracking-[0.4em] mb-4">
+                                <div className="px-2">
+                                   <div className="text-xs font-bold text-teal-600 uppercase tracking-widest mb-3">
                                       {lang === 'hi' ? 'चरण' : 'Phase'} {step.number}
                                    </div>
-                                   <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight group-hover:text-teal-700 transition-colors">
+                                   <h3 className="text-xl font-bold text-slate-900 mb-3">
                                       {step.title}
                                    </h3>
-                                   <div className="w-12 h-1 bg-slate-100 mx-auto mb-6 group-hover:w-20 group-hover:bg-teal-200 transition-all duration-500" />
-                                   <p className="text-slate-500 leading-[1.8] font-medium text-sm md:text-base">
+                                   <p className="text-slate-600 text-sm leading-relaxed">
                                       {step.description}
                                    </p>
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
-
-                {/* Micro-Interaction Support */}
-                <div className="mt-24 text-center">
-                   <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Experience Concierge Care</p>
-                   <div className="flex justify-center gap-2">
-                      {[1,2,3,4,5].map(i => (
-                         <div key={i} className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-teal-500 transition-colors" />
-                      ))}
-                   </div>
                 </div>
             </div>
         </section>
