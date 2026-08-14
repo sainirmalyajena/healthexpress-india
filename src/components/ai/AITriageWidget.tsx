@@ -76,8 +76,11 @@ export function AITriageWidget({ lang }: { lang: string }) {
         }
     };
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleLeadSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsSubmitting(true);
         const formData = new FormData(e.currentTarget);
         const phone = formData.get('phone') as string;
 
@@ -94,6 +97,8 @@ export function AITriageWidget({ lang }: { lang: string }) {
                     fullName: 'AI Triage User',
                     phone: phone,
                     city: 'Online',
+                    surgeryId: 'General Consultation',
+                    insurance: 'NOT_SURE',
                     description: description,
                     sourcePage: isSurgeryNeeded ? 'ai_triage_surgical' : 'ai_triage_nonsurgical',
                     consent: true
@@ -102,9 +107,14 @@ export function AITriageWidget({ lang }: { lang: string }) {
 
             if (response.ok) {
                 setLeadSubmitted(true);
+            } else {
+                alert(lang === 'hi' ? 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।' : 'Something went wrong. Please try again.');
             }
         } catch (err) {
             console.error('Failed to submit lead', err);
+            alert(lang === 'hi' ? 'कुछ गलत हो गया। कृपया पुनः प्रयास करें।' : 'Something went wrong. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -369,19 +379,31 @@ export function AITriageWidget({ lang }: { lang: string }) {
                                 </div>
                                 <button
                                     type="submit"
-                                    className={`w-full font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 ${
+                                    disabled={isSubmitting}
+                                    className={`w-full font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 ${
+                                        isSubmitting ? 'opacity-70 cursor-not-allowed' : 'active:scale-95'
+                                    } ${
                                         isSurgeryNotNeeded
                                             ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-emerald-500/20'
                                             : 'bg-teal-500 hover:bg-teal-400 text-slate-900 shadow-teal-500/20'
                                     }`}
                                 >
-                                    {isSurgeryNotNeeded
-                                        ? (lang === 'hi' ? 'मुफ्त रिकवरी प्लान पाएं' : 'Get Free Recovery Plan')
-                                        : isConsultationNeeded
-                                        ? (lang === 'hi' ? 'मुफ्त परामर्श बुक करें' : 'Book Free Consultation')
-                                        : (lang === 'hi' ? 'मुफ़्त कॉल बुक करें' : 'Book Free Call')
-                                    }
-                                    <ArrowRight className="w-4 h-4" />
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            {lang === 'hi' ? 'भेजा जा रहा है...' : 'Sending...'}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {isSurgeryNotNeeded
+                                                ? (lang === 'hi' ? 'मुफ्त रिकवरी प्लान पाएं' : 'Get Free Recovery Plan')
+                                                : isConsultationNeeded
+                                                ? (lang === 'hi' ? 'मुफ्त परामर्श बुक करें' : 'Book Free Consultation')
+                                                : (lang === 'hi' ? 'मुफ़्त कॉल बुक करें' : 'Book Free Call')
+                                            }
+                                            <ArrowRight className="w-4 h-4" />
+                                        </>
+                                    )}
                                 </button>
                             </form>
                         </div>
