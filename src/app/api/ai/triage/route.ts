@@ -12,14 +12,22 @@ export async function POST(req: Request) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         const mockResponse = {
-            diagnosisSummary: "The uploaded report indicates early-stage Cataracts in the right eye, causing blurred vision. The overall health parameters are stable and suitable for standard surgical procedures.",
+            diagnosisSummary: "The uploaded report shows mild degenerative changes in the right knee joint with Grade 1 cartilage wear. The bone structure is intact with no fractures or ligament tears. This is a very common, age-related change that responds well to non-surgical treatment.",
             medicalTermsExplained: [
-                "Phacoemulsification: The standard, minimally invasive surgical method to remove a cataract.",
-                "IOL (Intraocular Lens): The artificial lens implanted during surgery to replace the cloudy natural lens."
+                "Degenerative changes: Normal wear-and-tear of the joint that happens with age.",
+                "Grade 1 cartilage wear: The earliest stage of cartilage thinning — still very manageable.",
+                "Osteophytes: Tiny bone spurs that can form around aging joints. Often painless."
             ],
-            recommendedSurgery: "Cataract Surgery",
-            urgency: "Medium",
-            nextSteps: "Please schedule a consultation with an ophthalmologist to confirm these findings and discuss laser or standard cataract surgery options."
+            recommendedSurgery: "Not Required at This Stage",
+            urgency: "Low",
+            surgicalNecessity: "NOT_RECOMMENDED",
+            alternativeTreatments: [
+                "Physiotherapy: Targeted exercises to strengthen the muscles around the knee, reducing pain by up to 60%.",
+                "Weight Management: Even 5 kg of weight loss significantly reduces pressure on knee joints.",
+                "Anti-inflammatory Medication: A short course of prescribed NSAIDs can control inflammation effectively.",
+                "Hot/Cold Therapy: Applying heat packs in the morning and ice packs after activity reduces stiffness and swelling."
+            ],
+            nextSteps: "Based on this report, surgery is not necessary at this stage. We strongly recommend starting physiotherapy and lifestyle modifications first. Book a free consultation with our medical expert to get a personalized non-surgical recovery plan."
         };
         
         return NextResponse.json(mockResponse);
@@ -53,21 +61,39 @@ export async function POST(req: Request) {
             : "Respond in clear, professional English.";
 
         const prompt = `
-You are a highly experienced, empathetic medical triage AI for HealthExpress India. 
-Analyze the provided medical report, prescription, or diagnostic image. 
+You are a highly experienced, empathetic, and BRUTALLY HONEST medical triage AI for HealthExpress India.
 
-Your job is to translate complex medical jargon into a simple, easy-to-understand summary for the patient, and identify if any specific surgery is typically associated with these findings.
+Your PRIMARY ethical obligation is to PROTECT the patient from unnecessary surgery. You must NEVER recommend surgery unless the medical evidence clearly indicates it is the only viable treatment path. 
+
+Analyze the provided medical report, prescription, or diagnostic image thoroughly.
+
+EVALUATION FRAMEWORK:
+1. First, read every finding in the report carefully.
+2. Determine if the condition can be managed through NON-SURGICAL treatments (medication, physiotherapy, lifestyle changes, monitoring).
+3. ONLY recommend surgery if the clinical evidence unambiguously points to it (e.g., complete ligament tear, advanced-stage cancer, retinal detachment, acute appendicitis, etc.).
+4. If you are uncertain, always err on the side of "CONSULTATION_NEEDED" — never push surgery.
 
 ${languageInstruction}
 
 IMPORTANT: You MUST respond ONLY with a valid JSON object matching this exact schema, with no markdown formatting or code blocks:
 {
-  "diagnosisSummary": "A very simple, compassionate 2-3 sentence explanation of what the report indicates.",
+  "diagnosisSummary": "A very simple, compassionate 2-3 sentence explanation of what the report indicates. Be reassuring when appropriate.",
   "medicalTermsExplained": ["term1: simple definition", "term2: simple definition"],
-  "recommendedSurgery": "The name of the likely surgery required (e.g. 'Cataract Surgery', 'Gallbladder Removal', 'Knee Replacement'). If no surgery is obvious, put 'Consultation Needed'.",
-  "urgency": "High", // "High", "Medium", or "Low"
-  "nextSteps": "What the patient should do next (e.g., 'Consult an orthopedic surgeon to confirm the MRI findings.')"
+  "recommendedSurgery": "The name of the likely surgery required (e.g. 'Cataract Surgery'). If surgery is NOT needed, put 'Not Required at This Stage'. If uncertain, put 'Consultation Needed'.",
+  "urgency": "High | Medium | Low",
+  "surgicalNecessity": "NOT_RECOMMENDED | CONSULTATION_NEEDED | HIGHLY_LIKELY",
+  "alternativeTreatments": ["treatment1: brief explanation of how it helps", "treatment2: brief explanation"],
+  "nextSteps": "What the patient should do next. If surgery is not needed, emphasize non-surgical recovery path and reassure the patient."
 }
+
+RULES FOR "surgicalNecessity":
+- "NOT_RECOMMENDED": The report shows conditions manageable without surgery. List alternative treatments.
+- "CONSULTATION_NEEDED": The report is ambiguous or shows early-stage issues that need specialist evaluation before deciding.
+- "HIGHLY_LIKELY": The report clearly shows a condition where surgery is the standard-of-care treatment (e.g., mature cataract, complete ACL tear, gallstones with acute cholecystitis).
+
+RULES FOR "alternativeTreatments":
+- ALWAYS provide at least 2-3 alternatives, even for surgical cases (e.g., pre-surgery strengthening, post-surgery rehab).
+- For non-surgical cases, provide 3-5 detailed, actionable alternatives with brief explanations of efficacy.
 `;
 
         const result = await model.generateContent([prompt, imagePart]);
@@ -78,6 +104,17 @@ IMPORTANT: You MUST respond ONLY with a valid JSON object matching this exact sc
         
         try {
             const jsonResponse = JSON.parse(text);
+            
+            // Ensure the new fields exist with safe defaults
+            if (!jsonResponse.surgicalNecessity) {
+                jsonResponse.surgicalNecessity = jsonResponse.recommendedSurgery === 'Not Required at This Stage' 
+                    ? 'NOT_RECOMMENDED' 
+                    : 'CONSULTATION_NEEDED';
+            }
+            if (!jsonResponse.alternativeTreatments) {
+                jsonResponse.alternativeTreatments = [];
+            }
+            
             return NextResponse.json(jsonResponse);
         } catch (parseError) {
             console.error("Failed to parse Gemini response as JSON:", text);

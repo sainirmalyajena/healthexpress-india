@@ -295,11 +295,19 @@ export function generateSoftwareApplicationSchema() {
     return {
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
-        name: 'HealthExpress AI Triage',
+        name: 'HealthExpress AI Medical Report Analyzer & Surgical Necessity Checker',
         operatingSystem: 'Any',
         applicationCategory: 'HealthApplication',
-        description: 'Upload your medical report and our AI will explain it in simple terms and recommend the right treatment path.',
+        description: 'Upload your medical report and our AI will explain it in simple language, check if surgery is truly necessary, and recommend non-surgical alternatives when possible. Free, honest, and patient-first.',
         url: baseUrl,
+        featureList: [
+            'AI-powered medical report analysis',
+            'Surgical necessity evaluation',
+            'Non-surgical treatment recommendations',
+            'Medical jargon translation to simple language',
+            'Hindi and English language support',
+            'DPDP Act compliant data security'
+        ],
         offers: {
             '@type': 'Offer',
             price: '0',

@@ -250,6 +250,6 @@ export function PricingIndexWidget({ surgeryName, marketCost, partnerCost, lang 
                     </form>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

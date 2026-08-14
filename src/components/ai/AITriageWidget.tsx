@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { UploadCloud, FileText, CheckCircle2, AlertCircle, Loader2, ArrowRight, ShieldCheck, Activity } from 'lucide-react';
+import { UploadCloud, FileText, CheckCircle2, AlertCircle, Loader2, ArrowRight, ShieldCheck, Activity, Heart, Leaf, Stethoscope } from 'lucide-react';
 import Link from 'next/link';
 
 interface TriageResult {
@@ -9,6 +9,8 @@ interface TriageResult {
     medicalTermsExplained: string[];
     recommendedSurgery: string;
     urgency: "High" | "Medium" | "Low";
+    surgicalNecessity: "NOT_RECOMMENDED" | "CONSULTATION_NEEDED" | "HIGHLY_LIKELY";
+    alternativeTreatments: string[];
     nextSteps: string;
 }
 
@@ -79,6 +81,11 @@ export function AITriageWidget({ lang }: { lang: string }) {
         const formData = new FormData(e.currentTarget);
         const phone = formData.get('phone') as string;
 
+        const isSurgeryNeeded = result?.surgicalNecessity === 'HIGHLY_LIKELY';
+        const description = isSurgeryNeeded
+            ? `AI Triage Lead. Surgery Recommended: ${result?.recommendedSurgery}. Diagnosis: ${result?.diagnosisSummary}`
+            : `AI Triage Lead (Non-Surgical). Diagnosis: ${result?.diagnosisSummary}. Alternative treatments recommended: ${result?.alternativeTreatments?.join('; ')}`;
+
         try {
             const response = await fetch('/api/leads', {
                 method: 'POST',
@@ -87,8 +94,8 @@ export function AITriageWidget({ lang }: { lang: string }) {
                     fullName: 'AI Triage User',
                     phone: phone,
                     city: 'Online',
-                    description: `AI Triage Lead. Surgery Recommended: ${result?.recommendedSurgery}. Diagnosis: ${result?.diagnosisSummary}`,
-                    sourcePage: 'ai_triage',
+                    description: description,
+                    sourcePage: isSurgeryNeeded ? 'ai_triage_surgical' : 'ai_triage_nonsurgical',
                     consent: true
                 }),
             });
@@ -101,19 +108,29 @@ export function AITriageWidget({ lang }: { lang: string }) {
         }
     };
 
+    // ─── Lead Submitted Success ─────────────────────────────────────────
     if (leadSubmitted) {
+        const isSurgeryNeeded = result?.surgicalNecessity === 'HIGHLY_LIKELY';
         return (
             <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 p-8 md:p-12 text-center animate-in zoom-in duration-300">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle2 className="w-10 h-10 text-green-600" />
+                <div className={`w-20 h-20 ${isSurgeryNeeded ? 'bg-green-100' : 'bg-emerald-100'} rounded-full flex items-center justify-center mx-auto mb-6`}>
+                    {isSurgeryNeeded 
+                        ? <CheckCircle2 className="w-10 h-10 text-green-600" />
+                        : <Heart className="w-10 h-10 text-emerald-600" />
+                    }
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-4">
                     {lang === 'hi' ? 'अनुरोध प्राप्त हुआ!' : 'Request Received!'}
                 </h3>
                 <p className="text-slate-600 mb-8 max-w-md mx-auto">
-                    {lang === 'hi' 
-                        ? 'हमारे मेडिकल विशेषज्ञ आपकी रिपोर्ट की समीक्षा कर रहे हैं और जल्द ही आपको कॉल करेंगे।' 
-                        : 'Our medical experts are reviewing your report and will call you shortly.'}
+                    {isSurgeryNeeded
+                        ? (lang === 'hi' 
+                            ? 'हमारे मेडिकल विशेषज्ञ आपकी रिपोर्ट की समीक्षा कर रहे हैं और जल्द ही आपको कॉल करेंगे।' 
+                            : 'Our medical experts are reviewing your report and will call you shortly to discuss next steps.')
+                        : (lang === 'hi'
+                            ? 'हमारे विशेषज्ञ आपके लिए एक व्यक्तिगत गैर-सर्जिकल रिकवरी योजना तैयार करेंगे।'
+                            : 'Our experts will prepare a personalized non-surgical recovery plan tailored to your condition.')
+                    }
                 </p>
                 <button
                     onClick={() => {
@@ -130,9 +147,15 @@ export function AITriageWidget({ lang }: { lang: string }) {
         );
     }
 
+    // ─── Result Display ─────────────────────────────────────────────────
     if (result) {
+        const isSurgeryNotNeeded = result.surgicalNecessity === 'NOT_RECOMMENDED';
+        const isConsultationNeeded = result.surgicalNecessity === 'CONSULTATION_NEEDED';
+        const isSurgeryLikely = result.surgicalNecessity === 'HIGHLY_LIKELY';
+
         return (
             <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {/* Header */}
                 <div className="bg-slate-900 p-6 md:p-8 text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-16 bg-teal-500/20 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
                     <div className="flex items-center gap-3 mb-2 relative z-10">
@@ -145,12 +168,62 @@ export function AITriageWidget({ lang }: { lang: string }) {
                 </div>
                 
                 <div className="p-6 md:p-8 space-y-8">
+
+                    {/* ═══ THE HONESTY BADGE ═══ */}
+                    {isSurgeryNotNeeded && (
+                        <div className="bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-2xl p-6 md:p-8 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 opacity-5">
+                                <Heart className="w-48 h-48 -mt-8 -mr-8" />
+                            </div>
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                                        <Leaf className="w-6 h-6 text-emerald-600" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xl font-black text-emerald-900">
+                                            {lang === 'hi' ? '🎉 अच्छी खबर: सर्जरी की जरूरत नहीं!' : '🎉 Great News: Surgery is Not Needed!'}
+                                        </h4>
+                                        <p className="text-sm font-medium text-emerald-700">
+                                            {lang === 'hi' ? 'आपकी स्थिति का इलाज बिना सर्जरी के संभव है।' : 'Your condition can be managed without surgery.'}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p className="text-emerald-800 text-sm leading-relaxed font-medium">
+                                    {lang === 'hi'
+                                        ? 'HealthExpress में हमारा मानना है कि सबसे अच्छी सर्जरी वो है जो कभी करनी ही न पड़े। आपकी रिपोर्ट के आधार पर, हम गैर-सर्जिकल उपचार की सिफारिश करते हैं।'
+                                        : 'At HealthExpress, we believe the best surgery is the one you never need. Based on your report, we recommend a non-surgical treatment path.'}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {isConsultationNeeded && (
+                        <div className="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-6 relative overflow-hidden">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                                    <Stethoscope className="w-5 h-5 text-amber-600" />
+                                </div>
+                                <h4 className="text-lg font-bold text-amber-900">
+                                    {lang === 'hi' ? 'विशेषज्ञ परामर्श की आवश्यकता' : 'Specialist Consultation Recommended'}
+                                </h4>
+                            </div>
+                            <p className="text-amber-800 text-sm leading-relaxed">
+                                {lang === 'hi'
+                                    ? 'आपकी रिपोर्ट में कुछ निष्कर्ष हैं जिनके लिए विशेषज्ञ मूल्यांकन की आवश्यकता है। सर्जरी आवश्यक है या नहीं, यह निर्धारित करने के लिए एक विशेषज्ञ से मिलें।'
+                                    : 'Your report has findings that require specialist evaluation. A doctor will determine whether surgery is needed or if non-surgical options are sufficient.'}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Summary */}
                     <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl">
                         <h4 className="font-bold text-slate-900 mb-2">{lang === 'hi' ? 'निष्कर्ष' : 'Summary'}</h4>
                         <p className="text-slate-700 leading-relaxed text-sm">{result.diagnosisSummary}</p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
+                        {/* Medical Terms */}
                         <div>
                             <h4 className="font-bold text-slate-900 mb-3">{lang === 'hi' ? 'चिकित्सा शर्तें (सरल भाषा में)' : 'Medical Terms Explained'}</h4>
                             <ul className="space-y-3">
@@ -162,15 +235,34 @@ export function AITriageWidget({ lang }: { lang: string }) {
                                 ))}
                             </ul>
                         </div>
+
+                        {/* Action Plan */}
                         <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
                             <h4 className="font-bold text-slate-900 mb-4">{lang === 'hi' ? 'अगले कदम' : 'Action Plan'}</h4>
                             <div className="space-y-4">
                                 <div>
-                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">{lang === 'hi' ? 'अनुशंसित सर्जरी' : 'Recommended Procedure'}</span>
-                                    <span className="inline-block bg-teal-100 text-teal-800 font-bold px-3 py-1 rounded-full text-sm">
-                                        {result.recommendedSurgery}
+                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">{lang === 'hi' ? 'सर्जिकल आवश्यकता' : 'Surgical Necessity'}</span>
+                                    <span className={`inline-block font-bold px-3 py-1 rounded-full text-sm ${
+                                        isSurgeryNotNeeded ? 'bg-emerald-100 text-emerald-800' :
+                                        isConsultationNeeded ? 'bg-amber-100 text-amber-800' :
+                                        'bg-red-100 text-red-800'
+                                    }`}>
+                                        {isSurgeryNotNeeded 
+                                            ? (lang === 'hi' ? '✅ सर्जरी जरूरी नहीं' : '✅ Surgery Not Required')
+                                            : isConsultationNeeded 
+                                            ? (lang === 'hi' ? '⚠️ परामर्श आवश्यक' : '⚠️ Consultation Needed')
+                                            : (lang === 'hi' ? '🏥 सर्जरी की सम्भावना' : '🏥 Surgery Likely Needed')
+                                        }
                                     </span>
                                 </div>
+                                {isSurgeryLikely && (
+                                    <div>
+                                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">{lang === 'hi' ? 'अनुशंसित सर्जरी' : 'Recommended Procedure'}</span>
+                                        <span className="inline-block bg-teal-100 text-teal-800 font-bold px-3 py-1 rounded-full text-sm">
+                                            {result.recommendedSurgery}
+                                        </span>
+                                    </div>
+                                )}
                                 <div>
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">{lang === 'hi' ? 'तत्काल' : 'Urgency'}</span>
                                     <span className={`inline-block font-bold px-3 py-1 rounded-full text-sm ${
@@ -188,15 +280,64 @@ export function AITriageWidget({ lang }: { lang: string }) {
                         </div>
                     </div>
 
+                    {/* ═══ ALTERNATIVE TREATMENTS SECTION ═══ */}
+                    {result.alternativeTreatments && result.alternativeTreatments.length > 0 && (
+                        <div className={`rounded-2xl p-6 border ${isSurgeryNotNeeded ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-100'}`}>
+                            <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                <Leaf className={`w-5 h-5 ${isSurgeryNotNeeded ? 'text-emerald-600' : 'text-teal-600'}`} />
+                                {lang === 'hi' ? 'गैर-सर्जिकल उपचार विकल्प' : 'Non-Surgical Treatment Options'}
+                            </h4>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                                {result.alternativeTreatments.map((treatment, i) => {
+                                    const parts = treatment.split(':');
+                                    const title = parts[0]?.trim();
+                                    const desc = parts.slice(1).join(':').trim();
+                                    return (
+                                        <div key={i} className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+                                            <div className="flex items-start gap-3">
+                                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-black ${isSurgeryNotNeeded ? 'bg-emerald-100 text-emerald-700' : 'bg-teal-100 text-teal-700'}`}>
+                                                    {i + 1}
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-slate-900 text-sm">{title}</p>
+                                                    {desc && <p className="text-xs text-slate-600 mt-1 leading-relaxed">{desc}</p>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ═══ ADAPTIVE LEAD CAPTURE ═══ */}
                     <div className="border-t border-slate-100 pt-8 mt-8">
-                        <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 md:p-8 text-white text-center">
+                        <div className={`rounded-3xl p-6 md:p-8 text-white text-center ${
+                            isSurgeryNotNeeded 
+                                ? 'bg-gradient-to-br from-emerald-800 to-teal-900' 
+                                : 'bg-gradient-to-br from-slate-900 to-slate-800'
+                        }`}>
                             <h4 className="text-xl font-bold mb-2">
-                                {lang === 'hi' ? 'विशेषज्ञ से परामर्श लें' : 'Consult a Specialist'}
+                                {isSurgeryNotNeeded
+                                    ? (lang === 'hi' ? 'गैर-सर्जिकल रिकवरी प्लान पाएं' : 'Get Your Non-Surgical Recovery Plan')
+                                    : isConsultationNeeded
+                                    ? (lang === 'hi' ? 'विशेषज्ञ से मुफ्त परामर्श' : 'Free Specialist Consultation')
+                                    : (lang === 'hi' ? 'विशेषज्ञ से परामर्श लें' : 'Consult a Specialist')
+                                }
                             </h4>
                             <p className="text-slate-300 text-sm mb-6 max-w-md mx-auto">
-                                {lang === 'hi' 
-                                    ? `हम आपको ${result.recommendedSurgery} के लिए सबसे अच्छे सर्जन से जोड़ सकते हैं। अभी अपना नंबर दर्ज करें।` 
-                                    : `We can connect you with the best surgeon for ${result.recommendedSurgery}. Enter your number for a free consultation.`}
+                                {isSurgeryNotNeeded
+                                    ? (lang === 'hi'
+                                        ? 'हमारे विशेषज्ञ आपके लिए एक व्यक्तिगत गैर-सर्जिकल उपचार योजना तैयार करेंगे। कोई सर्जरी नहीं, कोई दबाव नहीं।'
+                                        : 'Our experts will create a personalized non-surgical treatment plan for you. No surgery pressure, just honest care.')
+                                    : isConsultationNeeded
+                                    ? (lang === 'hi'
+                                        ? 'एक विशेषज्ञ आपकी रिपोर्ट की समीक्षा करेगा और तय करेगा कि सर्जरी जरूरी है या नहीं।'
+                                        : 'A specialist will review your report and honestly determine if surgery is truly necessary or not.')
+                                    : (lang === 'hi' 
+                                        ? `हम आपको ${result.recommendedSurgery} के लिए सबसे अच्छे सर्जन से जोड़ सकते हैं। अभी अपना नंबर दर्ज करें।` 
+                                        : `We can connect you with the best surgeon for ${result.recommendedSurgery}. Enter your number for a free consultation.`)
+                                }
                             </p>
                             
                             <form onSubmit={handleLeadSubmit} className="max-w-sm mx-auto space-y-4">
@@ -205,6 +346,7 @@ export function AITriageWidget({ lang }: { lang: string }) {
                                     name="phone"
                                     placeholder="+91 91234 56789"
                                     required
+                                    aria-label="Enter your phone number"
                                     className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:ring-2 focus:ring-teal-400 focus:outline-none text-center font-medium"
                                 />
                                 <div className="text-left pt-2 pb-2">
@@ -227,9 +369,18 @@ export function AITriageWidget({ lang }: { lang: string }) {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-teal-500/20 active:scale-95 flex items-center justify-center gap-2"
+                                    className={`w-full font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 ${
+                                        isSurgeryNotNeeded
+                                            ? 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-emerald-500/20'
+                                            : 'bg-teal-500 hover:bg-teal-400 text-slate-900 shadow-teal-500/20'
+                                    }`}
                                 >
-                                    {lang === 'hi' ? 'मुफ़्त कॉल बुक करें' : 'Book Free Call'}
+                                    {isSurgeryNotNeeded
+                                        ? (lang === 'hi' ? 'मुफ्त रिकवरी प्लान पाएं' : 'Get Free Recovery Plan')
+                                        : isConsultationNeeded
+                                        ? (lang === 'hi' ? 'मुफ्त परामर्श बुक करें' : 'Book Free Consultation')
+                                        : (lang === 'hi' ? 'मुफ़्त कॉल बुक करें' : 'Book Free Call')
+                                    }
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
                             </form>
@@ -240,6 +391,7 @@ export function AITriageWidget({ lang }: { lang: string }) {
         );
     }
 
+    // ─── Upload State ────────────────────────────────────────────────────
     return (
         <div className="bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-100">
             <div className="mb-8 text-center">
@@ -252,8 +404,12 @@ export function AITriageWidget({ lang }: { lang: string }) {
                 <p className="text-slate-500 font-medium max-w-lg mx-auto">
                     {lang === 'hi' 
                         ? 'अपनी प्रिस्क्रिप्शन या टेस्ट रिपोर्ट की फोटो अपलोड करें और हमारा AI आपको सरल भाषा में समझाएगा कि आपको किस सर्जरी या उपचार की आवश्यकता हो सकती है।' 
-                        : 'Upload a photo of your prescription or diagnostic report. Our AI will explain it in simple terms and recommend the right treatment path.'}
+                        : 'Upload a photo of your prescription or diagnostic report. Our AI will explain it in simple terms and honestly tell you if surgery is truly needed — or not.'}
                 </p>
+                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-bold text-emerald-700">
+                    <Leaf className="w-3.5 h-3.5" />
+                    {lang === 'hi' ? 'हम अनावश्यक सर्जरी के खिलाफ हैं' : 'We protect you from unnecessary surgery'}
+                </div>
             </div>
 
             <div 
@@ -269,6 +425,7 @@ export function AITriageWidget({ lang }: { lang: string }) {
                     className="hidden" 
                     ref={fileInputRef}
                     onChange={handleFileChange}
+                    aria-label="Upload medical report image"
                 />
                 
                 {preview ? (
