@@ -11,7 +11,7 @@ interface DoctorLeadFormProps {
     lang: string;
 }
 
-export function DoctorLeadForm({ doctorName }: DoctorLeadFormProps) {
+export function DoctorLeadForm({ doctorName, lang }: DoctorLeadFormProps) {
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false);
 
