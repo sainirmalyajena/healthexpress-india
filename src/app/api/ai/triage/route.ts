@@ -5,32 +5,10 @@ const apiKey = process.env.GEMINI_API_KEY;
 
 export async function POST(req: Request) {
     if (!apiKey) {
-        // Fallback demo mode if API key is not configured
-        console.warn("Gemini API key not found. Returning mock analysis for demonstration.");
-        
-        // Simulate network delay for realistic UX
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        const mockResponse = {
-            diagnosisSummary: "The uploaded report shows mild degenerative changes in the right knee joint with Grade 1 cartilage wear. The bone structure is intact with no fractures or ligament tears. This is a very common, age-related change that responds well to non-surgical treatment.",
-            medicalTermsExplained: [
-                "Degenerative changes: Normal wear-and-tear of the joint that happens with age.",
-                "Grade 1 cartilage wear: The earliest stage of cartilage thinning — still very manageable.",
-                "Osteophytes: Tiny bone spurs that can form around aging joints. Often painless."
-            ],
-            recommendedSurgery: "Not Required at This Stage",
-            urgency: "Low",
-            surgicalNecessity: "NOT_RECOMMENDED",
-            alternativeTreatments: [
-                "Physiotherapy: Targeted exercises to strengthen the muscles around the knee, reducing pain by up to 60%.",
-                "Weight Management: Even 5 kg of weight loss significantly reduces pressure on knee joints.",
-                "Anti-inflammatory Medication: A short course of prescribed NSAIDs can control inflammation effectively.",
-                "Hot/Cold Therapy: Applying heat packs in the morning and ice packs after activity reduces stiffness and swelling."
-            ],
-            nextSteps: "Based on this report, surgery is not necessary at this stage. We strongly recommend starting physiotherapy and lifestyle modifications first. Book a free consultation with our medical expert to get a personalized non-surgical recovery plan."
-        };
-        
-        return NextResponse.json(mockResponse);
+        console.error("CRITICAL: Gemini API key not found in environment variables.");
+        return NextResponse.json({ 
+            error: "System Configuration Error: AI capabilities are currently offline. Please ensure GEMINI_API_KEY is set in your Vercel Environment Variables." 
+        }, { status: 500 });
     }
 
     try {
