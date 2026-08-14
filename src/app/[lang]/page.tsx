@@ -9,7 +9,7 @@ import { FAQAccordion } from '@/components/home/FAQAccordion';
 import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone } from 'lucide-react';
 import { Button } from '@/components/ui';
-import { generateFAQSchema, generateLocalBusinessSchema } from '@/lib/schema';
+import { generateFAQSchema, generateLocalBusinessSchema, generateSoftwareApplicationSchema } from '@/lib/schema';
 
 const categories = [
   'GENERAL_SURGERY',
@@ -95,12 +95,13 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
   const faqSchema = generateFAQSchema(faqs);
   const orgSchema = generateLocalBusinessSchema();
+  const aiTriageSchema = generateSoftwareApplicationSchema();
 
   return (
     <div className="min-h-screen bg-white">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: `[${JSON.stringify(faqSchema)}, ${JSON.stringify(orgSchema)}]` }}
+        dangerouslySetInnerHTML={{ __html: `[${JSON.stringify(faqSchema)}, ${JSON.stringify(orgSchema)}, ${JSON.stringify(aiTriageSchema)}]` }}
       />
       {/* Hero Section */}
       <Hero lang={lang} dict={dict.hero} />

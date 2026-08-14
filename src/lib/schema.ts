@@ -289,3 +289,26 @@ export function generateHospitalSchema(hospital: HospitalSchemaOptions) {
         medicalSpecialty: hospital.specialties
     };
 }
+
+export function generateSoftwareApplicationSchema() {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'HealthExpress AI Triage',
+        operatingSystem: 'Any',
+        applicationCategory: 'HealthApplication',
+        description: 'Upload your medical report and our AI will explain it in simple terms and recommend the right treatment path.',
+        url: baseUrl,
+        offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'INR'
+        },
+        publisher: {
+            '@type': 'MedicalOrganization',
+            name: 'HealthExpress India',
+            url: baseUrl
+        }
+    };
+}

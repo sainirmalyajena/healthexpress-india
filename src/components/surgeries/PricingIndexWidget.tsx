@@ -77,7 +77,10 @@ export function PricingIndexWidget({ surgeryName, marketCost, partnerCost, lang 
     }
 
     return (
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden font-sans flex flex-col h-full">
+        <section 
+            className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden font-sans flex flex-col h-full"
+            aria-label={`Pricing and EMI calculator for ${surgeryName}`}
+        >
             {/* Header */}
             <div className="bg-slate-900 p-6 md:p-8 text-white relative overflow-hidden shrink-0">
                 <div className="absolute top-0 right-0 p-16 bg-teal-500/20 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />

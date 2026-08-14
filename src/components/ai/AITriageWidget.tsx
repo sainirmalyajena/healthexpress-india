@@ -275,11 +275,12 @@ export function AITriageWidget({ lang }: { lang: string }) {
                     <div className="space-y-6">
                         <div className="w-32 h-32 mx-auto rounded-2xl overflow-hidden shadow-lg border-4 border-white relative group">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={preview} alt="Document preview" className="w-full h-full object-cover" />
+                            <img src={preview} alt="Medical prescription or diagnostic report preview for AI analysis" className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <button 
                                     onClick={() => { setFile(null); setPreview(null); }}
                                     className="text-white text-xs font-bold uppercase tracking-wider"
+                                    aria-label="Remove uploaded image"
                                 >
                                     Change
                                 </button>
