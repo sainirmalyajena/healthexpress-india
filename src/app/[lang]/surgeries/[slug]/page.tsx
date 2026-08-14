@@ -11,6 +11,7 @@ import {
 import { getCategoryLabel, getCategoryIcon, formatCurrency } from '@/lib/utils';
 import { LeadForm } from '@/components/forms';
 import { DoctorCard } from '@/components/doctors/DoctorCard';
+import { PricingIndexWidget } from '@/components/surgeries/PricingIndexWidget';
 import {
   generateMedicalProcedureSchema,
   generateFAQSchema,
@@ -377,59 +378,13 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
             <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-7">
               <SectionHeading icon={IndianRupee} title={dict.cost_insurance} iconBg="bg-emerald-100" iconColor="text-emerald-600" />
               
-              <div className="flex flex-col md:flex-row gap-5 mb-8">
-                <div className="flex-1 bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <IndianRupee className="w-24 h-24" />
-                  </div>
-                  <p className="text-teal-400 text-xs font-bold uppercase tracking-wider mb-2">Transparent Pricing</p>
-                  <h3 className="text-xl font-bold mb-1">Starting from {formatCurrency(surgery.costRangeMin)}</h3>
-                  <p className="text-slate-300 text-sm mb-6">No hidden charges. 100% transparency.</p>
-                  
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-sm text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                      <span>Surgeon & Anesthesia Fees</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                      <span>OT & Consumables</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-200">
-                      <CheckCircle2 className="w-4 h-4 text-teal-400 flex-shrink-0" />
-                      <span>Pre-op & Post-op Consultations</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex-1 bg-white border-2 border-blue-100 rounded-2xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <ShieldCheck className="w-6 h-6 text-blue-600" />
-                      <h3 className="text-lg font-bold text-slate-900">Insurance Eligibility Check</h3>
-                    </div>
-                    <p className="text-slate-600 text-sm leading-relaxed mb-4">
-                      Are you covered for {surgery.name}? Our insurance desk handles approvals within 30 minutes. 
-                      {surgery.insuranceLikely ? ' This procedure is usually covered by major policies.' : ''}
-                    </p>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                      <span className="text-sm text-slate-700 font-medium">100% Cashless Available</span>
-                    </div>
-                    <div className="flex items-center gap-2 mb-6">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                      <span className="text-sm text-slate-700 font-medium">Zero Cost EMI Options</span>
-                    </div>
-                  </div>
-                  <a 
-                    href={`https://wa.me/919307861041?text=${encodeURIComponent(`Hi HealthExpress, I want to check my insurance eligibility and cashless options for ${surgery.name}.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-sm text-center rounded-lg transition-colors border border-blue-200"
-                  >
-                    Check My Insurance on WhatsApp
-                  </a>
-                </div>
+              <div className="mb-8">
+                <PricingIndexWidget 
+                  surgeryName={surgery.name}
+                  marketCost={surgery.costRangeMax}
+                  partnerCost={surgery.costRangeMin}
+                  lang={lang}
+                />
               </div>
 
               {surgery.availableCities.length > 0 && (
