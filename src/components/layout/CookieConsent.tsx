@@ -21,26 +21,24 @@ export function CookieConsent({ lang }: { lang: string }) {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 md:p-6 z-50 border-t border-slate-700 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex-1 max-w-4xl text-sm md:text-base text-slate-300">
+        <div className="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:w-80 bg-slate-900 text-white p-4 md:p-5 rounded-2xl z-50 border border-slate-700 shadow-2xl flex flex-col gap-3 animate-in slide-in-from-bottom-5">
+            <div className="text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p>
                     {lang === 'hi'
-                        ? 'हम आपकी ब्राउज़िंग अनुभव को बेहतर बनाने, ट्रैफ़िक का विश्लेषण करने और व्यक्तिगत सामग्री प्रदान करने के लिए कुकीज़ का उपयोग करते हैं। '
-                        : 'We use cookies to improve your browsing experience, analyze site traffic, and personalize content. '}
+                        ? 'हम अनुभव बेहतर बनाने के लिए कुकीज़ का उपयोग करते हैं। '
+                        : 'We use cookies to improve your experience. '}
                     {lang === 'hi'
-                        ? <>हमारी साइट का उपयोग जारी रखकर, आप हमारे <Link href={`/${lang}/privacy`} className="text-teal-400 hover:text-teal-300 underline font-semibold">गोपनीयता नीति</Link> से सहमत हैं।</>
-                        : <>By clicking "Accept", you consent to our use of cookies as described in our <Link href={`/${lang}/privacy`} className="text-teal-400 hover:text-teal-300 underline font-semibold">Privacy Policy</Link>.</>
+                        ? <>जारी रखकर, आप <Link href={`/${lang}/privacy`} className="text-teal-400 hover:text-teal-300 underline font-semibold">गोपनीयता नीति</Link> स्वीकार करते हैं।</>
+                        : <>By continuing, you agree to our <Link href={`/${lang}/privacy`} className="text-teal-400 hover:text-teal-300 underline font-semibold">Privacy Policy</Link>.</>
                     }
                 </p>
             </div>
-            <div className="flex gap-4 w-full md:w-auto">
-                <button
-                    onClick={acceptCookies}
-                    className="flex-1 md:flex-none bg-teal-600 hover:bg-teal-500 text-white px-6 py-2.5 rounded-lg font-bold transition-colors whitespace-nowrap"
-                >
-                    {lang === 'hi' ? 'स्वीकार करें' : 'Accept All'}
-                </button>
-            </div>
+            <button
+                onClick={acceptCookies}
+                className="w-full bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors"
+            >
+                {lang === 'hi' ? 'स्वीकार करें' : 'Accept All'}
+            </button>
         </div>
     );
 }
