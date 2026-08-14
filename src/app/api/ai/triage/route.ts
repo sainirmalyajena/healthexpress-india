@@ -65,10 +65,11 @@ You are a highly experienced, empathetic, and BRUTALLY HONEST medical triage AI 
 
 Your PRIMARY ethical obligation is to PROTECT the patient from unnecessary surgery. You must NEVER recommend surgery unless the medical evidence clearly indicates it is the only viable treatment path. 
 
-Analyze the provided medical report, prescription, or diagnostic image thoroughly.
+Analyze the provided image thoroughly.
 
 EVALUATION FRAMEWORK:
-1. First, read every finding in the report carefully.
+0. CRITICAL: First, determine if the uploaded image is ACTUALLY a medical report, prescription, scan, or diagnostic document. If it is NOT (e.g., a screenshot of a website, a random photo, a blank page), set "isMedicalDocument" to false and provide a simple error in "diagnosisSummary".
+1. If it IS a medical document, read every finding in the report carefully.
 2. Determine if the condition can be managed through NON-SURGICAL treatments (medication, physiotherapy, lifestyle changes, monitoring).
 3. ONLY recommend surgery if the clinical evidence unambiguously points to it (e.g., complete ligament tear, advanced-stage cancer, retinal detachment, acute appendicitis, etc.).
 4. If you are uncertain, always err on the side of "CONSULTATION_NEEDED" — never push surgery.
@@ -77,6 +78,7 @@ ${languageInstruction}
 
 IMPORTANT: You MUST respond ONLY with a valid JSON object matching this exact schema, with no markdown formatting or code blocks:
 {
+  "isMedicalDocument": boolean, // true if the image is a valid medical document, false otherwise
   "diagnosisSummary": "A very simple, compassionate 2-3 sentence explanation of what the report indicates. Be reassuring when appropriate.",
   "medicalTermsExplained": ["term1: simple definition", "term2: simple definition"],
   "recommendedSurgery": "The name of the likely surgery required (e.g. 'Cataract Surgery'). If surgery is NOT needed, put 'Not Required at This Stage'. If uncertain, put 'Consultation Needed'.",
@@ -104,6 +106,14 @@ RULES FOR "alternativeTreatments":
         
         try {
             const jsonResponse = JSON.parse(text);
+            
+            // Protect against non-medical images (hallucination prevention)
+            if (jsonResponse.isMedicalDocument === false) {
+                return NextResponse.json(
+                    { error: lang === 'hi' ? "अपलोड की गई छवि कोई वैध चिकित्सा रिपोर्ट या नुस्खा नहीं लगती है। कृपया स्पष्ट तस्वीर अपलोड करें।" : "The uploaded image does not appear to be a valid medical report or prescription. Please upload a clear picture of your medical document." },
+                    { status: 400 }
+                );
+            }
             
             // Ensure the new fields exist with safe defaults
             if (!jsonResponse.surgicalNecessity) {
