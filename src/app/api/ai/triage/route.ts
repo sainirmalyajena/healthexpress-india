@@ -68,7 +68,9 @@ Your PRIMARY ethical obligation is to PROTECT the patient from unnecessary surge
 Analyze the provided image thoroughly.
 
 EVALUATION FRAMEWORK:
-0. CRITICAL: First, determine if the uploaded image is ACTUALLY a medical report, prescription, scan, or diagnostic document. If it is NOT (e.g., a screenshot of a website, a random photo, a blank page), set "isMedicalDocument" to false and provide a simple error in "diagnosisSummary".
+0. CRITICAL: First, determine if the uploaded image is ACTUALLY a medical report, prescription, lab test, scan, or diagnostic document. 
+   - If it is a picture of a person, a selfie, a website screenshot, a random object, or anything else: set "isMedicalDocument" to false.
+   - If it is NOT a medical document, DO NOT hallucinate a diagnosis. You MUST set "isMedicalDocument" to false.
 1. If it IS a medical document, read every finding in the report carefully.
 2. Determine if the condition can be managed through NON-SURGICAL treatments (medication, physiotherapy, lifestyle changes, monitoring).
 3. ONLY recommend surgery if the clinical evidence unambiguously points to it (e.g., complete ligament tear, advanced-stage cancer, retinal detachment, acute appendicitis, etc.).
@@ -78,14 +80,14 @@ ${languageInstruction}
 
 IMPORTANT: You MUST respond ONLY with a valid JSON object matching this exact schema, with no markdown formatting or code blocks:
 {
-  "isMedicalDocument": boolean, // true if the image is a valid medical document, false otherwise
-  "diagnosisSummary": "A very simple, compassionate 2-3 sentence explanation of what the report indicates. Be reassuring when appropriate.",
-  "medicalTermsExplained": ["term1: simple definition", "term2: simple definition"],
-  "recommendedSurgery": "The name of the likely surgery required (e.g. 'Cataract Surgery'). If surgery is NOT needed, put 'Not Required at This Stage'. If uncertain, put 'Consultation Needed'.",
+  "isMedicalDocument": boolean, // MUST be false if the image is a person, selfie, random object, or not a medical document.
+  "diagnosisSummary": "If isMedicalDocument is false, leave empty. Otherwise, a simple 2-3 sentence explanation.",
+  "medicalTermsExplained": ["term1: simple definition"],
+  "recommendedSurgery": "If isMedicalDocument is false, leave empty. Otherwise, name of surgery or 'Not Required at This Stage'.",
   "urgency": "High | Medium | Low",
   "surgicalNecessity": "NOT_RECOMMENDED | CONSULTATION_NEEDED | HIGHLY_LIKELY",
-  "alternativeTreatments": ["treatment1: brief explanation of how it helps", "treatment2: brief explanation"],
-  "nextSteps": "What the patient should do next. If surgery is not needed, emphasize non-surgical recovery path and reassure the patient."
+  "alternativeTreatments": ["treatment1: brief explanation"],
+  "nextSteps": "What the patient should do next."
 }
 
 RULES FOR "surgicalNecessity":
@@ -110,7 +112,7 @@ RULES FOR "alternativeTreatments":
             // Protect against non-medical images (hallucination prevention)
             if (jsonResponse.isMedicalDocument === false) {
                 return NextResponse.json(
-                    { error: lang === 'hi' ? "अपलोड की गई छवि कोई वैध चिकित्सा रिपोर्ट या नुस्खा नहीं लगती है। कृपया स्पष्ट तस्वीर अपलोड करें।" : "The uploaded image does not appear to be a valid medical report or prescription. Please upload a clear picture of your medical document." },
+                    { error: lang === 'hi' ? "अपलोड की गई छवि कोई वैध चिकित्सा रिपोर्ट या नुस्खा नहीं लगती है। कृपया अपनी वास्तविक रिपोर्ट की स्पष्ट तस्वीर अपलोड करें।" : "The uploaded image does not appear to be a valid medical report or prescription. Please upload a clear picture of your actual medical document." },
                     { status: 400 }
                 );
             }
