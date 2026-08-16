@@ -116,7 +116,7 @@ export function Hero({ lang }: HeroProps) {
                 <div key={i} className={`w-8 h-8 rounded-full ${c} border-2 border-white flex items-center justify-center text-white text-xs font-bold`}>{['R','S','P','A'][i]}</div>
               ))}
             </div>
-            <p className="text-xs md:text-sm font-semibold text-slate-700">10,000+ Happy Patients</p>
+            <p className="text-xs md:text-sm font-semibold text-slate-700">2,000+ Happy Patients</p>
           </div>
           <div className="hidden md:block w-px h-8 bg-slate-200" />
           <div className="flex flex-col md:flex-row items-center gap-2 text-center md:text-left">
@@ -128,7 +128,7 @@ export function Hero({ lang }: HeroProps) {
           <div className="hidden md:block w-px h-8 bg-slate-200" />
           <div className="flex flex-col md:flex-row items-center gap-2 text-center md:text-left">
             <Shield className="w-5 h-5 md:w-4 md:h-4 text-teal-600" />
-            <p className="text-xs md:text-sm font-semibold text-slate-700">500+ NABH Hospitals</p>
+            <p className="text-xs md:text-sm font-semibold text-slate-700">50+ NABH Hospitals</p>
           </div>
           <div className="hidden md:block w-px h-8 bg-slate-200" />
           <a href="tel:9307861041" className="flex flex-col md:flex-row items-center gap-2 px-4 py-2 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 transition-colors mx-auto md:mx-0">
