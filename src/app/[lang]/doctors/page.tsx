@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { DoctorCard } from '@/components/doctors/DoctorCard';
 import { DoctorEnquiryForm } from '@/components/doctors/DoctorEnquiryForm';
+import { DoctorSearchBar } from '@/components/doctors/DoctorSearchBar';
 import { Metadata } from 'next';
 import { Prisma } from '@/generated/prisma';
 import { getDictionary } from '@/get-dictionary';
@@ -12,7 +13,7 @@ export const revalidate = 86400; // ISR: revalidate once a day
 
 interface PageProps {
     params: Promise<{ lang: string }>;
-    searchParams: Promise<{ specialty?: string; city?: string }>;
+    searchParams: Promise<{ specialty?: string; city?: string; q?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -38,7 +39,7 @@ export default async function DoctorsPage({
     searchParams,
 }: PageProps) {
     const { lang } = await params;
-    const { specialty, city } = await searchParams;
+    const { specialty, city, q } = await searchParams;
     const dictionary = await getDictionary(lang as Locale);
     const dict = dictionary.doctors_page;
 
@@ -48,6 +49,12 @@ export default async function DoctorsPage({
     }
     if (city) {
         where.hospital = { city: { equals: city, mode: 'insensitive' } };
+    }
+    if (q) {
+        where.OR = [
+            { name: { contains: q, mode: 'insensitive' } },
+            { qualification: { contains: q, mode: 'insensitive' } }
+        ];
     }
 
     const doctors = await prisma.doctor.findMany({
@@ -81,14 +88,22 @@ export default async function DoctorsPage({
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }} />
             
             {/* Page Header */}
-            <div className="bg-white border-b border-slate-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 text-center">
-                    <h1 className="text-3xl font-extrabold text-slate-900 sm:text-4xl md:text-5xl tracking-tight mb-4 leading-tight">
+            <div className="bg-white border-b border-slate-200 relative overflow-hidden">
+                <div className="absolute inset-0 bg-slate-50/50 pointer-events-none" />
+                <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/5 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/2 pointer-events-none" />
+                
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center relative z-10">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border border-teal-100">
+                        {lang === 'hi' ? 'विशेषज्ञ निर्देशिका' : 'Specialist Directory'}
+                    </div>
+                    <h1 className="text-4xl font-extrabold text-slate-900 sm:text-5xl md:text-6xl tracking-tight mb-6 leading-tight">
                         {dict.title}
                     </h1>
-                    <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
+                    <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed mb-10">
                         {dict.subtitle}
                     </p>
+                    
+                    <DoctorSearchBar lang={lang} />
                 </div>
             </div>
 
