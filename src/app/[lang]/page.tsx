@@ -106,11 +106,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       {/* Hero Section */}
       <Hero lang={lang} dict={dict.hero} />
 
-      {/* Trust Cards Section */}
-      <TrustCards lang={lang} dict={dict.trust_cards} />
 
       {/* AI Triage Widget — Anti-Greed Surgical Necessity Checker */}
-      <section className="py-12 md:py-16 bg-white relative overflow-hidden" id="ai-report-analyzer" aria-label="AI Medical Report Analyzer and Surgical Necessity Checker">
+      <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden" id="ai-report-analyzer" aria-label="AI Medical Report Analyzer and Surgical Necessity Checker">
           <div className="absolute top-1/2 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="absolute top-1/2 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -118,6 +116,8 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
           </div>
       </section>
 
+      {/* Trust Cards Section */}
+      <TrustCards lang={lang} dict={dict.trust_cards} />
       {/* Surgery Categories Section */}
       <section className="py-12 md:py-16 bg-slate-50 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

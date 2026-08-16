@@ -417,20 +417,24 @@ export function AITriageWidget({ lang }: { lang: string }) {
     return (
         <div className="bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-100">
             <div className="mb-8 text-center">
-                <div className="w-16 h-16 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <ShieldCheck className="w-8 h-8" />
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 rounded-full text-xs font-black uppercase tracking-widest text-teal-400 mb-6 shadow-xl">
+                    <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500" />
+                    </span>
+                    {lang === 'hi' ? 'मुफ़्त एआई दूसरी राय' : 'Free AI Second Opinion'}
                 </div>
-                <h2 className="text-3xl font-bold text-slate-900 mb-3">
-                    {lang === 'hi' ? 'अपनी मेडिकल रिपोर्ट समझें' : 'Understand Your Medical Report'}
+                <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                    {lang === 'hi' ? 'क्या आपको सच में सर्जरी की आवश्यकता है?' : 'Do You Really Need Surgery?'}
                 </h2>
-                <p className="text-slate-500 font-medium max-w-lg mx-auto">
+                <p className="text-slate-500 font-medium max-w-xl mx-auto text-base md:text-lg">
                     {lang === 'hi' 
-                        ? 'अपनी प्रिस्क्रिप्शन या टेस्ट रिपोर्ट की फोटो अपलोड करें और हमारा AI आपको सरल भाषा में समझाएगा कि आपको किस सर्जरी या उपचार की आवश्यकता हो सकती है।' 
-                        : 'Upload a photo of your prescription or diagnostic report. Our AI will explain it in simple terms and honestly tell you if surgery is truly needed — or not.'}
+                        ? 'अपनी एमआरआई, एक्स-रे या डॉक्टर की पर्ची अपलोड करें। हमारा उन्नत एआई तुरंत विश्लेषण करेगा कि क्या आपकी स्थिति को बिना सर्जरी के प्रबंधित किया जा सकता है।' 
+                        : 'Upload your MRI, X-Ray, or Prescription. Our clinical AI will instantly analyze your report to determine if your condition can be managed without surgery.'}
                 </p>
-                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-bold text-emerald-700">
-                    <Leaf className="w-3.5 h-3.5" />
-                    {lang === 'hi' ? 'हम अनावश्यक सर्जरी के खिलाफ हैं' : 'We protect you from unnecessary surgery'}
+                <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-bold text-emerald-700">
+                    <ShieldCheck className="w-4 h-4" />
+                    {lang === 'hi' ? 'अनावश्यक सर्जरी से 100% सुरक्षा' : '100% Protection from Unnecessary Surgery'}
                 </div>
             </div>
 
