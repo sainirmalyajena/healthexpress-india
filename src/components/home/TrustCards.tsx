@@ -10,7 +10,7 @@ export default function TrustCards({ dict }: TrustCardsProps) {
     const stats = [
         {
             icon: Building2,
-            value: '500+',
+            value: '50+',
             label: dict.hospital_title,
             desc: dict.hospital_desc,
             color: 'text-blue-600',
@@ -26,7 +26,7 @@ export default function TrustCards({ dict }: TrustCardsProps) {
         },
         {
             icon: UserCheck,
-            value: '10K+',
+            value: '24/7',
             label: dict.care_title,
             desc: dict.care_desc,
             color: 'text-indigo-600',
