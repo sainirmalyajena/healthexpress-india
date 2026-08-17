@@ -38,7 +38,7 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
         { href: `/${lang}/surgeries`, label: dict.surgeries },
         { href: `/${lang}/doctors`, label: dict.doctors },
         { href: `/${lang}/blog`, label: dict.blog },
-        { href: `/${lang}/partners`, label: dict.partners },
+        { href: `/${lang}#ai-report-analyzer`, label: lang === 'hi' ? 'AI विश्लेषक' : 'AI Analyzer' },
         { href: `/${lang}/contact`, label: dict.contact },
     ];
 
