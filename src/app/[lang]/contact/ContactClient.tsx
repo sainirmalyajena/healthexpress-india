@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Phone, Mail, MapPin, MessageCircle, Clock, CheckCircle2, ArrowRight, Send } from 'lucide-react';
-import { trackFormSubmission, trackPhoneClick, trackWhatsAppClick } from '@/lib/analytics';
+
 import Link from 'next/link';
 
 interface ContactClientProps {
@@ -44,7 +44,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
 
             if (response.ok && result.success) {
                 setSubmitted(true);
-                trackFormSubmission('contact_form', formData.get('surgery') as string | undefined);
+
             } else {
                 alert(result.error || 'Failed to submit. Please try again.');
             }
@@ -77,7 +77,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                         </div>
 
                         <div className="grid sm:grid-cols-2 gap-6">
-                            <a href="tel:9307861041" onClick={() => trackPhoneClick('9307861041')} className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 hover:bg-teal-50 transition-colors border border-slate-100 hover:border-teal-100 group">
+                            <a href="tel:9307861041" className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 hover:bg-teal-50 transition-colors border border-slate-100 hover:border-teal-100 group">
                                 <div className="w-10 h-10 bg-white text-teal-600 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform shrink-0">
                                     <Phone className="w-4 h-4" />
                                 </div>
@@ -87,7 +87,7 @@ export default function ContactClient({ lang, dict }: ContactClientProps) {
                                 </div>
                             </a>
 
-                            <a href="https://wa.me/919307861041" target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick()} className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 hover:bg-green-50 transition-colors border border-slate-100 hover:border-green-100 group">
+                            <a href="https://wa.me/919307861041" target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 p-5 rounded-2xl bg-slate-50 hover:bg-green-50 transition-colors border border-slate-100 hover:border-green-100 group">
                                 <div className="w-10 h-10 bg-white text-green-600 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform shrink-0">
                                     <MessageCircle className="w-4 h-4" />
                                 </div>
