@@ -12,13 +12,14 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
     const regions = [
         {
             id: 'eyes',
-            name: lang === 'hi' ? 'आँखें' : 'Eyes & Vision',
+            name: lang === 'hi' ? 'आँख, कान, नाक और गला' : 'Eyes, Ear, Nose & Throat (ENT)',
             icon: Eye,
             top: '15%', left: '50%',
-            conditions: ['Blurry Vision', 'Cataracts', 'Refractive Errors'],
+            conditions: ['Blurry Vision', 'Cataracts', 'Sinus Pain', 'Tonsillitis', 'Hearing Loss'],
             surgeries: [
-                { name: 'LASIK Eye Surgery', url: `/${lang}/surgeries/lasik` },
-                { name: 'Cataract Surgery', url: `/${lang}/surgeries/cataract` }
+                { name: 'LASIK Eye Surgery', url: `/${lang}/surgeries/lasik-eye-surgery` },
+                { name: 'Cataract Surgery', url: `/${lang}/surgeries/cataract-surgery` },
+                { name: 'Rhinoplasty', url: `/${lang}/surgeries/rhinoplasty-nose-job` }
             ]
         },
         {
@@ -38,8 +39,8 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             top: '32%', left: '50%',
             conditions: ['Chest Pain', 'Blocked Arteries', 'Valve Issues'],
             surgeries: [
-                { name: 'Coronary Artery Bypass', url: `/${lang}/surgeries/cabg` },
-                { name: 'Heart Valve Replacement', url: `/${lang}/surgeries/valve-replacement` }
+                { name: 'Coronary Artery Bypass', url: `/${lang}/surgeries/coronary-artery-bypass-graft-cabg` },
+                { name: 'Heart Valve Replacement', url: `/${lang}/surgeries/heart-valve-replacement` }
             ]
         },
         {
@@ -49,9 +50,9 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             top: '45%', left: '50%',
             conditions: ['Severe Stomach Pain', 'Hernia', 'Gallstones', 'Appendicitis'],
             surgeries: [
-                { name: 'Hernia Repair', url: `/${lang}/surgeries/hernia` },
-                { name: 'Gallbladder Removal', url: `/${lang}/surgeries/gallbladder` },
-                { name: 'Appendix Removal', url: `/${lang}/surgeries/appendix` }
+                { name: 'Hernia Repair', url: `/${lang}/surgeries/hernia-repair` },
+                { name: 'Gallbladder Removal', url: `/${lang}/surgeries/gallbladder-removal` },
+                { name: 'Appendix Removal', url: `/${lang}/surgeries/appendix-removal-appendectomy` }
             ]
         },
         {
@@ -63,7 +64,7 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             conditions: ['Chronic Back Pain', 'Slipped Disc', 'Spinal Stenosis'],
             surgeries: [
                 { name: 'Spinal Fusion Surgery', url: `/${lang}/surgeries/spinal-fusion` },
-                { name: 'Discectomy', url: `/${lang}/surgeries/discectomy` }
+                { name: 'Discectomy', url: `/${lang}/surgeries/discectomy-microdiscectomy` }
             ]
         },
         {
@@ -73,7 +74,7 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             top: '55%', left: '50%',
             conditions: ['Hip Joint Pain', 'Osteoarthritis', 'Fractures'],
             surgeries: [
-                { name: 'Total Hip Replacement', url: `/${lang}/surgeries/hip-replacement` }
+                { name: 'Total Hip Replacement', url: `/${lang}/surgeries/total-hip-replacement` }
             ]
         },
         {
@@ -83,8 +84,8 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             top: '72%', left: '42%',
             conditions: ['Severe Knee Pain', 'ACL Tear', 'Arthritis'],
             surgeries: [
-                { name: 'Total Knee Replacement', url: `/${lang}/surgeries/knee-replacement` },
-                { name: 'ACL Reconstruction', url: `/${lang}/surgeries/acl` }
+                { name: 'Total Knee Replacement', url: `/${lang}/surgeries/total-knee-replacement` },
+                { name: 'ACL Reconstruction', url: `/${lang}/surgeries/acl-reconstruction` }
             ]
         },
         {
