@@ -36,8 +36,8 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
 
     const navLinks = [
         { href: `/${lang}/surgeries`, label: dict.surgeries },
+        { href: `/${lang}/pain-mapper`, label: lang === 'hi' ? 'पेन मैपर' : 'Pain Mapper' },
         { href: `/${lang}/doctors`, label: dict.doctors },
-        { href: `/${lang}/blog`, label: dict.blog },
         { href: `/${lang}#ai-report-analyzer`, label: lang === 'hi' ? 'AI विश्लेषक' : 'AI Analyzer' },
         { href: `/${lang}/contact`, label: dict.contact },
     ];
