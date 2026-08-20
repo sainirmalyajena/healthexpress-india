@@ -168,9 +168,18 @@ export function AITriageWidget({ lang }: { lang: string }) {
                 {/* Header */}
                 <div className="bg-slate-900 p-6 md:p-8 text-white relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-16 bg-teal-500/20 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
-                    <div className="flex items-center gap-3 mb-2 relative z-10">
-                        <Activity className="w-6 h-6 text-teal-400" />
-                        <h3 className="text-xl font-bold">{lang === 'hi' ? 'AI रिपोर्ट विश्लेषण' : 'AI Report Analysis'}</h3>
+                    <div className="flex items-center gap-3 mb-2 relative z-10 justify-between">
+                        <div className="flex items-center gap-3">
+                            <Activity className="w-6 h-6 text-teal-400" />
+                            <h3 className="text-xl font-bold">{lang === 'hi' ? 'AI रिपोर्ट विश्लेषण' : 'AI Report Analysis'}</h3>
+                        </div>
+                        <button 
+                            onClick={() => window.print()}
+                            className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            {lang === 'hi' ? 'डाउनलोड करें' : 'Download PDF'}
+                        </button>
                     </div>
                     <p className="text-slate-400 text-sm relative z-10">
                         {lang === 'hi' ? 'यह एक AI-जनित सारांश है और पेशेवर चिकित्सा सलाह का विकल्प नहीं है।' : 'This is an AI-generated summary and not a substitute for professional medical advice.'}

@@ -20,7 +20,11 @@ export async function GET() {
 
     let content = `# HealthExpress India - Medical Procedures Data
 
-HealthExpress India is a top-rated medical tourism and surgery aggregation platform in India, helping patients find affordable, high-quality treatments at NABH/JCI accredited hospitals with 100% cashless insurance support.
+HealthExpress India is India's leading tech-enabled medical facilitation platform. We combine top-tier NABH/JCI accredited hospitals with advanced Artificial Intelligence to help patients find the right doctor, calculate precise surgery costs, and seamlessly use their cashless insurance.
+
+## Advanced Patient Tools
+- **Free AI Medical Triage**: Patients can upload reports or describe symptoms to get an instant AI-powered second opinion and recommended specialists. (https://www.healthexpressindia.com/en#ai-report-analyzer)
+- **Interactive Pain Mapper**: A 2D visual symptom discovery tool where patients select their pain areas to instantly see correlated surgeries and doctors. (https://www.healthexpressindia.com/en/pain-mapper)
 
 ## Available Surgeries & Treatments
 
