@@ -5,7 +5,6 @@ import { getCategoryLabel } from '@/lib/utils';
 import { CategoryIcon } from '@/components/ui/CategoryIcon';
 import { getDictionary } from '@/get-dictionary';
 import { Hero } from '@/components/home/Hero';
-import { FAQAccordion } from '@/components/home/FAQAccordion';
 import type { Locale } from '@/i18n-config';
 import { ArrowRight, Phone } from 'lucide-react';
 import { Button } from '@/components/ui';
@@ -27,8 +26,9 @@ const categories = [
   'ONCOLOGY'
 ];
 const HowItWorks = dynamic(() => import('@/components/home/HowItWorks'));
-import TrustCards from '@/components/home/TrustCards';
-import { AITriageWidget } from '@/components/ai/AITriageWidget';
+const TrustCards = dynamic(() => import('@/components/home/TrustCards'));
+const AITriageWidget = dynamic(() => import('@/components/ai/AITriageWidget').then(mod => mod.AITriageWidget));
+const FAQAccordion = dynamic(() => import('@/components/home/FAQAccordion').then(mod => mod.FAQAccordion));
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;

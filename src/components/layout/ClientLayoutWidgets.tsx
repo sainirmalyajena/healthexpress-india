@@ -64,7 +64,12 @@ export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Sticky
     return (
         <>
             <StickyMobileCTA lang={lang} dict={dict} />
-            {/* Any deferred widgets can go here later */}
+            {showDeferredWidgets && (
+                <>
+                    <MedBot />
+                    <WhatsAppButton />
+                </>
+            )}
         </>
     );
 }
