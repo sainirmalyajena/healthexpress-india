@@ -6,6 +6,7 @@ import { LeadStatus } from '@/generated/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import { getStatusColor, formatCurrency } from '@/lib/utils';
 import LeadStatusSelect from '@/components/dashboard/LeadStatusSelect';
+import ManageCaseButton from '@/components/dashboard/ManageCaseButton';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -26,7 +27,10 @@ export default async function LeadDetailPage({ params }: PageProps) {
     if (!session) redirect('/dashboard/login');
 
     const { id } = await params;
-    const lead = await getLeadDetail(id);
+    const [lead, hospitals] = await Promise.all([
+        getLeadDetail(id),
+        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true }})
+    ]);
 
     if (!lead) notFound();
 
