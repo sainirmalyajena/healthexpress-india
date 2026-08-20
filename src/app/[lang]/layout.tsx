@@ -70,10 +70,10 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       description: isHi ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें।" : "Find the right surgery at the right hospital across India.",
       images: [
         {
-          url: "/logo.png",
+          url: "/hero-elite.png",
           width: 1200,
           height: 630,
-          alt: "HealthExpress India",
+          alt: "HealthExpress India - Advanced Medical Care",
         },
       ],
     },
