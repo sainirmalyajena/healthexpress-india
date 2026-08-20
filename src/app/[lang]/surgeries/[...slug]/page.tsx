@@ -24,7 +24,7 @@ import { Locale } from '@/i18n-config';
 export const revalidate = 86400; // ISR: revalidate once a day
 
 interface PageProps {
-  params: Promise<{ slug: string; lang: string }>;
+  params: Promise<{ slug: string[]; lang: string }>;
 }
 
 const CITY_COST_FACTORS: Record<string, number> = {
@@ -45,11 +45,15 @@ const getCategoryImage = (category: string) => {
   return map[category] || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=60&w=1200&auto=format&fit=crop';
 };
 
-const getSurgery = cache(async (slug: string) => {
+const getSurgery = cache(async (slug: string, cityName: string | null) => {
   try {
     return await prisma.surgery.findUnique({
       where: { slug },
-      include: { doctors: { include: { hospital: true } } },
+      include: { 
+        doctors: cityName 
+          ? { where: { hospital: { city: cityName } }, include: { hospital: true } }
+          : { include: { hospital: true } } 
+      },
     });
   } catch (error) {
     console.warn(`[getSurgery] Failed for slug ${slug}:`, error);
@@ -58,8 +62,13 @@ const getSurgery = cache(async (slug: string) => {
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug, lang } = await params;
-  const surgery = await getSurgery(slug);
+  const { slug: slugArray, lang } = await params;
+  const isCityRoute = slugArray.length === 2;
+  const cityParam = isCityRoute ? slugArray[0] : null;
+  const slug = isCityRoute ? slugArray[1] : slugArray[0];
+  const cityName = cityParam ? cityParam.charAt(0).toUpperCase() + cityParam.slice(1) : null;
+  
+  const surgery = await getSurgery(slug, cityName);
   if (!surgery) return { title: 'Surgery Not Found' };
   const minCost = formatCurrency(surgery.costRangeMin);
   const maxCost = formatCurrency(surgery.costRangeMax);
@@ -201,8 +210,13 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
-  const { slug, lang } = await params;
-  const surgery = await getSurgery(slug);
+  const { slug: slugArray, lang } = await params;
+  const isCityRoute = slugArray.length === 2;
+  const cityParam = isCityRoute ? slugArray[0] : null;
+  const slug = isCityRoute ? slugArray[1] : slugArray[0];
+  const cityName = cityParam ? cityParam.charAt(0).toUpperCase() + cityParam.slice(1) : null;
+  
+  const surgery = await getSurgery(slug, cityName);
   if (!surgery) notFound();
 
   const dictionary = await getDictionary(lang as Locale);
