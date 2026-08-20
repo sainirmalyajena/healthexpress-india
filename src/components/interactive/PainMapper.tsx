@@ -39,7 +39,7 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             top: '32%', left: '50%',
             conditions: ['Chest Pain', 'Blocked Arteries', 'Valve Issues'],
             surgeries: [
-                { name: 'Coronary Artery Bypass', url: `/${lang}/surgeries/coronary-artery-bypass-graft-cabg` },
+                { name: 'Coronary Artery Bypass', url: `/${lang}/surgeries/coronary-artery-bypass-cabg` },
                 { name: 'Heart Valve Replacement', url: `/${lang}/surgeries/heart-valve-replacement` }
             ]
         },
@@ -51,8 +51,8 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             conditions: ['Severe Stomach Pain', 'Hernia', 'Gallstones', 'Appendicitis'],
             surgeries: [
                 { name: 'Hernia Repair', url: `/${lang}/surgeries/hernia-repair` },
-                { name: 'Gallbladder Removal', url: `/${lang}/surgeries/gallbladder-removal` },
-                { name: 'Appendix Removal', url: `/${lang}/surgeries/appendix-removal-appendectomy` }
+                { name: 'Gallbladder Removal', url: `/${lang}/surgeries/gallbladder-removal-cholecystectomy` },
+                { name: 'Appendix Removal', url: `/${lang}/surgeries/appendectomy` }
             ]
         },
         {
@@ -64,7 +64,7 @@ export function PainMapper({ lang, dict }: { lang: string; dict: any }) {
             conditions: ['Chronic Back Pain', 'Slipped Disc', 'Spinal Stenosis'],
             surgeries: [
                 { name: 'Spinal Fusion Surgery', url: `/${lang}/surgeries/spinal-fusion` },
-                { name: 'Discectomy', url: `/${lang}/surgeries/discectomy-microdiscectomy` }
+                { name: 'Discectomy', url: `/${lang}/surgeries/microdiscectomy` }
             ]
         },
         {
