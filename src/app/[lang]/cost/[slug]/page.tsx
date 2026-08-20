@@ -6,7 +6,7 @@ import { Locale } from '@/i18n-config';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ShieldCheck, MapPin, Calculator, Calendar } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
-import AppointmentForm from '@/components/forms/AppointmentForm';
+import LeadForm from '@/components/forms/LeadForm';
 
 interface PageProps {
     params: Promise<{ lang: string; slug: string }>;
@@ -190,7 +190,7 @@ export default async function CostPage({ params }: PageProps) {
                         <div className="sticky top-24 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                             <h3 className="font-bold text-slate-900 mb-2">Get an Exact Quote</h3>
                             <p className="text-sm text-slate-500 mb-6">Share your details and our medical experts will provide a customized cost estimate from top hospitals.</p>
-                            <AppointmentForm lang={lang} dict={dict} />
+                            <LeadForm surgeryId={surgery.id} surgeryName={surgery.name} />
                         </div>
                     </div>
                 </div>
