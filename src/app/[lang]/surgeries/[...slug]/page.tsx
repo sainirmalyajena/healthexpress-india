@@ -24,7 +24,7 @@ import { Locale } from '@/i18n-config';
 export const revalidate = 86400; // ISR: revalidate once a day
 
 interface PageProps {
-  params: Promise<{ lang: string; city: string; slug: string }>;
+  params: Promise<{ slug: string; lang: string }>;
 }
 
 const CITY_COST_FACTORS: Record<string, number> = {
@@ -45,44 +45,72 @@ const getCategoryImage = (category: string) => {
   return map[category] || 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=60&w=1200&auto=format&fit=crop';
 };
 
-async function getSurgeryData(slug: string, cityName: string) {
-  return prisma.surgery.findUnique({
-    where: { slug },
-    include: {
-      doctors: {
-        where: { hospital: { city: cityName } },
-        include: { hospital: true }
-      }
-    }
-  });
-}
+const getSurgery = cache(async (slug: string) => {
+  try {
+    return await prisma.surgery.findUnique({
+      where: { slug },
+      include: { doctors: { include: { hospital: true } } },
+    });
+  } catch (error) {
+    console.warn(`[getSurgery] Failed for slug ${slug}:`, error);
+    return null;
+  }
+});
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { lang, city, slug } = await params;
-  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
-  const surgery = await getSurgeryData(slug, cityName);
-  
-  if (!surgery) return { title: 'Not Found' };
+  const { slug, lang } = await params;
+  const surgery = await getSurgery(slug);
+  if (!surgery) return { title: 'Surgery Not Found' };
+  const minCost = formatCurrency(surgery.costRangeMin);
+  const maxCost = formatCurrency(surgery.costRangeMax);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
-  const canonical = `${baseUrl}/${lang}/surgeries/${city}/${slug}`;
+  const canonical = `${baseUrl}/${lang}/surgeries/${slug}`;
 
   return {
-    title: `Best ${surgery.name} in ${cityName} - 100% Cashless | HealthExpress`,
-    description: `Find top ${surgery.name} doctors in ${cityName}. Starting from ₹${surgery.costRangeMin} with 100% Cashless Insurance.`,
+    title: `${surgery.name} Cost in India – ${minCost} to ${maxCost} | HealthExpress`,
+    description: surgery.metaDescription || `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
     alternates: {
       canonical: canonical,
+      languages: {
+        'en-IN': `${baseUrl}/en/surgeries/${slug}`,
+        'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
+      },
     },
     openGraph: {
-      title: `Best ${surgery.name} in ${cityName}`,
-      description: `Find top ${surgery.name} doctors in ${cityName}. Starting from ₹${surgery.costRangeMin} with 100% Cashless Insurance.`,
+      title: `${surgery.name} – HealthExpress India`,
+      description: surgery.overview.substring(0, 160),
       url: canonical,
       type: 'article',
       locale: lang === 'hi' ? 'hi_IN' : 'en_IN',
-    }
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${surgery.name} – HealthExpress India`,
+      description: surgery.overview.substring(0, 160),
+    },
+    keywords: [
+      surgery.name,
+      `${surgery.name} cost India`,
+      `${surgery.name} cost`,
+      `${surgery.name} surgery price`,
+      `best hospital for ${surgery.name}`,
+      `${surgery.name} recovery time`,
+      'affordable surgery India',
+      'medical tourism India',
+      ...surgery.availableCities.map(c => `${surgery.name} ${c}`),
+    ],
   };
 }
 
-// Dynamic route - no static params
+export async function generateStaticParams() {
+  try {
+    const surgeries = await prisma.surgery.findMany({ select: { slug: true }, take: 100 });
+    return surgeries.flatMap(s => ['en', 'hi'].map(lang => ({ slug: s.slug, lang })));
+  } catch (error) {
+    console.warn('Failed to fetch surgeries for static params, falling back to dynamic generation:', error);
+    return [];
+  }
+}
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -173,10 +201,8 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
-  const { lang, city, slug } = await params;
-  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
-  const surgery = await getSurgeryData(slug, cityName);
-  
+  const { slug, lang } = await params;
+  const surgery = await getSurgery(slug);
   if (!surgery) notFound();
 
   const dictionary = await getDictionary(lang as Locale);
@@ -264,7 +290,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-5 leading-tight tracking-tight drop-shadow-lg break-words">
-              {surgery.name}
+              {surgery.name}{cityName ? ` in ${cityName}` : ''}
             </h1>
             
             {doctor && (

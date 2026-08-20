@@ -6,7 +6,7 @@ import { Locale } from '@/i18n-config';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ShieldCheck, MapPin, Calculator, Calendar } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
-import LeadForm from '@/components/forms/LeadForm';
+import { LeadForm } from '@/components/forms/LeadForm';
 
 interface PageProps {
     params: Promise<{ lang: string; slug: string }>;
