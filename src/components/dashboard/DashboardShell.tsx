@@ -8,18 +8,22 @@ import { cn } from '@/lib/utils';
 interface DashboardShellProps {
     children: React.ReactNode;
     userName: string;
+    userRole?: string;
 }
 
-const navItems = [
-    { name: 'Overview', href: '/dashboard', icon: '📊' },
-    { name: 'Leads', href: '/dashboard/leads', icon: '📋' },
-    { name: 'Partner Requests', href: '/dashboard/partners', icon: '🤝' },
-    { name: 'Doctors', href: '/dashboard/doctors', icon: '👨‍⚕️' },
-    { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
-];
-
-export default function DashboardShell({ children, userName }: DashboardShellProps) {
+export default function DashboardShell({ children, userName, userRole }: DashboardShellProps) {
     const pathname = usePathname();
+
+    const navItems = userRole === 'TEAM_MEMBER' ? [
+        { name: 'My Leads (CRM)', href: '/dashboard/my-leads', icon: 'dY"<' },
+        { name: 'Settings', href: '/dashboard/settings', icon: 'sT,?' },
+    ] : [
+        { name: 'Overview', href: '/dashboard', icon: 'dY"S' },
+        { name: 'Leads', href: '/dashboard/leads', icon: 'dY"<' },
+        { name: 'Partner Requests', href: '/dashboard/partners', icon: 'dY ?' },
+        { name: 'Doctors', href: '/dashboard/doctors', icon: 'dY`"??s ,?' },
+        { name: 'Settings', href: '/dashboard/settings', icon: 'sT,?' },
+    ];
 
     return (
         <div className="min-h-screen bg-slate-50 flex">

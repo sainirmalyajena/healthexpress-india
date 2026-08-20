@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { format } from "date-fns";
+import { CSVUploader } from "@/components/dashboard/CSVUploader";
 
 export const revalidate = 0; // Disable caching so dashboard is always fresh
 
 export default async function AdminLeadsPage() {
+    const teamMembers = await prisma.user.findMany({ where: { role: 'TEAM_MEMBER' }, select: { id: true, name: true, email: true } });
     const leads = await prisma.lead.findMany({
         orderBy: {
             createdAt: 'desc'
@@ -20,9 +22,10 @@ export default async function AdminLeadsPage() {
                     </div>
                 </div>
 
+                <CSVUploader teamMembers={teamMembers} />
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full text-sm text-left border-collapse">
                             <thead>
                                 <tr className="bg-slate-50 border-b border-slate-200">
                                     <th className="p-4 font-semibold text-slate-600">Patient Name</th>

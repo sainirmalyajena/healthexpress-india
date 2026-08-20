@@ -103,9 +103,12 @@ model Lead {
   updatedAt      DateTime        @updatedAt
   rating         Int?
   feedback       String?
+  assignedUserId String?
+  followUpDate   DateTime?
   documents      Document[]
   hospital       Hospital?       @relation(fields: [hospitalId], references: [id])
   surgery        Surgery?        @relation(fields: [surgeryId], references: [id])
+  assignedUser   User?           @relation(fields: [assignedUserId], references: [id])
 
   @@index([status])
   @@index([createdAt])
@@ -129,6 +132,7 @@ model User {
   name         String
   role         String   @default("admin")
   createdAt    DateTime @default(now())
+  assignedLeads Lead[]
 }
 
 model PartnerRequest {

@@ -38,7 +38,14 @@ interface AnalyticsChartsProps {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
+import { useState, useEffect } from 'react';
+
 export default function AnalyticsCharts({ revenueData, statusData, conversionData }: AnalyticsChartsProps) {
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => setIsMounted(true), []);
+
+    if (!isMounted) return null;
+
     return (
         <div className="space-y-8 mb-8">
             <div className="grid lg:grid-cols-2 gap-8">
