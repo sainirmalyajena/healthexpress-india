@@ -173,8 +173,10 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
-  const { slug, lang } = await params;
-  const surgery = await getSurgery(slug);
+  const { lang, city, slug } = await params;
+  const cityName = city.charAt(0).toUpperCase() + city.slice(1);
+  const surgery = await getSurgeryData(slug, cityName);
+  
   if (!surgery) notFound();
 
   const dictionary = await getDictionary(lang as Locale);
