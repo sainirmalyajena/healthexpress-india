@@ -90,6 +90,15 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     verification: {
       google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     },
+    icons: {
+      icon: [
+        { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+        { url: '/logo.png', sizes: '512x512', type: 'image/png' }
+      ],
+      apple: [
+        { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' }
+      ]
+    },
   };
 }
 
