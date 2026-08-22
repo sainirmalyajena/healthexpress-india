@@ -106,36 +106,36 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 {/* What's Next Timeline */}
                 <div className="text-left bg-slate-50 rounded-2xl p-6 border border-slate-100">
                     <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest mb-6 text-center">What Happens Next?</h4>
-                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-teal-200 before:to-transparent">
+                    <div className="space-y-6 relative before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-teal-200 before:to-transparent">
                         
                         {/* Step 1 */}
-                        <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <div className="relative flex items-center gap-4 group">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 z-10">
                                 <UserCheck className="w-4 h-4" />
                             </div>
-                            <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                            <div className="flex-1 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
                                 <h5 className="font-bold text-slate-900 text-sm mb-1">Expert Review</h5>
                                 <p className="text-xs text-slate-500 leading-relaxed">A senior care coordinator is reviewing your medical requirements.</p>
                             </div>
                         </div>
 
                         {/* Step 2 */}
-                        <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <div className="relative flex items-center gap-4 group">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 z-10">
                                 <Clock className="w-4 h-4" />
                             </div>
-                            <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                            <div className="flex-1 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
                                 <h5 className="font-bold text-slate-900 text-sm mb-1">Priority Callback</h5>
                                 <p className="text-xs text-slate-500 leading-relaxed">You will receive a call within 24 hours to discuss options.</p>
                             </div>
                         </div>
 
                         {/* Step 3 */}
-                        <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                        <div className="relative flex items-center gap-4 group">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-full border-4 border-white bg-teal-100 text-teal-600 shadow shrink-0 z-10">
                                 <Stethoscope className="w-4 h-4" />
                             </div>
-                            <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                            <div className="flex-1 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
                                 <h5 className="font-bold text-slate-900 text-sm mb-1">Doctor Match</h5>
                                 <p className="text-xs text-slate-500 leading-relaxed">We will connect you with the best surgeon and hospital for your needs.</p>
                             </div>
