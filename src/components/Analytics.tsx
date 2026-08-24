@@ -2,43 +2,40 @@
 
 import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
 
 declare global {
     interface Window {
         gtag: (...args: unknown[]) => void;
+        fbq: (...args: unknown[]) => void;
     }
 }
 
-export default function Analytics() {
-    const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-HJ1V4B9QQQ';
+function AnalyticsInner() {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
     const FB_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || '2647191662345776';
+
+    useEffect(() => {
+        // Track FB Pixel PageView on route change
+        if (typeof window !== 'undefined' && window.fbq) {
+            window.fbq('track', 'PageView');
+        }
+        
+        // Also send GA config for Google Ads on mount or route change if needed
+        // (Though GoogleAnalytics component handles GA4 pageviews automatically)
+        if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag('config', 'AW-16966558904');
+        }
+    }, [pathname, searchParams]);
 
     return (
         <>
-            {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
-            
-            <Script
-                id="google-ads"
-                strategy="afterInteractive"
-                src={`https://www.googletagmanager.com/gtag/js?id=AW-16966558904`}
-            />
-            <Script
-                id="google-ads-config"
-                strategy="afterInteractive"
-                dangerouslySetInnerHTML={{
-                    __html: `
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'AW-16966558904');
-                    `,
-                }}
-            />
-
             {FB_ID && (
                 <Script
                     id="fb-pixel"
-                    strategy="lazyOnload"
+                    strategy="afterInteractive"
                     dangerouslySetInnerHTML={{
                         __html: `
                             !function(f,b,e,v,n,t,s)
@@ -50,11 +47,23 @@ export default function Analytics() {
                             s.parentNode.insertBefore(t,s)}(window, document,'script',
                             'https://connect.facebook.net/en_US/fbevents.js');
                             fbq('init', '${FB_ID}');
-                            fbq('track', 'PageView');
                         `,
                     }}
                 />
             )}
+        </>
+    );
+}
+
+export default function Analytics() {
+    const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-HJ1V4B9QQQ';
+
+    return (
+        <>
+            {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
+            <Suspense fallback={null}>
+                <AnalyticsInner />
+            </Suspense>
         </>
     );
 }
