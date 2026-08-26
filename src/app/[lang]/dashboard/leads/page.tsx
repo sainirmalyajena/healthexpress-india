@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { LeadStatus, Prisma } from '@/generated/prisma';
 import LeadsTable from '@/components/dashboard/LeadsTable';
 import DashboardShell from '@/components/dashboard/DashboardShell';
+import { CSVUploader } from '@/components/dashboard/CSVUploader';
 
 export const dynamic = 'force-dynamic';
 
@@ -118,6 +119,7 @@ export default async function AdminLeadsPage({
                             <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
                             <p className="text-sm text-slate-500">Track and manage patient inquiries from all channels.</p>
                         </div>
+                        <CSVUploader teamMembers={[]} />
                     </div>
 
                     {/* Filters */}
