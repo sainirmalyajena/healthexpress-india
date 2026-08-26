@@ -481,7 +481,7 @@ export function AITriageWidget({ lang }: { lang: string }) {
                         </div>
                         <div>
                             <p className="font-medium text-slate-900">{file?.name}</p>
-                            <p className="text-xs text-slate-500">{(file?.size! / 1024 / 1024).toFixed(2)} MB</p>
+                            <p className="text-xs text-slate-500">{((file?.size || 0) / 1024 / 1024).toFixed(2)} MB</p>
                         </div>
                         <button
                             onClick={handleAnalyze}

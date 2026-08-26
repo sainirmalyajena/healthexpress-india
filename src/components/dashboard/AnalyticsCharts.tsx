@@ -42,7 +42,8 @@ import { useState, useEffect } from 'react';
 
 export default function AnalyticsCharts({ revenueData, statusData, conversionData }: AnalyticsChartsProps) {
     const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => setIsMounted(true), []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => { setIsMounted(true); }, []);
 
     if (!isMounted) return null;
 

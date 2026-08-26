@@ -23,8 +23,8 @@ export default function LasikCampaignForm() {
 
         try {
             // Track lead event via Pixel
-            if (typeof window !== 'undefined' && (window as unknown as Record<string, Function>).fbq) {
-                (window as unknown as Record<string, Function>).fbq('track', 'Lead', {
+            if (typeof window !== 'undefined' && (window as unknown as Record<string, (...args: any[]) => void>).fbq) {
+                (window as unknown as Record<string, (...args: any[]) => void>).fbq('track', 'Lead', {
                     content_name: 'LASIK Campaign',
                     city: formData.city
                 });

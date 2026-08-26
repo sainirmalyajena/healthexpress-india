@@ -17,6 +17,34 @@ export default function DemoVoiceAgent() {
     const transcriptRef = useRef('');
     const isListeningRef = useRef(false);
 
+    async function handleSend(text: string) {
+        if (!text.trim()) return;
+        
+        setIsSpeaking(true);
+        setHistory(prev => [...prev, { role: 'Patient', text }]);
+
+        try {
+            const res = await fetch('/api/ai/demo-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text, history })
+            });
+            const data = await res.json();
+            
+            setHistory(prev => [...prev, { role: 'Sarah', text: data.text }]);
+            speakText(data.text);
+            
+            if (data.booked) {
+                setTimeout(() => {
+                    alert('🎉 Appointment successfully saved to Database!');
+                }, 2000);
+            }
+        } catch (e) {
+            console.error(e);
+            setIsSpeaking(false);
+        }
+    };
+
     useEffect(() => {
         transcriptRef.current = transcript;
         isListeningRef.current = isListening;
@@ -62,35 +90,8 @@ export default function DemoVoiceAgent() {
         }
     };
 
-    async function handleSend(text: string) {
-        if (!text.trim()) return;
-        
-        setIsSpeaking(true);
-        setHistory(prev => [...prev, { role: 'Patient', text }]);
 
-        try {
-            const res = await fetch('/api/ai/demo-chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text, history })
-            });
-            const data = await res.json();
-            
-            setHistory(prev => [...prev, { role: 'Sarah', text: data.text }]);
-            speakText(data.text);
-            
-            if (data.booked) {
-                setTimeout(() => {
-                    alert('🎉 Appointment successfully saved to Database!');
-                }, 2000);
-            }
-        } catch (e) {
-            console.error(e);
-            setIsSpeaking(false);
-        }
-    };
-
-    const speakText = (text: string) => {
+    const speakTextRef = (text: string) => {
         if (!synthesisRef.current) return;
         
         const utterance = new SpeechSynthesisUtterance(text);

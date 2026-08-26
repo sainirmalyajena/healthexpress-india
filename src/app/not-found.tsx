@@ -8,7 +8,7 @@ export default function GlobalNotFound() {
                     <div className="text-6xl text-teal-600 font-bold">404</div>
                     <h1 className="text-3xl font-bold text-slate-900">Page Not Found</h1>
                     <p className="text-slate-600 text-lg">
-                        We couldn't find the page you're looking for.
+                        We couldn&apos;t find the page you&apos;re looking for.
                     </p>
                     <div className="pt-4">
                         <Link 
