@@ -38,6 +38,8 @@ Content Requirements:
 - Make it empathetic and reassuring to patients.
 - Include a Call to Action (CTA) at the end encouraging them to book a free consultation with HealthExpress India.
 - Format beautifully using standard Markdown.
+- STRICT RULE: DO NOT invent, hallucinate, or reference specific real-world doctor names. If you must refer to doctors, use terms like "Board-Certified Specialists" or "HealthExpress Orthopedic Surgeons".
+- STRICT RULE: At the very bottom of the article, add a small disclaimer in italics: "*Disclaimer: The costs mentioned are estimates and may vary based on hospital choice, graft type, room category, and the patient's specific medical condition. Please consult with our medical team for a personalized quote.*"
 
 Output ONLY the MDX file content, starting with --- and ending with the final paragraph.
 `;
