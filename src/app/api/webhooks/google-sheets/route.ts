@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { InsuranceOption } from '@/generated/prisma';
+import { whatsappService } from '@/lib/services/whatsapp.service';
 
 export async function POST(req: NextRequest) {
     try {
         const authHeader = req.headers.get('authorization');
         const EXPECTED_SECRET = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET || 'HE_GSHEETS_SEC_2026';
         
-        if (authHeader !== \Bearer \ + EXPECTED_SECRET) {
+        if (authHeader !== `Bearer ` + EXPECTED_SECRET) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
@@ -51,6 +52,11 @@ export async function POST(req: NextRequest) {
         });
 
         console.log('[AUTOMATION] Triggering WhatsApp message to ' + phone + '...');
+        
+        // Asynchronously send the welcome WhatsApp message so it doesn't block the webhook response
+        whatsappService.sendInitialLeadWelcome(phone, fullName, surgeryName || 'medical treatment').catch(err => {
+            console.error('Failed to send WhatsApp message asynchronously:', err);
+        });
 
         return NextResponse.json({ 
             success: true, 
