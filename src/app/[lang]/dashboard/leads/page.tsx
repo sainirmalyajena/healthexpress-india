@@ -24,17 +24,17 @@ async function getLeads(searchParams: SearchParams) {
 
     const where: Prisma.LeadWhereInput = {};
 
-    if (searchParams.status) {
-        where.status = searchParams.status as LeadStatus;
+    if (searchsearchParamsData.status) {
+        where.status = searchsearchParamsData.status as LeadStatus;
     }
 
-    if (searchParams.surgery) {
-        where.surgeryId = searchParams.surgery;
+    if (searchsearchParamsData.surgery) {
+        where.surgeryId = searchsearchParamsData.surgery;
     }
 
-    if (searchParams.city) {
+    if (searchsearchParamsData.city) {
         where.city = {
-            contains: searchParams.city
+            contains: searchsearchParamsData.city
         };
     }
 
@@ -79,17 +79,20 @@ async function getLeads(searchParams: SearchParams) {
 }
 
 export default async function AdminLeadsPage({
+    params,
     searchParams,
 }: {
+    params: Promise<{ lang: string }>;
     searchParams: Promise<SearchParams>;
 }) {
+    const { lang } = await params;
     const session = await getAdminSession();
 
     if (!session) {
         redirect('/dashboard/login');
     }
 
-    const params = await searchParams;
+    const searchParamsData = await searchParams;
     let data;
     const statuses = Object.values(LeadStatus);
     
@@ -100,7 +103,7 @@ export default async function AdminLeadsPage({
     });
 
     try {
-        data = await getLeads(params);
+        data = await getLeads(searchParamsData);
     } catch (error) {
         console.error('Dashboard Error:', error);
         return (
@@ -114,7 +117,7 @@ export default async function AdminLeadsPage({
     }
 
     const { leads, total, totalPages } = data;
-    const currentPage = parseInt(params.page || '1');
+    const currentPage = parseInt(searchParamsData.page || '1');
 
     return (
         <div className="min-h-screen bg-slate-50">
@@ -135,7 +138,7 @@ export default async function AdminLeadsPage({
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Status</label>
                                 <select
                                     name="status"
-                                    defaultValue={params.status || ''}
+                                    defaultValue={searchParamsData.status || ''}
                                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 >
                                     <option value="">All Statuses</option>
@@ -149,7 +152,7 @@ export default async function AdminLeadsPage({
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Surgery</label>
                                 <select
                                     name="surgery"
-                                    defaultValue={params.surgery || ''}
+                                    defaultValue={searchParamsData.surgery || ''}
                                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 >
                                     <option value="">All Surgeries</option>
@@ -164,7 +167,7 @@ export default async function AdminLeadsPage({
                                 <input
                                     type="text"
                                     name="city"
-                                    defaultValue={params.city || ''}
+                                    defaultValue={searchParamsData.city || ''}
                                     placeholder="e.g. Pune"
                                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
@@ -178,7 +181,7 @@ export default async function AdminLeadsPage({
                                     Apply Filters
                                 </button>
                                 <Link
-                                    href="/dashboard/leads"
+                                    href={`/${lang}/dashboard/leads`}
                                     className="px-4 py-2 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-100 transition-colors"
                                 >
                                     Reset
@@ -210,8 +213,8 @@ export default async function AdminLeadsPage({
                             <div className="flex gap-2">
                                 {data.page > 1 && (
                                     <Link
-                                        href={`/dashboard/leads?${new URLSearchParams({
-                                            ...params,
+                                        href={`/${lang}/dashboard/leads?${new URLSearchParams({
+                                            ...searchParamsData,
                                             page: String(data.page - 1),
                                         } as Record<string, string>).toString()}`}
                                         className="px-4 py-2 text-sm font-bold text-slate-600 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-all"
@@ -221,8 +224,8 @@ export default async function AdminLeadsPage({
                                 )}
                                 {data.page < data.totalPages && (
                                     <Link
-                                        href={`/dashboard/leads?${new URLSearchParams({
-                                            ...params,
+                                        href={`/${lang}/dashboard/leads?${new URLSearchParams({
+                                            ...searchParamsData,
                                             page: String(data.page + 1),
                                         } as Record<string, string>).toString()}`}
                                         className="px-4 py-2 text-sm font-bold text-white bg-teal-600 rounded-lg hover:bg-teal-700 transition-all shadow-sm shadow-teal-100"
@@ -238,6 +241,9 @@ export default async function AdminLeadsPage({
         </div>
     );
 }
+
+
+
 
 
 
