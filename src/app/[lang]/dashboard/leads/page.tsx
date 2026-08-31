@@ -234,9 +234,9 @@ export default async function AdminLeadsPage({
                         </div>
                     )}
                 </div>
-            </div>
-        </DashboardShell>
+            </DashboardShell>
         </div>
     );
 }
+
 
