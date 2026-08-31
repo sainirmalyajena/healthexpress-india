@@ -24,17 +24,17 @@ async function getLeads(searchParams: SearchParams) {
 
     const where: Prisma.LeadWhereInput = {};
 
-    if (searchsearchParamsData.status) {
-        where.status = searchsearchParamsData.status as LeadStatus;
+    if (searchParams.status) {
+        where.status = searchParams.status as LeadStatus;
     }
 
-    if (searchsearchParamsData.surgery) {
-        where.surgeryId = searchsearchParamsData.surgery;
+    if (searchParams.surgery) {
+        where.surgeryId = searchParams.surgery;
     }
 
-    if (searchsearchParamsData.city) {
+    if (searchParams.city) {
         where.city = {
-            contains: searchsearchParamsData.city
+            contains: searchParams.city
         };
     }
 
@@ -241,6 +241,7 @@ export default async function AdminLeadsPage({
         </div>
     );
 }
+
 
 
 
