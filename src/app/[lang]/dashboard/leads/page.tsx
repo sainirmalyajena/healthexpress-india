@@ -118,7 +118,7 @@ export default async function AdminLeadsPage({
 
     return (
         <div className="min-h-screen bg-slate-50">
-            <DashboardShell>
+            <DashboardShell userName={session.name || 'Admin'}>
                 <div className="p-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
@@ -238,5 +238,6 @@ export default async function AdminLeadsPage({
         </div>
     );
 }
+
 
 
