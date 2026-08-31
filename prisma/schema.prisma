@@ -228,6 +228,11 @@ enum LeadStatus {
   SCHEDULED
   COMPLETED
   CLOSED
+  OPD_SCHEDULED
+  OPD_DONE
+  SURGERY_SCHEDULED
+  SURGERY_DONE
+  LOST
 }
 
 enum InsuranceOption {
@@ -243,3 +248,4 @@ enum PartnerStatus {
   REJECTED
   ONBOARDED
 }
+
