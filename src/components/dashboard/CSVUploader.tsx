@@ -14,7 +14,23 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
         setUploading(true);
         setMessage('');
 
-        Papa.parse(file, {
+        // Read file text to handle Meta Ads CSVs where header is sometimes on the 2nd line
+        const text = await file.text();
+        let lines = text.split('\n');
+        
+        // Check if first line lacks standard headers but second line has them
+        const firstLine = lines[0].toLowerCase();
+        if (lines.length > 1 && !firstLine.includes('name') && !firstLine.includes('phone') && !firstLine.includes('email')) {
+            const secondLine = lines[1].toLowerCase();
+            if (secondLine.includes('name') || secondLine.includes('phone')) {
+                // Remove the first line
+                lines.shift();
+            }
+        }
+        
+        const correctedText = lines.join('\n');
+
+        Papa.parse(correctedText, {
             header: true,
             skipEmptyLines: true,
             complete: async (results) => {
@@ -30,7 +46,7 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
                     
                     const data = await response.json();
                     if (data.success) {
-                        setMessage('Successfully imported leads.');
+                        setMessage('Successfully imported ' + data.count + ' leads.');
                         setFile(null);
                         window.location.reload();
                     } else {
@@ -73,13 +89,17 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
                 <button 
                     onClick={handleUpload}
                     disabled={!file || uploading}
-                    className="bg-teal-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 flex items-center gap-2"
+                    className="flex items-center gap-2 px-6 py-2 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-all"
                 >
                     <Upload className="w-4 h-4" />
-                    {uploading ? 'Importing...' : 'Upload CSV'}
+                    {uploading ? 'Uploading...' : 'Upload CSV'}
                 </button>
             </div>
-            {message && <p className="mt-3 text-sm text-emerald-600 font-medium">{message}</p>}
+            {message && (
+                <p className={\mt-4 text-sm font-bold \\}>
+                    {message}
+                </p>
+            )}
         </div>
     );
 }
