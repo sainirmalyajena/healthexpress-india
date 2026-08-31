@@ -87,6 +87,7 @@ model Lead {
   callbackTime   String?
   status         LeadStatus      @default(NEW)
   notes          String?
+  opdDate        DateTime?
   originalCost   Float?
   discountedCost Float?
   revenue        Float?

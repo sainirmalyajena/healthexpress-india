@@ -24,10 +24,10 @@ export class WhatsAppService {
         const formattedPhone = this.formatPhoneNumber(phone);
         
         try {
-            const response = await fetch(\\/\/messages\, {
+            const response = await fetch(`${this.apiUrl}/${this.phoneNumberId}/messages`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': \Bearer \\,
+                    'Authorization': `Bearer ${this.accessToken}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -56,7 +56,7 @@ export class WhatsAppService {
                 return false;
             }
 
-            console.log(\[WhatsAppService] Successfully sent welcome message to \\);
+            console.log(`[WhatsAppService] Successfully sent welcome message to ${formattedPhone}`);
             return true;
         } catch (error) {
             console.error('[WhatsAppService] Exception sending message:', error);

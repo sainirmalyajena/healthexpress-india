@@ -214,12 +214,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                         </div>
                                     </div>
 
-                                    <Link
-                                        href="/dashboard/leads"
-                                        className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
-                                    >
-                                        Update Details
-                                    </Link>
+                                    <ManageCaseButton lead={lead} hospitals={hospitals} />
                                 </div>
                             </div>
                         </div>

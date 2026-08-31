@@ -23,12 +23,14 @@ export async function PATCH(
         originalCost,
         isEmergency,
         hasCard,
-        notes
+        notes,
+        opdDate,
+        followUpDate
     } = body;
 
     try {
         // Calculate revenue if hospital and cost are provided
-        let discountedCost = originalCost;
+        let discountedCost = null;
         let revenue = null;
 
         if (originalCost && hospitalId) {
@@ -39,21 +41,23 @@ export async function PATCH(
             if (hospital) {
                 const discount = hasCard ? (originalCost * (hospital.discountPercent / 100)) : 0;
                 discountedCost = originalCost - discount;
-                revenue = discountedCost * 0.15; // 15% standard commission
+                revenue = discountedCost * 0.15; // 15% platform fee
             }
         }
 
         const updatedLead = await prisma.lead.update({
             where: { id },
             data: {
-                ...(status && { status }),
-                ...(hospitalId && { hospitalId }),
-                ...(originalCost !== undefined && { originalCost }),
-                ...(discountedCost !== undefined && { discountedCost }),
-                ...(revenue !== undefined && { revenue }),
-                ...(isEmergency !== undefined && { isEmergency }),
-                ...(hasCard !== undefined && { hasCard }),
-                ...(notes !== undefined && { notes }),
+                ...(status && { status: status as LeadStatus }),
+                hospitalId: hospitalId || null,
+                originalCost: originalCost || null,
+                discountedCost,
+                revenue,
+                isEmergency: isEmergency ?? false,
+                hasCard: hasCard ?? false,
+                notes: notes || null,
+                opdDate: opdDate ? new Date(opdDate) : null,
+                followUpDate: followUpDate ? new Date(followUpDate) : null
             },
             include: {
                 hospital: true,

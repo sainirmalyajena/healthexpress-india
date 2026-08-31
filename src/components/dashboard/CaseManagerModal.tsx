@@ -20,13 +20,10 @@ interface Lead {
     isEmergency: boolean;
     hasCard: boolean;
     notes?: string | null;
+    opdDate?: Date | null;
+    followUpDate?: Date | null;
     hospital?: { name: string } | null;
     surgery: { name: string } | null;
-    utmSource?: string | null;
-    utmCampaign?: string | null;
-    utmMedium?: string | null;
-    sourcePage?: string | null;
-    description?: string | null;
 }
 
 interface CaseManagerModalProps {
@@ -45,24 +42,30 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
     const [hasCard, setHasCard] = useState(lead.hasCard);
     const [status, setStatus] = useState(lead.status);
     const [notes, setNotes] = useState(lead.notes || '');
+    
+    // Format dates for date input fields (YYYY-MM-DD)
+    const formatDateForInput = (dateObj?: Date | null) => {
+        if (!dateObj) return '';
+        return new Date(dateObj).toISOString().split('T')[0];
+    };
 
-    const selectedHospital = hospitals.find(h => h.id === hospitalId);
-    const discount = hasCard && selectedHospital ? (originalCost * (selectedHospital.discountPercent / 100)) : 0;
-    const discountedCost = originalCost - discount;
-    const revenue = discountedCost * 0.15;
+    const [opdDate, setOpdDate] = useState(formatDateForInput(lead.opdDate));
+    const [followUpDate, setFollowUpDate] = useState(formatDateForInput(lead.followUpDate));
 
     const handleSave = async () => {
         try {
-            const response = await fetch(`/api/dashboard/leads/${lead.id}`, {
+            const response = await fetch(\/api/dashboard/leads/\ + lead.id, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     status,
                     hospitalId,
-                    originalCost,
+                    originalCost: Number(originalCost),
                     isEmergency,
                     hasCard,
-                    notes
+                    notes,
+                    opdDate: opdDate || null,
+                    followUpDate: followUpDate || null
                 }),
             });
 
@@ -78,140 +81,113 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
     };
 
     return (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                    <div>
-                        <h3 className="font-bold text-slate-900">Manage Case</h3>
-                        <p className="text-xs text-slate-500">{lead.fullName} • {lead.surgery?.name || 'General Inquiry'}</p>
-                    </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
-                        <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+            <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
+                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                    <h2 className="text-lg font-bold text-slate-900">Update Lead: {lead.fullName}</h2>
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600">?</button>
                 </div>
 
-                <div className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
-                    
-                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm">
-                        <h4 className="font-semibold text-slate-900 mb-2">Lead Intelligence</h4>
-                        <div className="space-y-2 text-slate-600">
-                            <p><span className="font-medium text-slate-700">Source:</span> {lead.utmSource ? (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
-                                    Ads ({lead.utmSource}) {lead.utmCampaign && `- ${lead.utmCampaign}`}
-                                </span>
-                            ) : (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-800">Organic (SEO)</span>
-                            )}</p>
-                            <p><span className="font-medium text-slate-700">Entry Page:</span> <code className="text-xs bg-slate-200 px-1 py-0.5 rounded">{lead.sourcePage || '/'}</code></p>
-                            {lead.description && (
-                                <p><span className="font-medium text-slate-700">Inquiry:</span> {lead.description}</p>
-                            )}
-                        </div>
-                    </div>
-
+                <div className="p-6 overflow-y-auto space-y-6 flex-1">
+                    {/* Status & Hospital */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
-                            <select
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Status</label>
+                            <select 
+                                value={status} 
+                                onChange={e => setStatus(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
                             >
-                                <option value="NEW">NEW</option>
-                                <option value="CONTACTED">CONTACTED</option>
-                                <option value="QUALIFIED">QUALIFIED</option>
-                                <option value="ASSIGNED">ASSIGNED</option>
-                                <option value="SCHEDULED">SCHEDULED</option>
-                                <option value="COMPLETED">COMPLETED</option>
-                                <option value="CLOSED">CLOSED</option>
+                                <option value="NEW">New</option>
+                                <option value="CONTACTED">Contacted</option>
+                                <option value="OPD_SCHEDULED">OPD Scheduled</option>
+                                <option value="OPD_DONE">OPD Done</option>
+                                <option value="SURGERY_SCHEDULED">Surgery Scheduled</option>
+                                <option value="SURGERY_DONE">Surgery Done</option>
+                                <option value="LOST">Lost</option>
                             </select>
                         </div>
-
-                        <div className="col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Assign Hospital</label>
-                            <select
-                                value={hospitalId}
-                                onChange={(e) => setHospitalId(e.target.value)}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Assign Hospital</label>
+                            <select 
+                                value={hospitalId} 
+                                onChange={e => setHospitalId(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
                             >
-                                <option value="">Select Hospital</option>
-                                <option value="">-- Clear Selection --</option>
+                                <option value="">-- Select Hospital --</option>
                                 {hospitals.map(h => (
-                                    <option key={h.id} value={h.id}>{h.name} ({h.discountPercent}% disc)</option>
+                                    <option key={h.id} value={h.id}>{h.name}</option>
                                 ))}
                             </select>
                         </div>
+                    </div>
 
+                    {/* Dates */}
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Surgery Cost (₹)</label>
-                            <input
-                                type="number"
-                                value={originalCost}
-                                onChange={(e) => setOriginalCost(Number(e.target.value))}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none"
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date</label>
+                            <input 
+                                type="date"
+                                value={followUpDate}
+                                onChange={e => setFollowUpDate(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
                             />
                         </div>
-
-                        <div className="flex flex-col justify-end gap-2 pb-1">
-                            <label className="flex items-center gap-2 cursor-pointer group">
-                                <input
-                                    type="checkbox"
-                                    checked={hasCard}
-                                    onChange={(e) => setHasCard(e.target.checked)}
-                                    className="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
-                                />
-                                <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Has Health Card</span>
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer group">
-                                <input
-                                    type="checkbox"
-                                    checked={isEmergency}
-                                    onChange={(e) => setIsEmergency(e.target.checked)}
-                                    className="w-4 h-4 rounded border-slate-300 text-red-600 focus:ring-red-500"
-                                />
-                                <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">Emergency Case</span>
-                            </label>
-                        </div>
-
-                        <div className="col-span-2">
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Internal Notes</label>
-                            <textarea
-                                value={notes}
-                                onChange={(e) => setNotes(e.target.value)}
-                                placeholder="Add patient interaction notes, callback details, etc."
-                                rows={3}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 outline-none resize-none"
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">OPD Date</label>
+                            <input 
+                                type="date"
+                                value={opdDate}
+                                onChange={e => setOpdDate(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
                             />
                         </div>
                     </div>
 
-                    <div className="bg-slate-50 rounded-xl p-4 space-y-2 border border-slate-100">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-slate-500">Discounted Cost</span>
-                            <span className="font-semibold text-slate-900">₹{discountedCost.toLocaleString()}</span>
+                    {/* Cost & Economics */}
+                    <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (?)</label>
+                            <input 
+                                type="number"
+                                value={originalCost}
+                                onChange={e => setOriginalCost(Number(e.target.value))}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                            />
                         </div>
-                        <div className="flex justify-between text-sm pt-2 border-t border-slate-200">
-                            <span className="text-slate-500 italic">Estimated Revenue (15%)</span>
-                            <span className="font-bold text-teal-600">₹{revenue.toLocaleString()}</span>
+                        <div className="flex gap-4 items-end">
+                            <label className="flex items-center gap-2 cursor-pointer mt-6">
+                                <input type="checkbox" checked={isEmergency} onChange={e => setIsEmergency(e.target.checked)} className="rounded text-teal-600 focus:ring-teal-500" />
+                                <span className="text-sm font-medium text-slate-700">Emergency</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer mt-6">
+                                <input type="checkbox" checked={hasCard} onChange={e => setHasCard(e.target.checked)} className="rounded text-teal-600 focus:ring-teal-500" />
+                                <span className="text-sm font-medium text-slate-700">Health Card</span>
+                            </label>
                         </div>
+                    </div>
+
+                    {/* Notes */}
+                    <div>
+                        <label className="block text-sm font-bold text-slate-700 mb-1">Internal Notes & Follow-ups</label>
+                        <textarea 
+                            value={notes}
+                            onChange={e => setNotes(e.target.value)}
+                            rows={4}
+                            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                            placeholder="Add details about follow-ups, patient questions, etc."
+                        ></textarea>
                     </div>
                 </div>
 
-                <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                    <button
-                        onClick={onClose}
-                        className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSave}
+                <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
+                    <button onClick={onClose} className="px-4 py-2 text-sm font-bold text-slate-600 hover:text-slate-900">Cancel</button>
+                    <button 
+                        onClick={handleSave} 
                         disabled={isPending}
-                        className="px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-50"
+                        className="px-6 py-2 bg-teal-600 text-white text-sm font-bold rounded-lg hover:bg-teal-700 disabled:opacity-50"
                     >
-                        {isPending ? 'Saving...' : 'Save Changes'}
+                        {isPending ? 'Saving...' : 'Save Details'}
                     </button>
                 </div>
             </div>
