@@ -38,34 +38,21 @@ async function getLeads(searchParams: SearchParams) {
         };
     }
 
-    const [leads, total] = await Promise.all([
-        prisma.lead.findMany({
-            where,
-            include: {
-                surgery: true,
-                hospital: true
-            },
-            orderBy: {
-                createdAt: 'desc'
-            },
-            skip,
-            take: ITEMS_PER_PAGE
-        }),
-        prisma.lead.count({ where })
-    ]);
+    const leads = await prisma.lead.findMany({
+        where,
+        include: { surgery: true, hospital: true },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: ITEMS_PER_PAGE
+    });
+    const total = await prisma.lead.count({ where });
 
     const totalPages = Math.ceil(total / ITEMS_PER_PAGE) || 1;
 
     // Get filter data
-    const [surgeries, hospitals, citiesData] = await Promise.all([
-        prisma.surgery.findMany({ select: { id: true, name: true } }),
-        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true } }),
-        prisma.lead.findMany({
-            select: { city: true },
-            distinct: ['city'],
-            where: { city: { not: undefined } }
-        })
-    ]);
+    const surgeries = await prisma.surgery.findMany({ select: { id: true, name: true } });
+    const hospitals = await prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true } });
+    const citiesData = await prisma.lead.findMany({ select: { city: true }, distinct: ['city'], where: { city: { not: '' } } });
 
     return {
         leads,
