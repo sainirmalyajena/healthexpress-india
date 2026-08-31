@@ -15,6 +15,38 @@ export class WhatsAppService {
     /**
      * Sends the initial "Welcome & Triage" message to a new lead
      */
+    async sendTextMessage(phone: string, text: string): Promise<boolean> {
+        if (!this.isConfigured()) return false;
+
+        const formattedPhone = this.formatPhoneNumber(phone);
+        
+        try {
+            const response = await fetch(`${this.apiUrl}/${this.phoneNumberId}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messaging_product: 'whatsapp',
+                    to: formattedPhone,
+                    type: 'text',
+                    text: { body: text }
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                console.error('[WhatsAppService] Error:', err);
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error('[WhatsAppService] Exception:', error);
+            return false;
+        }
+    }
+
     async sendInitialLeadWelcome(phone: string, patientName: string, surgeryName: string): Promise<boolean> {
         if (!this.isConfigured()) {
             console.warn('[WhatsAppService] Not configured. Skipping message to:', phone);
@@ -78,3 +110,4 @@ export class WhatsAppService {
 }
 
 export const whatsappService = new WhatsAppService();
+
