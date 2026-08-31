@@ -1,34 +1,22 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 import withBundleAnalyzer from "@next/bundle-analyzer";
-import withPWAInit from "@ducanh2912/next-pwa";
 
-const withPWA = withPWAInit({
-  dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  register: true,
-  skipWaiting: true,
-});
 const withAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
   openAnalyzer: true,
 });
 
-const nextConfig = {
-  // No serverExternalPackages needed — handled by transpilePackages already
-
-  // Add aggressive HTTP caching headers to static assets and pages
+const nextConfig: any = {
   async headers() {
     return [
       {
-        // Static assets (JS, CSS, fonts, images) — cache for 1 year (immutable)
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
-        // Public folder assets
         source: '/(.*)\\.(png|jpg|jpeg|gif|webp|avif|svg|ico|woff|woff2|ttf|eot)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
@@ -38,8 +26,7 @@ const nextConfig = {
   },
 
   images: {
-    formats: ['image/avif', 'image/webp'],
-    // Aggressive caching for optimized images
+    formats: ['image/avif', 'image/webp'] as any,
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
@@ -49,7 +36,6 @@ const nextConfig = {
     ],
   },
 
-  // Performance: compress responses, enable React strict mode
   compress: true,
   reactStrictMode: true,
   poweredByHeader: false,
@@ -62,7 +48,6 @@ const nextConfig = {
   },
 
   experimental: {
-    // Removed cpus: 1 — this was artificially throttling the build AND runtime
     optimizePackageImports: [
       'lucide-react',
       'react-icons',
@@ -72,10 +57,11 @@ const nextConfig = {
   },
 };
 
-export default withSentryConfig(withAnalyzer(withPWA(nextConfig)), {
+export default withSentryConfig(withAnalyzer(nextConfig), {
   org: "healthexpress-india",
   project: "javascript-nextjs",
   silent: !process.env.CI,
   widenClientFileUpload: true,
   disableLogger: true,
 });
+

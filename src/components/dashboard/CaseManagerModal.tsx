@@ -54,7 +54,7 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
 
     const handleSave = async () => {
         try {
-            const response = await fetch(\/api/dashboard/leads/\ + lead.id, {
+            const response = await fetch(`/api/dashboard/leads/${lead.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -85,7 +85,7 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
                 <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                     <h2 className="text-lg font-bold text-slate-900">Update Lead: {lead.fullName}</h2>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600">?</button>
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600">✕</button>
                 </div>
 
                 <div className="p-6 overflow-y-auto space-y-6 flex-1">
@@ -147,7 +147,7 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
                     {/* Cost & Economics */}
                     <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (?)</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (₹)</label>
                             <input 
                                 type="number"
                                 value={originalCost}

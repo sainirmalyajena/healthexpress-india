@@ -16,7 +16,7 @@ export default async function MyLeadsPage({ params }: { params: Promise<{ lang: 
     }
 
     const leads = await prisma.lead.findMany({
-        where: { assignedUserId: session.id },
+        where: { assignedUserId: session.adminId },
         orderBy: { createdAt: 'desc' },
         include: { surgery: true, hospital: true }
     });
@@ -93,3 +93,4 @@ export default async function MyLeadsPage({ params }: { params: Promise<{ lang: 
         </DashboardShell>
     );
 }
+

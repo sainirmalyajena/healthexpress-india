@@ -99,7 +99,7 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
                         </div>
 
                         <div className="mt-10 flex flex-wrap items-center gap-6">
-                           <Button variant="default" size="lg" className="rounded-xl px-8 bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold">
+                           <Button variant="primary" size="lg" className="rounded-xl px-8 bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold">
                               {lang === 'hi' ? 'संपर्क करें' : 'Private Concierge'}
                               <ArrowRight className="w-5 h-5 ml-2" />
                            </Button>
@@ -148,4 +148,5 @@ export default function TrustSection({ lang, dict }: TrustSectionProps) {
         </section>
     );
 }
+
 

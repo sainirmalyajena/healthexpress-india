@@ -91,7 +91,7 @@ export default function DemoVoiceAgent() {
     };
 
 
-    const speakTextRef = (text: string) => {
+    const speakText = (text: string) => {
         if (!synthesisRef.current) return;
         
         const utterance = new SpeechSynthesisUtterance(text);
@@ -206,3 +206,4 @@ export default function DemoVoiceAgent() {
         </div>
     );
 }
+

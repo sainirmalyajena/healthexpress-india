@@ -136,7 +136,7 @@ export default async function CostPage({ params }: PageProps) {
                                 {[
                                     'Surgeon & Anesthetist Fees',
                                     'Operation Theatre (OT) Charges',
-                                    `Hospital Stay (${surgery.recoveryTime || 'Standard'} days)`,
+                                    `Hospital Stay (${surgery.recovery || 'Standard'} days)`,
                                     'Standard Implants/Consumables',
                                     'Pre-op Investigations (Basic)'
                                 ].map((item, i) => (
@@ -198,3 +198,4 @@ export default async function CostPage({ params }: PageProps) {
         </div>
     );
 }
+

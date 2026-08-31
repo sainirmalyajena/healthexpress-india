@@ -111,8 +111,9 @@ RULES FOR "alternativeTreatments":
             return NextResponse.json({ error: "Failed to parse AI response" }, { status: 500 });
         }
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("AI Triage Error:", error);
         return NextResponse.json({ error: "Internal server error during analysis: " + (error.message || "") }, { status: 500 });
     }
 }
+

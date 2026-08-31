@@ -66,10 +66,11 @@ export function ClientLayoutWidgets({ lang, dict }: { lang: string; dict: Sticky
             <StickyMobileCTA lang={lang} dict={dict} />
             {showDeferredWidgets && (
                 <>
-                    <MedBot />
+                    <MedBot lang={lang as any} />
                     <WhatsAppButton />
                 </>
             )}
         </>
     );
 }
+

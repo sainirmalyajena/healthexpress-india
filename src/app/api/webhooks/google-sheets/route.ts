@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
                 sourcePage: 'Google Sheets Automation',
                 utmSource: utmSource || 'meta_ads',
                 status: 'NEW',
+                referenceId: 'WEBHOOK-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
             }
         });
 
@@ -69,3 +70,4 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
     }
 }
+
