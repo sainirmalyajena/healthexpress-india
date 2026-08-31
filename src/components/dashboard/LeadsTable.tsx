@@ -80,7 +80,9 @@ export default function LeadsTable({ leads, hospitals, statuses }: LeadsTablePro
                                         <td className="px-4 py-3">
                                             <div>
                                                 <p className="font-medium text-slate-900">{lead.fullName}</p>
-                                                <p className="text-xs text-slate-500">{lead.phone}</p>
+                                                <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:text-teal-800 hover:underline font-medium">
+                                                    📞 {lead.phone}
+                                                </a>
                                             </div>
                                         </td>
                                         <td className="px-4 py-3 text-sm text-slate-700">{lead.surgery?.name || 'General Inquiry'}</td>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus } from '@/generated/prisma';
 
@@ -7,16 +7,21 @@ export async function PATCH(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
 ) {
-    const session = await auth();
+    const session = await getAdminSession();
 
-    // Type casting to access custom role property added in auth.ts callbacks
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (!session || (session.user as any)?.role !== 'admin') {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized — please log in again' }, { status: 401 });
     }
 
     const { id } = await props.params;
-    const body = await request.json();
+
+    let body;
+    try {
+        body = await request.json();
+    } catch {
+        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+
     const {
         status,
         hospitalId,
@@ -65,13 +70,10 @@ export async function PATCH(
             }
         });
 
-        // Note: Status update emails (Resend) are currently handled manually or in a dedicated worker
-        // if automated status alerts are required, they will be implemented here using the new src/lib/resend.ts
-
         return NextResponse.json({ success: true, lead: updatedLead });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error updating lead:', error);
-        return NextResponse.json({ error: 'Failed to update lead' }, { status: 500 });
+        return NextResponse.json({ error: error.message || 'Failed to update lead' }, { status: 500 });
     }
 }
 
@@ -80,9 +82,8 @@ export async function GET(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
 ) {
-    const session = await auth();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (!session || (session.user as any)?.role !== 'admin') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const session = await getAdminSession();
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await props.params;
     if (id !== 'export') return NextResponse.json({ error: 'Not found' }, { status: 404 });

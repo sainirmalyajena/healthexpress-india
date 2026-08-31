@@ -86,7 +86,9 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <p className="text-xs font-bold text-slate-400 uppercase mb-1">Phone Number</p>
-                                        <p className="text-slate-900 font-medium">{lead.phone}</p>
+                                        <a href={`tel:${lead.phone}`} className="text-teal-600 hover:text-teal-800 hover:underline font-medium text-lg">
+                                            📞 {lead.phone}
+                                        </a>
                                     </div>
                                     <div>
                                         <p className="text-xs font-bold text-slate-400 uppercase mb-1">Email (if provided)</p>
