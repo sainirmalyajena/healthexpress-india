@@ -92,6 +92,12 @@ export default async function AdminLeadsPage({
     const params = await searchParams;
     let data;
     const statuses = Object.values(LeadStatus);
+    
+    // Fetch team members for the CSV Uploader assignment dropdown
+    const teamMembers = await prisma.user.findMany({
+        select: { id: true, name: true, email: true },
+        orderBy: { name: 'asc' }
+    });
 
     try {
         data = await getLeads(params);
@@ -99,27 +105,27 @@ export default async function AdminLeadsPage({
         console.error('Dashboard Error:', error);
         return (
             <div className="min-h-screen bg-red-50 p-8">
-                <h1 className="text-2xl font-bold text-red-800">Error Loading Page</h1>
-                <pre className="mt-4 p-4 bg-white rounded shadow text-red-600 overflow-auto">
-                    {error instanceof Error ? error.message : String(error)}
-                    {'\n\n'}
-                    {error instanceof Error ? error.stack : ''}
-                </pre>
+                <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-sm text-center">
+                    <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading Leads</h1>
+                    <p className="text-slate-600">Please check the database connection and try again.</p>
+                </div>
             </div>
         );
     }
 
+    const { leads, total, totalPages } = data;
+    const currentPage = parseInt(params.page || '1');
+
     return (
-        <DashboardShell userName={session.name || 'Admin'}>
-            <div className="p-8">
-                <div className="max-w-7xl mx-auto">
-                    {/* Header */}
+        <div className="min-h-screen bg-slate-50">
+            <DashboardShell>
+                <div className="p-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
                             <p className="text-sm text-slate-500">Track and manage patient inquiries from all channels.</p>
                         </div>
-                        <CSVUploader teamMembers={[]} />
+                        <CSVUploader teamMembers={teamMembers} />
                     </div>
 
                     {/* Filters */}
