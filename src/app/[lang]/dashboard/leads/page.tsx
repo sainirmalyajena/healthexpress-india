@@ -111,6 +111,7 @@ export default async function AdminLeadsPage({
                 <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-sm text-center">
                     <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading Leads</h1>
                     <p className="text-slate-600">Please check the database connection and try again.</p>
+                      <div className="mt-4 p-4 bg-red-100 rounded text-sm text-red-800 font-mono text-left overflow-auto">{String(error)}</div>
                 </div>
             </div>
         );
@@ -241,6 +242,7 @@ export default async function AdminLeadsPage({
         </div>
     );
 }
+
 
 
 
