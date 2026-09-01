@@ -22,11 +22,14 @@
       ]
     }
   ],
-  "crons": [`n    {`n      "path": "/api/cron/reminders",`n      "schedule": "0 10 * * *"`n    },
+  "crons": [
+    {
+      "path": "/api/cron/reminders",
+      "schedule": "0 10 * * *"
+    },
     {
       "path": "/api/cron/autobot",
       "schedule": "0 9 * * *"
     }
   ]
 }
-
