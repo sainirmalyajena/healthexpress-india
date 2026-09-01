@@ -44,7 +44,7 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
 
     const leads = await prisma.lead.findMany({
         where,
-        include: { surgery: true, hospital: true },
+        include: { surgery: true, hospital: true, assignedUser: true },
         orderBy: { createdAt: 'desc' },
         skip,
         take: ITEMS_PER_PAGE
@@ -113,14 +113,14 @@ export default async function AdminLeadsPage({
 
     return (
         <div className="min-h-screen bg-slate-50">
-            <DashboardShell userName={session.name || 'Admin'}>
+            <DashboardShell userName={session.name || 'Admin'} userRole={session.role}>
                 <div className="p-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
                             <p className="text-sm text-slate-500">Track and manage patient inquiries from all channels.</p>
                         </div>
-                        <CSVUploader teamMembers={teamMembers} />
+                        {session.role !== 'team' && <CSVUploader teamMembers={teamMembers} />}
                     </div>
 
                     {/* Filters */}

@@ -61,7 +61,7 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Surgery</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">City</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Details</th>
+                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Assigned To</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Actions</th>
                             </tr>
                         </thead>
@@ -104,8 +104,9 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                                             </div>
                                         </td>
                                         <td className="px-4 py-3 text-sm text-slate-700">
-                                            {lead.revenue ? (
-                                                <span className="text-teal-600 font-medium">₹{lead.revenue.toLocaleString()}</span>
+                                            {/* @ts-ignore */}
+                                            {lead.assignedUser ? (
+                                                <span className="text-indigo-600 font-semibold">{lead.assignedUser.name}</span>
                                             ) : (
                                                 <span className="text-slate-400 italic">Unassigned</span>
                                             )}
