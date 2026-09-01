@@ -30,7 +30,8 @@ export async function PATCH(
         hasCard,
         notes,
         opdDate,
-        followUpDate
+        followUpDate,
+        assignedUserId
     } = body;
 
     try {
@@ -62,7 +63,8 @@ export async function PATCH(
                 hasCard: hasCard ?? false,
                 notes: notes || null,
                 opdDate: opdDate ? new Date(opdDate) : null,
-                followUpDate: followUpDate ? new Date(followUpDate) : null
+                followUpDate: followUpDate ? new Date(followUpDate) : null,
+                assignedUserId: assignedUserId || null
             },
             include: {
                 hospital: true,

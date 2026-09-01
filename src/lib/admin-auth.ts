@@ -3,7 +3,8 @@ import { auth } from "@/auth";
 export async function getAdminSession() {
     const session = await auth();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (!session?.user || (session.user as any).role !== 'admin') return null;
+    const role = (session.user as any).role;
+    if (!session?.user || (role !== 'admin' && role !== 'team')) return null;
 
     return {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

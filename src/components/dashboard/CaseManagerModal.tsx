@@ -23,6 +23,7 @@ interface Lead {
     notes?: string | null;
     opdDate?: Date | null;
     followUpDate?: Date | null;
+    assignedUserId?: string | null;
     hospital?: { name: string } | null;
     surgery: { name: string } | null;
 }
@@ -30,10 +31,11 @@ interface Lead {
 interface CaseManagerModalProps {
     lead: Lead;
     hospitals: Hospital[];
+    teamMembers: { id: string, name: string }[];
     onClose: () => void;
 }
 
-export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManagerModalProps) {
+export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose }: CaseManagerModalProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
@@ -42,6 +44,7 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
     const [isEmergency, setIsEmergency] = useState(lead.isEmergency);
     const [hasCard, setHasCard] = useState(lead.hasCard);
     const [status, setStatus] = useState(lead.status);
+    const [assignedUserId, setAssignedUserId] = useState(lead.assignedUserId || '');
     const [notes, setNotes] = useState(lead.notes || '');
     const [error, setError] = useState('');
     const [saving, setSaving] = useState(false);
@@ -70,7 +73,8 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
                     hasCard,
                     notes,
                     opdDate: opdDate || null,
-                    followUpDate: followUpDate || null
+                    followUpDate: followUpDate || null,
+                    assignedUserId: assignedUserId || null
                 }),
             });
 
@@ -142,6 +146,21 @@ export default function CaseManagerModal({ lead, hospitals, onClose }: CaseManag
                                 ))}
                             </select>
                         </div>
+                    </div>
+
+                    {/* Assignment */}
+                    <div className="mb-4">
+                        <label className="block text-sm font-bold text-slate-700 mb-1">Assigned To</label>
+                        <select
+                            value={assignedUserId}
+                            onChange={e => setAssignedUserId(e.target.value)}
+                            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                        >
+                            <option value="">-- Unassigned --</option>
+                            {teamMembers.map(t => (
+                                <option key={t.id} value={t.id}>{t.name}</option>
+                            ))}
+                        </select>
                     </div>
 
                     {/* Dates */}

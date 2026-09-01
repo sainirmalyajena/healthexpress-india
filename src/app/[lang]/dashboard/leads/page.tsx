@@ -18,11 +18,15 @@ interface SearchParams {
 
 const ITEMS_PER_PAGE = 20;
 
-async function getLeads(searchParams: SearchParams) {
+async function getLeads(searchParams: SearchParams, userId: string, role: string) {
     const page = parseInt(searchParams.page || '1');
     const skip = (page - 1) * ITEMS_PER_PAGE;
 
     const where: Prisma.LeadWhereInput = {};
+
+    if (role === 'team') {
+        where.assignedUserId = userId;
+    }
 
     if (searchParams.status) {
         where.status = searchParams.status as LeadStatus;
@@ -90,7 +94,7 @@ export default async function AdminLeadsPage({
     });
 
     try {
-        data = await getLeads(searchParamsData);
+        data = await getLeads(searchParamsData, session.adminId, session.role);
     } catch (error) {
         console.error('Dashboard Error:', error);
         return (

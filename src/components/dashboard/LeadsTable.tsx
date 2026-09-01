@@ -43,9 +43,10 @@ interface LeadsTableProps {
     leads: Lead[];
     hospitals: Hospital[];
     statuses: string[];
+    teamMembers: {id: string, name: string}[];
 }
 
-export default function LeadsTable({ leads, hospitals, statuses }: LeadsTableProps) {
+export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: LeadsTableProps) {
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
     return (
