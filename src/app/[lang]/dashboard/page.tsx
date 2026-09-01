@@ -163,7 +163,7 @@ export default async function AdminDashboard({
     }
 
     if (session.role === 'team') {
-        redirect(`/${lang}/dashboard/my-leads`);
+        redirect(`/${lang}/dashboard/leads`);
     }
 
     const { range } = await searchParams;
