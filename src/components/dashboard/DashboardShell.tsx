@@ -18,7 +18,7 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const navItems = userRole === 'TEAM_MEMBER' ? [
+    const navItems = userRole === 'team' ? [
         { name: 'My Leads (CRM)', href: '/dashboard/my-leads', icon: '📞' },
         { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
     ] : [

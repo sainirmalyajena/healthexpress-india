@@ -11,7 +11,7 @@ export default async function MyLeadsPage({ params }: { params: Promise<{ lang: 
     const session = await getAdminSession();
     const { lang } = await params;
 
-    if (!session || session.role !== 'TEAM_MEMBER') {
+    if (!session || session.role !== 'team') {
         redirect(`/${lang}/dashboard/login`);
     }
 

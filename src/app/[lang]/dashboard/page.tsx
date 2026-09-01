@@ -162,6 +162,10 @@ export default async function AdminDashboard({
         redirect(`/${lang}/dashboard/login`);
     }
 
+    if (session.role === 'team') {
+        redirect(`/${lang}/dashboard/my-leads`);
+    }
+
     const { range } = await searchParams;
     const analytics = await getAnalytics(range);
 
