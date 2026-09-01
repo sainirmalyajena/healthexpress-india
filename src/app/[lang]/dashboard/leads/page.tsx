@@ -193,7 +193,7 @@ export default async function AdminLeadsPage({
                     <LeadsTable
                         leads={data.leads}
                         hospitals={data.hospitals}
-                        statuses={statuses}
+                        statuses={statuses} teamMembers={teamMembers}
                     />
 
                     {/* Pagination */}
