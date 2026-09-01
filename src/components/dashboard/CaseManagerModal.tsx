@@ -157,7 +157,7 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
                             className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
                         >
                             <option value="">-- Unassigned --</option>
-                            {teamMembers.map(t => (
+                            {(teamMembers || []).map(t => (
                                 <option key={t.id} value={t.id}>{t.name}</option>
                             ))}
                         </select>

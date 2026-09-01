@@ -27,9 +27,10 @@ export default async function LeadDetailPage({ params }: PageProps) {
     if (!session) redirect('/dashboard/login');
 
     const { id } = await params;
-    const [lead, hospitals] = await Promise.all([
+    const [lead, hospitals, teamMembers] = await Promise.all([
         getLeadDetail(id),
-        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true }})
+        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true }}),
+        prisma.user.findMany({ select: { id: true, name: true, email: true }, orderBy: { name: 'asc' } })
     ]);
 
     if (!lead) notFound();
@@ -216,7 +217,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                         </div>
                                     </div>
 
-                                    <ManageCaseButton lead={lead} hospitals={hospitals} />
+                                    <ManageCaseButton lead={lead} hospitals={hospitals} teamMembers={[]} />
                                 </div>
                             </div>
                         </div>

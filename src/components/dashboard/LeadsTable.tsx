@@ -142,7 +142,7 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
             {selectedLead && (
                 <CaseManagerModal
                     lead={selectedLead}
-                    hospitals={hospitals}
+                    hospitals={hospitals} teamMembers={teamMembers}
                     onClose={() => setSelectedLead(null)}
                 />
             )}

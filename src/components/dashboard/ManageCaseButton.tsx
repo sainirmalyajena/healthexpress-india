@@ -6,9 +6,10 @@ import CaseManagerModal from './CaseManagerModal';
 interface ManageCaseButtonProps {
     lead: any;
     hospitals: any[];
+    teamMembers?: any[];
 }
 
-export default function ManageCaseButton({ lead, hospitals }: ManageCaseButtonProps) {
+export default function ManageCaseButton({ lead, hospitals, teamMembers = [] }: ManageCaseButtonProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -24,6 +25,7 @@ export default function ManageCaseButton({ lead, hospitals }: ManageCaseButtonPr
                 <CaseManagerModal
                     lead={lead}
                     hospitals={hospitals}
+                    teamMembers={teamMembers}
                     onClose={() => setIsOpen(false)}
                 />
             )}
