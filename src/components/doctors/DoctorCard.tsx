@@ -21,13 +21,13 @@ export function DoctorCard({ doctor, lang, dict }: { doctor: DoctorProps; lang: 
             {/* Top Accent Bar */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 to-teal-600 opacity-80 group-hover:opacity-100 transition-opacity" />
             
-            <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                    <div className="pr-4">
+            <div className="p-5 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-4">
+                    <div className="pr-0 sm:pr-4">
                         <h3 className="text-xl font-black text-slate-900 tracking-tight group-hover:text-teal-700 transition-colors">{doctor.name}</h3>
                         <p className="text-sm text-teal-600 font-bold mt-1">{doctor.qualification}</p>
                     </div>
-                    <div className="bg-teal-50 border border-teal-100 text-teal-700 text-xs px-3 py-1.5 rounded-full font-black whitespace-nowrap shrink-0">
+                    <div className="bg-teal-50 border border-teal-100 text-teal-700 text-xs px-3 py-1.5 rounded-full font-black whitespace-nowrap self-start">
                         {doctor.experience}+ {dict.years_exp}
                     </div>
                 </div>
@@ -36,7 +36,7 @@ export function DoctorCard({ doctor, lang, dict }: { doctor: DoctorProps; lang: 
                     {doctor.about}
                 </div>
 
-                <div className="pt-5 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                     <div className="text-xs text-slate-500">
                         <p className="font-bold text-slate-800 uppercase tracking-wider mb-0.5">{doctor.hospital.name}</p>
                         <p className="flex items-center gap-1">
@@ -46,7 +46,7 @@ export function DoctorCard({ doctor, lang, dict }: { doctor: DoctorProps; lang: 
                     </div>
                     <Link
                         href={`/${lang}/doctors/${doctor.id}`}
-                        className="text-sm font-bold text-teal-700 bg-teal-50 px-5 py-2.5 rounded-xl hover:bg-teal-600 hover:text-white hover:shadow-md transition-all duration-300"
+                        className="text-sm text-center font-bold text-teal-700 bg-teal-50 px-5 py-2.5 rounded-xl hover:bg-teal-600 hover:text-white hover:shadow-md transition-all duration-300 w-full sm:w-auto"
                     >
                         {dict.view_profile}
                     </Link>
