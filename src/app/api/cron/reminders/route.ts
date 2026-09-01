@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { sendWhatsAppMessage } from '@/lib/services/whatsapp.service';
+import { whatsappService } from '@/lib/services/whatsapp.service';
 
 export async function GET(req: NextRequest) {
     // Check authorization header to ensure it's from Vercel Cron
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
                 // Add country code if missing (assuming India +91)
                 const finalPhone = phoneForWhatsapp.length === 10 ? `91${phoneForWhatsapp}` : phoneForWhatsapp;
                 
-                await sendWhatsAppMessage(finalPhone, message);
+                await whatsappService.sendTextMessage(finalPhone, message);
                 results.push({ leadId: lead.id, phone: finalPhone, status: 'success' });
             } catch (err: any) {
                 console.error(`Failed to send OPD reminder to ${lead.id}`, err);
@@ -55,3 +55,4 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+

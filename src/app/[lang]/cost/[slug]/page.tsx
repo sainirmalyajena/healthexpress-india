@@ -25,12 +25,7 @@ async function getSurgeryData(slug: string) {
 }
 
 export async function generateStaticParams() {
-    try {
-        const surgeries = await prisma.surgery.findMany({ select: { slug: true } });
-        return surgeries.map((s) => ({ slug: s.slug }));
-    } catch (e) {
-        return [];
-    }
+    return [];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -198,4 +193,5 @@ export default async function CostPage({ params }: PageProps) {
         </div>
     );
 }
+
 

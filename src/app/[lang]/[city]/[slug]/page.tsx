@@ -92,23 +92,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  try {
-    const surgeries = await prisma.surgery.findMany({ select: { slug: true, availableCities: true }, take: 100 });
-    const params: { slug: string; lang: string; city: string }[] = [];
-    
-    surgeries.forEach(s => {
-      s.availableCities.forEach(city => {
-        ['en', 'hi'].forEach(lang => {
-          params.push({ slug: s.slug, lang, city: city.toLowerCase() });
-        });
-      });
-    });
-    
-    return params;
-  } catch (error) {
-    console.warn('Failed to fetch surgeries for static params, falling back to dynamic generation:', error);
-    return [];
-  }
+  return [];
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -663,3 +647,4 @@ export default async function CitySurgeryDetailPage({ params }: PageProps) {
     </div>
   );
 }
+

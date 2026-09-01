@@ -112,13 +112,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  try {
-    const surgeries = await prisma.surgery.findMany({ select: { slug: true }, take: 100 });
-    return surgeries.flatMap(s => ['en', 'hi'].map(lang => ({ slug: [s.slug], lang })));
-  } catch (error) {
-    console.warn('Failed to fetch surgeries for static params, falling back to dynamic generation:', error);
-    return [];
-  }
+  return [];
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -685,3 +679,4 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
