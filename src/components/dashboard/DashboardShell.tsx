@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 
 interface DashboardShellProps {
     children: React.ReactNode;
@@ -96,14 +97,12 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
                     <div className="bg-slate-50 rounded-xl p-4">
                         <p className="text-xs text-slate-500 mb-1 font-medium">Logged in as</p>
                         <p className="text-sm font-bold text-slate-900 truncate">{userName}</p>
-                        <form action="/api/dashboard/auth" method="DELETE" className="mt-3">
-                            <button
-                                type="submit"
-                                className="w-full text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 py-2 rounded-lg transition-colors border border-red-100"
-                            >
-                                Sign Out
-                            </button>
-                        </form>
+                        <button
+                            onClick={() => signOut({ callbackUrl: '/dashboard/login' })}
+                            className="w-full mt-3 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 py-2 rounded-lg transition-colors border border-red-100"
+                        >
+                            Sign Out
+                        </button>
                     </div>
                 </div>
             </aside>
