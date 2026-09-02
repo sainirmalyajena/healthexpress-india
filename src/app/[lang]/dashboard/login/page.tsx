@@ -49,9 +49,9 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-            <div className="w-full max-w-md">
-                <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="min-h-[100dvh] bg-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
+                <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
                     <div className="text-center mb-8">
                         <div className="relative w-16 h-16 transition-transform hover:scale-105 mx-auto mb-4">
                             <Image
