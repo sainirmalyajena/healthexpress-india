@@ -45,6 +45,31 @@ export default function DemoVoiceAgent() {
         }
     };
 
+    const speakText = (text: string) => {
+        if (!synthesisRef.current) return;
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voices = synthesisRef.current.getVoices();
+        
+        utterance.voice = voices.find(v => v.lang.includes('en-IN') && v.name.includes('Female')) 
+            || voices.find(v => v.lang.includes('hi-IN')) 
+            || voices.find(v => v.name.includes('Female')) 
+            || voices[0];
+            
+        utterance.rate = 0.95;
+        
+        utterance.onend = () => {
+            setIsSpeaking(false);
+            setTranscript('');
+            if (isOpen) {
+                setIsListening(true);
+                recognitionRef.current?.start();
+            }
+        };
+        
+        synthesisRef.current.speak(utterance);
+    };
+
     useEffect(() => {
         transcriptRef.current = transcript;
         isListeningRef.current = isListening;
@@ -90,33 +115,6 @@ export default function DemoVoiceAgent() {
         }
     };
 
-
-    const speakText = (text: string) => {
-        if (!synthesisRef.current) return;
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voices = synthesisRef.current.getVoices();
-        
-        // Prioritize Indian Female voices, then Hindi voices, then any female
-        utterance.voice = voices.find(v => v.lang.includes('en-IN') && v.name.includes('Female')) 
-            || voices.find(v => v.lang.includes('hi-IN')) 
-            || voices.find(v => v.name.includes('Female')) 
-            || voices[0];
-            
-        utterance.rate = 0.95; // Slightly slower for better empathy and pronunciation
-        
-        utterance.onend = () => {
-            setIsSpeaking(false);
-            setTranscript('');
-            // Auto start listening again for next response
-            if (isOpen) {
-                setIsListening(true);
-                recognitionRef.current?.start();
-            }
-        };
-        
-        synthesisRef.current.speak(utterance);
-    };
 
     const startConversation = () => {
         setIsOpen(true);

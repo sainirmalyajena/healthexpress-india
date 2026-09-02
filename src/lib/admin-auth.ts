@@ -1,9 +1,9 @@
-import { auth } from "@/auth";
+import { auth } from '@/auth';
 
 export async function getAdminSession() {
     const session = await auth();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const role = (session.user as any).role;
+    const role = (session?.user as any)?.role;
     if (!session?.user || (role !== 'admin' && role !== 'team')) return null;
 
     return {
@@ -12,6 +12,6 @@ export async function getAdminSession() {
         email: session.user.email || '',
         name: session.user.name || 'Admin',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        role: (session.user as any).role
+        role
     };
 }

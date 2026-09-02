@@ -31,6 +31,7 @@ interface Lead {
     utmMedium: string | null;
     sourcePage: string | null;
     description: string | null;
+    assignedUser?: { name: string | null } | null;
 }
 
 interface Hospital {
