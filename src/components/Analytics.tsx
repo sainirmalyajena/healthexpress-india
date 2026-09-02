@@ -1,6 +1,5 @@
 'use client';
 
-import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
@@ -24,9 +23,12 @@ function AnalyticsInner() {
         }
         
         // Also send GA config for Google Ads on mount or route change if needed
-        // (Though GoogleAnalytics component handles GA4 pageviews automatically)
         if (typeof window !== 'undefined' && window.gtag) {
             window.gtag('config', 'AW-16966558904');
+            const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-HJ1V4B9QQQ';
+            window.gtag('config', GA_ID, {
+                page_path: pathname + searchParams.toString(),
+            });
         }
     }, [pathname, searchParams]);
 
@@ -60,7 +62,28 @@ export default function Analytics() {
 
     return (
         <>
-            {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
+            {GA_ID && (
+                <>
+                    <Script
+                        strategy="afterInteractive"
+                        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+                    />
+                    <Script
+                        id="gtag-init"
+                        strategy="afterInteractive"
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                                window.dataLayer = window.dataLayer || [];
+                                function gtag(){dataLayer.push(arguments);}
+                                gtag('js', new Date());
+                                gtag('config', '${GA_ID}', {
+                                    page_path: window.location.pathname,
+                                });
+                            `,
+                        }}
+                    />
+                </>
+            )}
             <Suspense fallback={null}>
                 <AnalyticsInner />
             </Suspense>
