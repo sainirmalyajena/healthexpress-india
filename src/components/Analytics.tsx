@@ -25,7 +25,7 @@ function AnalyticsInner() {
         // Also send GA config for Google Ads on mount or route change if needed
         if (typeof window !== 'undefined' && window.gtag) {
             window.gtag('config', 'AW-16966558904');
-            const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-HJ1V4B9QQQ';
+            const GA_ID = 'G-HJ1V4B9QQQ';
             window.gtag('config', GA_ID, {
                 page_path: pathname + searchParams.toString(),
             });
@@ -58,7 +58,8 @@ function AnalyticsInner() {
 }
 
 export default function Analytics() {
-    const GA_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-HJ1V4B9QQQ';
+    // Hardcoding to bypass any outdated Vercel dashboard environment variables
+    const GA_ID = 'G-HJ1V4B9QQQ';
 
     return (
         <>
