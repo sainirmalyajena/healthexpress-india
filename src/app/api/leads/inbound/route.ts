@@ -3,15 +3,27 @@ import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
     try {
-        // Optional Security: Verify API key so nobody can spam your CRM
         const authHeader = req.headers.get('authorization');
-        const validKey = process.env.INBOUND_API_KEY || 'healthexpress-secure-ads-2026';
+        // Accept either the one I gave you, or the one in your screenshot
+        const validKeys = ['healthexpress-secure-ads-2026', 'HE_GSHEETS_SEC_2026'];
+        const token = authHeader?.replace('Bearer ', '').trim();
         
-        if (authHeader !== `Bearer ${validKey}`) {
+        if (!token || !validKeys.includes(token)) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
         const data = await req.json();
+
+        // Try to match surgery by name if provided
+        let matchedSurgeryId = null;
+        if (data.surgeryName) {
+            const surgery = await prisma.surgery.findFirst({
+                where: { name: { contains: data.surgeryName, mode: 'insensitive' } }
+            });
+            if (surgery) {
+                matchedSurgeryId = surgery.id;
+            }
+        }
 
         // Create the lead in your database
         const lead = await prisma.lead.create({
@@ -20,11 +32,12 @@ export async function POST(req: Request) {
                 phone: data.phone || data.phoneNumber || 'Unknown',
                 email: data.email || null,
                 city: data.city || null,
-                source: data.source || 'Ad Campaign',
-                utmSource: data.utmSource || 'paid_ads',
+                source: data.source || 'Google Sheets',
+                utmSource: data.utmSource || 'google_sheets',
                 utmMedium: data.utmMedium || null,
                 utmCampaign: data.utmCampaign || null,
-                description: data.description || data.notes || null,
+                description: data.notes || data.description || (data.surgeryName ? `Surgery Interest: ${data.surgeryName}` : null),
+                surgeryId: matchedSurgeryId,
                 status: 'NEW',
             }
         });
