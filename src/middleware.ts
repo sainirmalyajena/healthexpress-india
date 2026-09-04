@@ -110,6 +110,10 @@ export function middleware(request: NextRequest) {
         const isCampaignPage = pathname.includes('/campaign/')
         requestHeaders.set('x-campaign-page', isCampaignPage ? 'true' : 'false')
 
+        // Detect dashboard pages so layout can hide the public website navigation
+        const isDashboardPage = pathname.includes('/dashboard')
+        requestHeaders.set('x-dashboard-page', isDashboardPage ? 'true' : 'false')
+
         return NextResponse.next({
             request: {
                 headers: requestHeaders,

@@ -122,6 +122,8 @@ export default async function RootLayout({
   
   const headersList = await headers();
   const isCampaignPage = headersList.get('x-campaign-page') === 'true';
+  const isDashboardPage = headersList.get('x-dashboard-page') === 'true';
+  const shouldHideNav = isCampaignPage || isDashboardPage;
   const organizationSchema = generateOrganizationSchema();
   
   return (
@@ -141,11 +143,11 @@ export default async function RootLayout({
 
           <Analytics />
           
-          {!isCampaignPage && <Header lang={lang} dict={dictionary.navigation} />}
+          {!shouldHideNav && <Header lang={lang} dict={dictionary.navigation} />}
 
           <main className="flex-1">{children}</main>
 
-          {!isCampaignPage && (
+          {!shouldHideNav && (
             <>
               <Footer lang={lang} dict={dictionary.footer} />
               <ClientLayoutWidgets lang={lang} dict={dictionary.sticky_cta} />
