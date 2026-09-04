@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import Heartbeat from './Heartbeat';
 
 interface DashboardShellProps {
     children: React.ReactNode;
@@ -24,6 +25,7 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
     ] : [
         { name: 'Overview', href: '/dashboard', icon: '📊' },
         { name: 'Leads', href: '/dashboard/leads', icon: '📞' },
+        { name: 'Team Analytics', href: '/dashboard/analytics', icon: '👥' },
         { name: 'Partner Requests', href: '/dashboard/partners', icon: '🤝' },
         { name: 'Doctors', href: '/dashboard/doctors', icon: '👨‍⚕️' },
         { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
@@ -133,6 +135,7 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
                 </header>
 
                 <main className="flex-1">
+                    <Heartbeat />
                     {children}
                 </main>
             </div>

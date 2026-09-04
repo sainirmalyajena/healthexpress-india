@@ -9,8 +9,8 @@ export async function PATCH(
 ) {
     const session = await getAdminSession();
 
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized â€” please log in again' }, { status: 401 });
+    if (!session?.adminId) {
+        return NextResponse.json({ error: 'Unauthorized – please log in again' }, { status: 401 });
     }
 
     const { id } = await props.params;
@@ -51,26 +51,75 @@ export async function PATCH(
             }
         }
 
+        // Get the old lead to check if status changed or firstContactedAt is missing
+        const oldLead = await prisma.lead.findUnique({ where: { id } });
+        
+        const dataToUpdate: any = {
+            ...(status && { status: status as LeadStatus }),
+            hospitalId: hospitalId || null,
+            originalCost: originalCost || null,
+            discountedCost,
+            revenue,
+            isEmergency: isEmergency ?? false,
+            hasCard: hasCard ?? false,
+            notes: notes || null,
+            opdDate: opdDate ? new Date(opdDate) : null,
+            followUpDate: followUpDate ? new Date(followUpDate) : null,
+            assignedUserId: assignedUserId || null
+        };
+
+        // Automatic Activity Logging triggers
+        const logsToCreate: any[] = [];
+
+        if (oldLead && status && status !== oldLead.status) {
+            logsToCreate.push({
+                userId: session.adminId,
+                leadId: id,
+                actionType: 'STATUS_CHANGED',
+                details: JSON.stringify({ from: oldLead.status, to: status })
+            });
+            // Update first contact if first interaction
+            if (!oldLead.firstContactedAt) {
+                dataToUpdate.firstContactedAt = new Date();
+            }
+        }
+
+        if (oldLead && assignedUserId && assignedUserId !== oldLead.assignedUserId) {
+            logsToCreate.push({
+                userId: session.adminId,
+                leadId: id,
+                actionType: 'LEAD_ASSIGNED',
+                details: JSON.stringify({ to: assignedUserId })
+            });
+            if (!oldLead.firstContactedAt) {
+                dataToUpdate.firstContactedAt = new Date();
+            }
+        }
+
+        if (oldLead && notes && notes !== oldLead.notes) {
+            logsToCreate.push({
+                userId: session.adminId,
+                leadId: id,
+                actionType: 'NOTE_ADDED',
+                details: JSON.stringify({ noteSnippet: notes.substring(0, 100) })
+            });
+        }
+
         const updatedLead = await prisma.lead.update({
             where: { id },
-            data: {
-                ...(status && { status: status as LeadStatus }),
-                hospitalId: hospitalId || null,
-                originalCost: originalCost || null,
-                discountedCost,
-                revenue,
-                isEmergency: isEmergency ?? false,
-                hasCard: hasCard ?? false,
-                notes: notes || null,
-                opdDate: opdDate ? new Date(opdDate) : null,
-                followUpDate: followUpDate ? new Date(followUpDate) : null,
-                assignedUserId: assignedUserId || null
-            },
+            data: dataToUpdate,
             include: {
                 hospital: true,
                 surgery: true
             }
         });
+
+        if (logsToCreate.length > 0) {
+            // Write to ActivityLog
+            await prisma.activityLog.createMany({
+                data: logsToCreate
+            });
+        }
 
         return NextResponse.json({ success: true, lead: updatedLead });
     } catch (error: any) {
@@ -79,13 +128,13 @@ export async function PATCH(
     }
 }
 
-// GET /api/dashboard/leads/export â€” CSV download (id='export' used as route)
+// GET /api/dashboard/leads/export – CSV download (id='export' used as route)
 export async function GET(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
 ) {
     const session = await getAdminSession();
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session?.adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await props.params;
     if (id !== 'export') return NextResponse.json({ error: 'Not found' }, { status: 404 });

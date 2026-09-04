@@ -4,6 +4,7 @@ import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus, Prisma } from '@/generated/prisma';
 import LeadsTable from '@/components/dashboard/LeadsTable';
+import DailyProgressBar from '@/components/dashboard/DailyProgressBar';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import { CSVUploader } from '@/components/dashboard/CSVUploader';
 
@@ -233,6 +234,7 @@ export default async function AdminLeadsPage({
         </div>
     );
 }
+
 
 
 

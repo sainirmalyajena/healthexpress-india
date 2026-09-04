@@ -106,7 +106,9 @@ model Lead {
   feedback       String?
   assignedUserId String?
   followUpDate   DateTime?
+  firstContactedAt DateTime?
   documents      Document[]
+  activityLogs   ActivityLog[]
   hospital       Hospital?       @relation(fields: [hospitalId], references: [id])
   surgery        Surgery?        @relation(fields: [surgeryId], references: [id])
   assignedUser   User?           @relation(fields: [assignedUserId], references: [id])
@@ -114,6 +116,7 @@ model Lead {
   @@index([status])
   @@index([createdAt])
   @@index([city])
+  @@index([assignedUserId])
 }
 
 model Document {
@@ -127,13 +130,16 @@ model Document {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  passwordHash String
-  name         String
-  role         String   @default("admin")
-  createdAt    DateTime @default(now())
-  assignedLeads Lead[]
+  id             String        @id @default(cuid())
+  email          String        @unique
+  passwordHash   String
+  name           String
+  role           String        @default("admin")
+  createdAt      DateTime      @default(now())
+  lastActiveAt   DateTime?
+  dailyCallQuota Int           @default(50)
+  assignedLeads  Lead[]
+  activityLogs   ActivityLog[]
 }
 
 model PartnerRequest {
@@ -249,3 +255,26 @@ enum PartnerStatus {
   ONBOARDED
 }
 
+model ActivityLog {
+  id         String       @id @default(cuid())
+  userId     String
+  leadId     String?
+  actionType ActivityType
+  details    String?
+  createdAt  DateTime     @default(now())
+  user       User         @relation(fields: [userId], references: [id])
+  lead       Lead?        @relation(fields: [leadId], references: [id])
+
+  @@index([userId])
+  @@index([leadId])
+  @@index([createdAt])
+  @@index([actionType])
+}
+
+enum ActivityType {
+  STATUS_CHANGED
+  CALL_LOGGED
+  NOTE_ADDED
+  LEAD_ASSIGNED
+  LOGIN
+}
