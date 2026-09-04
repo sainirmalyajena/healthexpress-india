@@ -10,7 +10,7 @@ export async function PATCH(
     const session = await getAdminSession();
 
     if (!session?.adminId) {
-        return NextResponse.json({ error: 'Unauthorized  please log in again' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized � please log in again' }, { status: 401 });
     }
 
     const { id } = await props.params;
@@ -128,7 +128,7 @@ export async function PATCH(
     }
 }
 
-// GET /api/dashboard/leads/export  CSV download (id='export' used as route)
+// GET /api/dashboard/leads/export � CSV download (id='export' used as route)
 export async function GET(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
@@ -171,3 +171,4 @@ export async function GET(
         },
     });
 }
+

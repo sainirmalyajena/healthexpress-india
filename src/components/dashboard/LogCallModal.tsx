@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 
@@ -96,4 +96,3 @@ export default function LogCallModal({ leadId, leadName, onClose, onLogged }: Lo
         </div>
     );
 }
-
