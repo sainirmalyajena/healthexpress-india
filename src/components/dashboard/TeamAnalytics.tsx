@@ -57,7 +57,7 @@ function getActionLabel(actionType: string, details: string | null): string {
             if (details) {
                 try {
                     const d = JSON.parse(details);
-                    return `Logged call: ${d.outcome}${d.note ? ` — "${d.note}"` : ''}`;
+                    return `Logged call: ${d.outcome}${d.note ? `  "${d.note}"` : ''}`;
                 } catch { /* fall through */ }
             }
             return 'Logged a call';
@@ -187,7 +187,7 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
                                                     {member.avgSpeedToLead} min
                                                 </span>
                                             ) : (
-                                                <span className="text-xs text-slate-400">—</span>
+                                                <span className="text-xs text-slate-400"></span>
                                             )}
                                         </td>
                                     </tr>
@@ -232,3 +232,4 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
         </div>
     );
 }
+

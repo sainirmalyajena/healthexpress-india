@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,15 +20,15 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const navItems = userRole === 'team' ? [
-        { name: 'My Leads (CRM)', href: '/dashboard/leads', icon: '📞' },
-        { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
+        { name: 'My Leads (CRM)', href: '/dashboard/leads', icon: 'ðŸ“ž' },
+        { name: 'Settings', href: '/dashboard/settings', icon: 'âš™ï¸' },
     ] : [
-        { name: 'Overview', href: '/dashboard', icon: '📊' },
-        { name: 'Leads', href: '/dashboard/leads', icon: '📞' },
-        { name: 'Team Analytics', href: '/dashboard/analytics', icon: '👥' },
-        { name: 'Partner Requests', href: '/dashboard/partners', icon: '🤝' },
-        { name: 'Doctors', href: '/dashboard/doctors', icon: '👨‍⚕️' },
-        { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
+        { name: 'Overview', href: '/dashboard', icon: 'ðŸ“Š' },
+        { name: 'Leads', href: '/dashboard/leads', icon: 'ðŸ“ž' },
+        { name: 'Team Analytics', href: '/dashboard/analytics', icon: 'ðŸ‘¥' },
+        { name: 'Partner Requests', href: '/dashboard/partners', icon: 'ðŸ¤' },
+        { name: 'Doctors', href: '/dashboard/doctors', icon: 'ðŸ‘¨â€âš•ï¸' },
+        { name: 'Settings', href: '/dashboard/settings', icon: 'âš™ï¸' },
     ];
 
     return (
@@ -142,4 +142,5 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
         </div>
     );
 }
+
 

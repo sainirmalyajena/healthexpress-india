@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -85,7 +85,7 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                                             <div>
                                                 <p className="font-medium text-slate-900">{lead.fullName}</p>
                                                 <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:text-teal-800 hover:underline font-medium">
-                                                    📞 {lead.phone}
+                                                    ðŸ“ž {lead.phone}
                                                 </a>
                                             </div>
                                         </td>
@@ -167,3 +167,4 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
         </>
     );
 }
+
