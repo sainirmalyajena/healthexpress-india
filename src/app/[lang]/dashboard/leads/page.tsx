@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 
 interface SearchParams {
     status?: string;
+    assignedUserId?: string;
     surgery?: string;
     city?: string;
     page?: string;
@@ -35,6 +36,14 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
 
     if (searchParams.surgery) {
         where.surgeryId = searchParams.surgery;
+    }
+
+    if (role !== 'team' && searchParams.assignedUserId) {
+        if (searchParams.assignedUserId === 'unassigned') {
+            where.assignedUserId = null;
+        } else {
+            where.assignedUserId = searchParams.assignedUserId;
+        }
     }
 
     if (searchParams.city) {
@@ -126,7 +135,7 @@ export default async function AdminLeadsPage({
 
                     {/* Filters */}
                     <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-100">
-                        <form action="/dashboard/leads" method="GET" className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 md:grid-cols-5 gap-4">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Status</label>
                                 <select
@@ -154,6 +163,24 @@ export default async function AdminLeadsPage({
                                     ))}
                                 </select>
                             </div>
+
+                            
+                            {session.role !== 'team' && (
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Assigned To</label>
+                                    <select
+                                        name="assignedUserId"
+                                        defaultValue={searchParamsData.assignedUserId || ''}
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    >
+                                        <option value="">All Members</option>
+                                        <option value="unassigned">-- Unassigned --</option>
+                                        {teamMembers.map((member) => (
+                                            <option key={member.id} value={member.id}>{member.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
 
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">City</label>
