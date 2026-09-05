@@ -59,12 +59,12 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Reference</th>
+                                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Reference</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Patient</th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Surgery</th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">City</th>
+                                <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Surgery</th>
+                                <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">City</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
-                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Assigned To</th>
+                                <th className="hidden xl:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Assigned To</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Actions</th>
                             </tr>
                         </thead>
@@ -78,7 +78,7 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                             ) : (
                                 leads.map((lead) => (
                                     <tr key={lead.id} className="hover:bg-slate-50 transition-colors">
-                                        <td className="px-4 py-3">
+                                        <td className="hidden md:table-cell px-4 py-3">
                                             <span className="font-mono text-xs text-slate-600">{lead.referenceId}</span>
                                         </td>
                                         <td className="px-4 py-3">
@@ -89,8 +89,8 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                                                 </a>
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-700">{lead.surgery?.name || 'General Inquiry'}</td>
-                                        <td className="px-4 py-3 text-sm text-slate-700">{lead.city}</td>
+                                        <td className="hidden lg:table-cell px-4 py-3 text-sm text-slate-700">{lead.surgery?.name || 'General Inquiry'}</td>
+                                        <td className="hidden sm:table-cell px-4 py-3 text-sm text-slate-700">{lead.city}</td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-2">
                                                 <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(lead.status)}`}>
@@ -106,7 +106,7 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                                                     )}
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-slate-700">
+                                        <td className="hidden xl:table-cell px-4 py-3 text-sm text-slate-700">
                                             {/* @ts-ignore */}
                                             {lead.assignedUser ? (
                                                 <span className="text-indigo-600 font-semibold">{lead.assignedUser.name}</span>
@@ -115,7 +115,7 @@ export default function LeadsTable({ leads, hospitals, statuses, teamMembers }: 
                                             )}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <div className="flex items-center gap-2">
+                                            <div className="flex flex-wrap items-center gap-2">
                                                 <LeadStatusSelect
                                                     leadId={lead.id}
                                                     currentStatus={lead.status || 'NEW'}

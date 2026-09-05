@@ -232,4 +232,3 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
         </div>
     );
 }
-
