@@ -61,7 +61,7 @@ const getSurgery = cache(async (slug: string, cityName: string | null) => {
   }
 });
 
-// export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug: slugArray, lang } = await params;
   const isCityRoute = slugArray.length === 2;
   const cityParam = isCityRoute ? slugArray[0] : null;
@@ -274,7 +274,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
             alt={`${surgery.name} in India`}
             fill
             sizes="100vw"
-            quality={60}
+            quality={75}
             priority
             fetchPriority="high"
             className="object-cover opacity-30 mix-blend-overlay"

@@ -28,6 +28,7 @@ const nextConfig: any = {
   images: {
     formats: ['image/avif', 'image/webp'] as any,
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    qualities: [60, 75, 90],
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'plus.unsplash.com' },
