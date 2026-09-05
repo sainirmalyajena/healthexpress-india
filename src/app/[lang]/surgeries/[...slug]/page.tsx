@@ -61,7 +61,7 @@ const getSurgery = cache(async (slug: string, cityName: string | null) => {
   }
 });
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug: slugArray, lang } = await params;
   const isCityRoute = slugArray.length === 2;
   const cityParam = isCityRoute ? slugArray[0] : null;
