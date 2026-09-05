@@ -40,7 +40,7 @@ async function main() {
             where: { id: lead.id },
             data: {
                 fullName: 'Rahul Sharma',
-                status: 'SCHEDULED', // To show some timeline progress
+                status: 'OPD_SCHEDULED', // To show some timeline progress
                 surgeryId: surgery.id
             }
         });
@@ -54,7 +54,7 @@ async function main() {
                 city: 'Bangalore',
                 description: 'Knee pain',
                 surgeryId: surgery.id,
-                status: 'SCHEDULED',
+                status: 'OPD_SCHEDULED',
                 referenceId: 'REF-' + Date.now(),
                 sourcePage: 'test-script'
             }

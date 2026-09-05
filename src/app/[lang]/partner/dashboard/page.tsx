@@ -33,7 +33,7 @@ export default async function PartnerDashboardPage() {
     const stats = {
         total: leads.length,
         active: leads.filter(l => ['ASSIGNED', 'SCHEDULED'].includes(l.status)).length,
-        completed: leads.filter(l => l.status === 'COMPLETED').length
+        completed: leads.filter(l => l.status === 'SURGERY_DONE').length
     };
 
     return (
