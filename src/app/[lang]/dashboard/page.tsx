@@ -6,6 +6,8 @@ import { prisma } from '@/lib/prisma';
 import AnalyticsCharts from '@/components/dashboard/AnalyticsCharts';
 import DateRangeFilter from '@/components/dashboard/DateRangeFilter';
 import DashboardShell from '@/components/dashboard/DashboardShell';
+import AgentDashboard from '@/components/dashboard/AgentDashboard';
+import { LeadStatus } from '@/generated/prisma';
 
 import { Prisma } from '@/generated/prisma';
 
@@ -163,7 +165,23 @@ export default async function AdminDashboard({
     }
 
     if (session.role === 'team') {
-        redirect(`/${lang}/dashboard/leads`);
+        const statuses = Object.values(LeadStatus);
+        const hospitals = await prisma.hospital.findMany();
+        const teamMembers = await prisma.user.findMany({ select: { id: true, name: true, email: true }, orderBy: { name: 'asc' } });
+        return (
+            <DashboardShell userName={session.name || 'Team Member'} userRole="team">
+                <div className="p-8 max-w-7xl mx-auto">
+                    <h1 className="text-3xl font-black text-slate-800 mb-2">My Action Dashboard</h1>
+                    <p className="text-slate-500 mb-8">Focus on what needs your attention today.</p>
+                    <AgentDashboard 
+                        userId={session.adminId} 
+                        hospitals={hospitals} 
+                        statuses={statuses} 
+                        teamMembers={teamMembers} 
+                    />
+                </div>
+            </DashboardShell>
+        );
     }
 
     const { range } = await searchParams;
