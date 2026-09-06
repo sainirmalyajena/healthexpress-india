@@ -61,6 +61,40 @@ const getSurgery = cache(async (slug: string, cityName: string | null) => {
   }
 });
 
+
+
+
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug: slugArray, lang } = await params;
+  const isCityRoute = slugArray.length === 2;
+  const cityParam = isCityRoute ? slugArray[0] : null;
+  const slug = isCityRoute ? slugArray[1] : slugArray[0];
+  const cityName = cityParam ? cityParam.charAt(0).toUpperCase() + cityParam.slice(1) : null;
+  
+  const surgery = await getSurgery(slug, cityName);
+  if (!surgery) return { title: 'Surgery Not Found' };
+  
+  const minCost = formatCurrency(surgery.costRangeMin);
+  const maxCost = formatCurrency(surgery.costRangeMax);
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+  const canonical = \\/\/surgeries/\\;
+
+  return {
+    title: \\ Cost in India - \ to \ | HealthExpress\,
+    description: surgery.metaDescription || \\ surgery cost in India ranges from \ to \. \\,
+    alternates: {
+      canonical: canonical,
+      languages: {
+        'en-IN': \\/en/surgeries/\\,
+        'hi-IN': \\/hi/surgeries/\\,
+        'bn-IN': \\/bn/surgeries/\\,
+      },
+    },
+  };
+}
+
+
 export default async function SurgeryDetailPage({ params }: PageProps) {
   const { slug: slugArray, lang } = await params;
   const isCityRoute = slugArray.length === 2;
@@ -537,5 +571,6 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
 
 
