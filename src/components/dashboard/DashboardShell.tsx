@@ -19,17 +19,15 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const navItems = userRole === 'team' ? [
-        { name: 'Dashboard', href: '/dashboard', icon: '📊' },
-        { name: 'My Leads (CRM)', href: '/dashboard/leads', icon: '📞' },
-        { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
+        const navItems = userRole === 'team' ? [
+        { name: 'My Leads (CRM)', href: '/dashboard/leads', icon: '??' },
+        { name: 'Settings', href: '/dashboard/settings', icon: '??' },
     ] : [
-        { name: 'Overview', href: '/dashboard', icon: '📊' },
-        { name: 'Leads', href: '/dashboard/leads', icon: '📞' },
-        { name: 'Team Analytics', href: '/dashboard/analytics', icon: '👥' },
-        { name: 'Partner Requests', href: '/dashboard/partners', icon: '🤝' },
-        { name: 'Doctors', href: '/dashboard/doctors', icon: '👨‍⚕️' },
-        { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
+        { name: 'Leads', href: '/dashboard/leads', icon: '??' },
+        { name: 'Team Analytics', href: '/dashboard/analytics', icon: '??' },
+        { name: 'Partner Requests', href: '/dashboard/partners', icon: '??' },
+        { name: 'Doctors', href: '/dashboard/doctors', icon: '?????' },
+        { name: 'Settings', href: '/dashboard/settings', icon: '??' },
     ];
 
     return (
