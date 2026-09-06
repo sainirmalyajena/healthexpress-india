@@ -96,7 +96,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
-  try {
   const { slug: slugArray, lang } = await params;
   const isCityRoute = slugArray.length === 2;
   const cityParam = isCityRoute ? slugArray[0] : null;
@@ -163,7 +162,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <Image 
-            src={getCategoryImage(surgery.category)} 
+            src={getCategoryImage(surgery?.category)} 
             alt={`${surgery.name} in India`}
             fill
             sizes="100vw"
@@ -375,7 +374,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
                 <div>
                   <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">{dict.common_symptoms}</p>
                   <div className="flex flex-wrap gap-2">
-                    {surgery.symptoms.map(s => (
+                    {(surgery.symptoms || []).map(s => (
                       <span key={s} className="text-sm bg-amber-50 text-amber-800 border border-amber-100 px-3 py-1 rounded-full">{s}</span>
                     ))}
                   </div>
@@ -571,7 +570,4 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
       </div>
     </div>
   );
-  } catch (e: any) {
-    return <div style={{padding: '50px', fontSize: '24px', color: 'red'}}>DEBUG ERROR: {e.message}<br/><pre>{e.stack}</pre></div>;
-  }
 }
