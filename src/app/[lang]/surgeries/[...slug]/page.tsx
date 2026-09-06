@@ -571,3 +571,4 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
