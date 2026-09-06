@@ -129,27 +129,7 @@ export async function POST(request: NextRequest) {
             aiResult.suggestedNotes,
         ].filter(Boolean).join(' ');
 
-        
-        // Check for duplicate by phone
-        const existingLead = await prisma.lead.findFirst({
-            where: { phone: data.phone }
-        });
-        
-        if (existingLead) {
-            // Update existing lead instead of creating duplicate
-            await prisma.lead.update({
-                where: { id: existingLead.id },
-                data: {
-                    notes: (existingLead.notes ? existingLead.notes + '
-
-' : '') + '[Duplicate Submission] ' + notesContent
-                }
-            });
-            return NextResponse.json({ success: true, referenceId: existingLead.referenceId });
-        }
-
         // Save to DB
-
         await prisma.lead.create({
             data: {
                 fullName: data.fullName,
