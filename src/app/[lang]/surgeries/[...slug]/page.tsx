@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+﻿import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -60,148 +60,6 @@ const getSurgery = cache(async (slug: string, cityName: string | null) => {
     return null;
   }
 });
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug: slugArray, lang } = await params;
-  const isCityRoute = slugArray.length === 2;
-  const cityParam = isCityRoute ? slugArray[0] : null;
-  const slug = isCityRoute ? slugArray[1] : slugArray[0];
-  const cityName = cityParam ? cityParam.charAt(0).toUpperCase() + cityParam.slice(1) : null;
-  
-  const surgery = await getSurgery(slug, cityName);
-  if (!surgery) return { title: 'Surgery Not Found' };
-  const minCost = formatCurrency(surgery.costRangeMin);
-  const maxCost = formatCurrency(surgery.costRangeMax);
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
-  const canonical = `${baseUrl}/${lang}/surgeries/${slug}`;
-
-  return {
-    title: `${surgery.name} Cost in India – ${minCost} to ${maxCost} | HealthExpress`,
-    description: surgery.metaDescription || `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
-    alternates: {
-      canonical: canonical,
-      languages: {
-        'en-IN': `${baseUrl}/en/surgeries/${slug}`,
-        'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
-      },
-    },
-    openGraph: {
-      title: `${surgery.name} – HealthExpress India`,
-      description: surgery.overview.substring(0, 160),
-      url: canonical,
-      type: 'article',
-      locale: lang === 'hi' ? 'hi_IN' : 'en_IN',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${surgery.name} – HealthExpress India`,
-      description: surgery.overview.substring(0, 160),
-    },
-    keywords: [
-      surgery.name,
-      `${surgery.name} cost India`,
-      `${surgery.name} cost`,
-      `${surgery.name} surgery price`,
-      `best hospital for ${surgery.name}`,
-      `${surgery.name} recovery time`,
-      'affordable surgery India',
-      'medical tourism India',
-      ...surgery.availableCities.map(c => `${surgery.name} ${c}`),
-    ],
-  };
-}
-
-export async function generateStaticParams() {
-  return [];
-}
-
-// ─── Sub-components ───────────────────────────────────────────────────────────
-
-function StatPill({
-  icon: Icon, label, value, highlight,
-}: { icon: React.ElementType; label: string; value: string; highlight?: boolean }) {
-  return (
-    <div className={`flex flex-col gap-1 p-3 sm:p-4 rounded-xl ${highlight ? 'bg-teal-600 text-white' : 'bg-slate-50'}`}>
-      <div className={`flex items-center gap-1.5 text-[11px] sm:text-xs font-medium ${highlight ? 'text-teal-100' : 'text-slate-500'}`}>
-        <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-        <span className="truncate">{label}</span>
-      </div>
-      <p className={`text-base sm:text-lg font-bold leading-tight ${highlight ? 'text-white' : 'text-slate-900'} truncate`}>
-        {value}
-      </p>
-    </div>
-  );
-}
-
-function SectionHeading({
-  icon: Icon, title, iconBg = 'bg-teal-100', iconColor = 'text-teal-600',
-}: { icon: React.ElementType; title: string; iconBg?: string; iconColor?: string }) {
-  return (
-    <h2 className="flex items-center gap-3 text-xl font-bold text-slate-900 mb-5">
-      <span className={`w-9 h-9 ${iconBg} ${iconColor} rounded-xl flex items-center justify-center flex-shrink-0`}>
-        <Icon className="w-[18px] h-[18px]" />
-      </span>
-      {title}
-    </h2>
-  );
-}
-
-function CityPricingTable({ cities, costMin, costMax, slug, lang }: { cities: string[]; costMin: number; costMax: number; slug: string; lang: string }) {
-  const rows = cities
-    .filter(c => CITY_COST_FACTORS[c])
-    .map(c => ({
-      city: c,
-      min: Math.round((costMin * CITY_COST_FACTORS[c]) / 1000) * 1000,
-      max: Math.round((costMax * CITY_COST_FACTORS[c]) / 1000) * 1000,
-    }))
-    .sort((a, b) => a.min - b.min);
-
-  if (rows.length === 0) return null;
-
-  return (
-    <div className="mt-5 rounded-xl overflow-hidden border border-slate-200">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="bg-slate-50 border-b border-slate-200">
-            <th className="text-left px-4 py-3 font-semibold text-slate-700">City</th>
-            <th className="text-right px-4 py-3 font-semibold text-slate-700">Min Cost</th>
-            <th className="text-right px-4 py-3 font-semibold text-slate-700">Max Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr key={row.city} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-              <td className="px-4 py-3 text-slate-700">
-                <Link href={`/${lang}/${row.city.toLowerCase()}/${slug}`} className="flex items-center gap-2 hover:text-teal-600 transition-colors">
-                  <MapPin className="w-3.5 h-3.5 text-teal-500 flex-shrink-0" />
-                  <span className="font-medium underline decoration-teal-200 underline-offset-4 hover:decoration-teal-500">{row.city}</span>
-                </Link>
-              </td>
-              <td className="px-4 py-3 text-right text-slate-900">{formatCurrency(row.min)}</td>
-              <td className="px-4 py-3 text-right font-semibold text-teal-700">{formatCurrency(row.max)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function FAQItem({ question, answer }: { question: string; answer: string }) {
-  return (
-    <details className="group border border-slate-200 rounded-xl overflow-hidden">
-      <summary className="flex items-center justify-between gap-4 cursor-pointer px-5 py-4 bg-white hover:bg-slate-50 transition-colors list-none">
-        <span className="font-medium text-slate-900 text-sm leading-snug">{question}</span>
-        <ChevronDown className="w-4 h-4 text-slate-400 flex-shrink-0 group-open:rotate-180 transition-transform duration-200" />
-      </summary>
-      <div className="px-5 py-4 bg-slate-50 text-sm text-slate-600 leading-relaxed border-t border-slate-200">
-        {answer}
-      </div>
-    </details>
-  );
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
   const { slug: slugArray, lang } = await params;
@@ -679,4 +537,5 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
 
