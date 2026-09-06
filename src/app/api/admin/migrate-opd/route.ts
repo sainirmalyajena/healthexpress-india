@@ -67,8 +67,10 @@ export async function GET() {
           });
         }
       } else {
+        const referenceId = `HE-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
         await prisma.lead.create({
           data: {
+            referenceId,
             fullName: name,
             phone: phone,
             status: 'OPD_SCHEDULED',
