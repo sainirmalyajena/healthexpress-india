@@ -78,22 +78,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const minCost = formatCurrency(surgery.costRangeMin);
   const maxCost = formatCurrency(surgery.costRangeMax);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
-  const canonical = \\/\/surgeries/\\;
+  const canonical = `${baseUrl}/${lang}/surgeries/${slug}`;
 
   return {
-    title: \\ Cost in India - \ to \ | HealthExpress\,
-    description: surgery.metaDescription || \\ surgery cost in India ranges from \ to \. \\,
+    title: `${surgery.name} Cost in India - ${minCost} to ${maxCost} | HealthExpress`,
+    description: surgery.metaDescription || `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
     alternates: {
       canonical: canonical,
       languages: {
-        'en-IN': \\/en/surgeries/\\,
-        'hi-IN': \\/hi/surgeries/\\,
-        'bn-IN': \\/bn/surgeries/\\,
+        'en-IN': `${baseUrl}/en/surgeries/${slug}`,
+        'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
+        'bn-IN': `${baseUrl}/bn/surgeries/${slug}`,
       },
     },
   };
 }
-
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
   const { slug: slugArray, lang } = await params;
@@ -571,4 +570,5 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
     </div>
   );
 }
+
 
