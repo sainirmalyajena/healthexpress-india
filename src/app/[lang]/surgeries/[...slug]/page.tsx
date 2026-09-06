@@ -96,6 +96,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 
 export default async function SurgeryDetailPage({ params }: PageProps) {
+  try {
   const { slug: slugArray, lang } = await params;
   const isCityRoute = slugArray.length === 2;
   const cityParam = isCityRoute ? slugArray[0] : null;
@@ -570,7 +571,7 @@ export default async function SurgeryDetailPage({ params }: PageProps) {
       </div>
     </div>
   );
+  } catch (e: any) {
+    return <div style={{padding: '50px', fontSize: '24px', color: 'red'}}>DEBUG ERROR: {e.message}<br/><pre>{e.stack}</pre></div>;
+  }
 }
-
-
-
