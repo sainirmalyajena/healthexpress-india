@@ -1,0 +1,30 @@
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug: slugArray, lang } = await params;
+  const isCityRoute = slugArray.length === 2;
+  const cityParam = isCityRoute ? slugArray[0] : null;
+  const slug = isCityRoute ? slugArray[1] : slugArray[0];
+  const cityName = cityParam ? cityParam.charAt(0).toUpperCase() + cityParam.slice(1) : null;
+  
+  const surgery = await getSurgery(slug, cityName);
+  if (!surgery) return { title: 'Surgery Not Found' };
+  
+  const minCost = formatCurrency(surgery.costRangeMin);
+  const maxCost = formatCurrency(surgery.costRangeMax);
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+  const canonical = `${baseUrl}/${lang}/surgeries/${slug}`;
+
+  return {
+    title: `${surgery.name} Cost in India - ${minCost} to ${maxCost} | HealthExpress`,
+    description: surgery.metaDescription || `${surgery.name} surgery cost in India ranges from ${minCost} to ${maxCost}. ${surgery.overview.substring(0, 120)}`,
+    alternates: {
+      canonical: canonical,
+      languages: {
+        'en-IN': `${baseUrl}/en/surgeries/${slug}`,
+        'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
+        'bn-IN': `${baseUrl}/bn/surgeries/${slug}`,
+      },
+    },
+  };
+}

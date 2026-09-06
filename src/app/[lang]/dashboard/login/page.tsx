@@ -94,11 +94,6 @@ export default function AdminLoginPage() {
                             Sign In
                         </Button>
                     </form>
-
-                    <div className="mt-6 text-center text-sm text-slate-500">
-                        <p>Credentials updated for security:</p>
-                        <p className="font-mono text-xs mt-1 text-slate-800 font-bold">admin@healthexpress.in / HealthExpress@2026</p>
-                    </div>
                 </div>
             </div>
         </div>

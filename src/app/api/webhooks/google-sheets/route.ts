@@ -36,7 +36,27 @@ export async function POST(req: NextRequest) {
             if (surgery) surgeryId = surgery.id;
         }
 
+        
+        // Check for duplicate by phone
+        const existingLead = await prisma.lead.findFirst({
+            where: { phone }
+        });
+
+        if (existingLead) {
+            // Update existing lead instead of creating duplicate
+            await prisma.lead.update({
+                where: { id: existingLead.id },
+                data: {
+                    description: (existingLead.description ? existingLead.description + '
+
+' : '') + '[Duplicate Google Sheets Import]'
+                }
+            });
+            return NextResponse.json({ success: true, message: 'Duplicate lead updated', referenceId: existingLead.referenceId });
+        }
+
         const newLead = await prisma.lead.create({
+
             data: {
                 fullName,
                 phone,

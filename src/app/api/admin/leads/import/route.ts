@@ -55,7 +55,18 @@ export async function POST(req: NextRequest) {
                 }
             }
 
+            
+            // Check for duplicate
+            const existingLead = await prisma.lead.findFirst({
+                where: { phone: cleanPhone }
+            });
+            if (existingLead) {
+                skippedCount++;
+                continue;
+            }
+
             await prisma.lead.create({
+
                 data: {
                     fullName: rawFullName,
                     phone: cleanPhone,
