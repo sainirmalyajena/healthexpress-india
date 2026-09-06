@@ -11,6 +11,7 @@ import { CSVUploader } from '@/components/dashboard/CSVUploader';
 export const dynamic = 'force-dynamic';
 
 interface SearchParams {
+    query?: string;
     status?: string;
     assignedUserId?: string;
     surgery?: string;
@@ -44,6 +45,15 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
         } else {
             where.assignedUserId = searchParams.assignedUserId;
         }
+    }
+
+    
+    if (searchParams.query) {
+        where.OR = [
+            { phone: { contains: searchParams.query, mode: 'insensitive' } },
+            { fullName: { contains: searchParams.query, mode: 'insensitive' } },
+            { referenceId: { contains: searchParams.query, mode: 'insensitive' } }
+        ];
     }
 
     if (searchParams.city) {
@@ -135,7 +145,18 @@ export default async function AdminLeadsPage({
 
                     {/* Filters */}
                     <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-100">
-                        <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                        <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Search</label>
+                                <input
+                                    type="text"
+                                    name="query"
+                                    placeholder="Phone, Name, or ID"
+                                    defaultValue={searchParamsData.query || ''}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                />
+                            </div>
+
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Status</label>
                                 <select
