@@ -23,7 +23,7 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
     
     const overdueFollowUps = leads.filter(l => 
         l.followUpDate && 
-        new Date(l.followUpDate) < startOfToday &&
+        new Date(l.followUpDate) < now &&
         !['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED'].includes(l.status)
     );
 
@@ -45,6 +45,14 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
         <div className="space-y-8">
             {/* KPI Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                
+                <div className="bg-teal-50 p-4 rounded-xl border border-teal-100">
+                    <h3 className="text-teal-800 text-sm font-bold uppercase tracking-wider">OPDs Booked (Today)</h3>
+                    <p className="text-3xl font-black text-teal-600 mt-2">
+                        {leads.filter(l => l.status === 'OPD_SCHEDULED' && new Date(l.updatedAt) >= startOfToday).length}
+                    </p>
+                </div>
+
                 <div className="bg-red-50 p-4 rounded-xl border border-red-100">
                     <h3 className="text-red-800 text-sm font-bold uppercase tracking-wider">Overdue</h3>
                     <p className="text-3xl font-black text-red-600 mt-2">{overdueFollowUps.length}</p>

@@ -55,8 +55,14 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
         return new Date(dateObj).toISOString().split('T')[0];
     };
 
-    const [opdDate, setOpdDate] = useState(formatDateForInput(lead.opdDate));
-    const [followUpDate, setFollowUpDate] = useState(formatDateForInput(lead.followUpDate));
+    
+    const formatDateTimeForInput = (dateObj?: Date | null) => {
+        if (!dateObj) return '';
+        const d = new Date(dateObj);
+        return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16);
+    };
+const [opdDate, setOpdDate] = useState(formatDateForInput(lead.opdDate));
+    const [followUpDate, setFollowUpDate] = useState(formatDateTimeForInput(lead.followUpDate));
 
     const handleSave = async () => {
         setSaving(true);
@@ -168,7 +174,7 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date</label>
                             <input
-                                type="date"
+                                type="datetime-local"
                                 value={followUpDate}
                                 onChange={e => setFollowUpDate(e.target.value)}
                                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
