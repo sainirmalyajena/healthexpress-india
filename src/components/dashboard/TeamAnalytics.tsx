@@ -84,6 +84,18 @@ function getActionEmoji(actionType: string): string {
     }
 }
 
+
+const getTimeAgo = (dateStr: string | null) => {
+    if (!dateStr) return 'Never';
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+};
+
 export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps) {
     const [activeTab, setActiveTab] = useState<'team' | 'feed'>('team');
 
@@ -128,7 +140,7 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
                         activeTab === 'feed' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
                     }`}
                 >
-                    ?? Live Activity Feed
+                    ? Live Activity Feed
                 </button>
             </div>
 
@@ -160,7 +172,7 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
                                                 online ? 'bg-green-50 text-green-700' : 'bg-slate-100 text-slate-500'
                                             }`}>
                                                 <span className={`w-2 h-2 rounded-full ${online ? 'bg-green-500 animate-pulse' : 'bg-slate-400'}`} />
-                                                {online ? 'Online' : 'Offline'}
+                                                {online ? 'Online' : `Offline (${getTimeAgo(member.lastActiveAt)})`}
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 text-center text-sm font-medium text-slate-700">{member.totalLeads}</td>
