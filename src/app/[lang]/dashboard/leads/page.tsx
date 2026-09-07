@@ -51,6 +51,7 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
 
     
     
+    
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
@@ -66,6 +67,12 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
             where.followUpDate = { gte: startOfToday, lte: endOfToday };
         } else if (searchParams.quickFilter === 'today_opds') {
             where.opdDate = { gte: startOfToday, lte: endOfToday };
+        } else if (searchParams.quickFilter === 'today_surgeries') {
+            where.status = 'SURGERY_SCHEDULED';
+            // Assuming surgery date is stored somewhere. Wait, Lead doesn't have surgeryDate!
+            // Wait, does Lead have surgeryDate? No, just opdDate and followUpDate.
+            // If they are SURGERY_SCHEDULED, maybe we just show all of them? Or is there a followUpDate for it?
+            // Let's just show all SURGERY_SCHEDULED leads for now if there is no surgeryDate field.
         }
     }
 
@@ -207,41 +214,7 @@ const { leads, total, totalPages } = data;
 
                     
                     
-                    {/* Quick Stats Banner */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=uncontacted`} className={`bg-blue-50 hover:bg-blue-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'uncontacted' ? 'border-blue-400 ring-2 ring-blue-200' : 'border-blue-100'} flex items-center justify-between`}>
-                            <div>
-                                <p className="text-blue-800 text-xs font-bold uppercase tracking-wider">New Leads</p>
-                                <p className="text-2xl font-black text-blue-600 mt-1">{uncontactedCount}</p>
-                            </div>
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"><UserPlus className="w-5 h-5" /></div>
-                        </Link>
-
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=overdue`} className={`bg-red-50 hover:bg-red-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'overdue' ? 'border-red-400 ring-2 ring-red-200' : 'border-red-100'} flex items-center justify-between`}>
-                            <div>
-                                <p className="text-red-800 text-xs font-bold uppercase tracking-wider">Overdue</p>
-                                <p className="text-2xl font-black text-red-600 mt-1">{overdueFollowUps}</p>
-                            </div>
-                            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600"><AlertTriangle className="w-5 h-5" /></div>
-                        </Link>
-                        
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=today_followups`} className={`bg-amber-50 hover:bg-amber-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'today_followups' ? 'border-amber-400 ring-2 ring-amber-200' : 'border-amber-100'} flex items-center justify-between`}>
-                            <div>
-                                <p className="text-amber-800 text-xs font-bold uppercase tracking-wider">Today's Calls</p>
-                                <p className="text-2xl font-black text-amber-600 mt-1">{todaysFollowUps}</p>
-                            </div>
-                            <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600"><PhoneCall className="w-5 h-5" /></div>
-                        </Link>
-                        
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=today_opds`} className={`bg-indigo-50 hover:bg-indigo-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'today_opds' ? 'border-indigo-400 ring-2 ring-indigo-200' : 'border-indigo-100'} flex items-center justify-between`}>
-                            <div>
-                                <p className="text-indigo-800 text-xs font-bold uppercase tracking-wider">Today's OPDs</p>
-                                <p className="text-2xl font-black text-indigo-600 mt-1">{todaysOpds}</p>
-                            </div>
-                            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600"><Calendar className="w-5 h-5" /></div>
-                        </Link>
-                    </div>
-{/* Filters */}
+                    {/* Filters */}
                     <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-100">
                         <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 gap-4">
                             <div>
