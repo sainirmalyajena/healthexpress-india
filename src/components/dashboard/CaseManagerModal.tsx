@@ -29,6 +29,7 @@ interface Lead {
 }
 
 interface CaseManagerModalProps {
+    onUpdate?: (id: string, data: any) => void;
     lead: Lead;
     hospitals: Hospital[];
     teamMembers: { id: string, name: string }[];

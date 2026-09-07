@@ -1,47 +1,56 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
+import { useState } from 'react';
 
 interface LeadStatusSelectProps {
     leadId: string;
     currentStatus: string;
     statuses: string[];
+    onUpdate?: (newStatus: string) => void;
 }
 
-export default function LeadStatusSelect({ leadId, currentStatus, statuses }: LeadStatusSelectProps) {
+export default function LeadStatusSelect({ leadId, currentStatus, statuses, onUpdate }: LeadStatusSelectProps) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
+    const [status, setStatus] = useState(currentStatus);
+    const [isUpdating, setIsUpdating] = useState(false);
 
-    const handleChange = async (newStatus: string) => {
+    const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newStatus = e.target.value;
         if (!newStatus) return;
 
+        // Optimistic UI Update
+        setStatus(newStatus);
+        if (onUpdate) onUpdate(newStatus);
+
+        setIsUpdating(true);
         try {
-            const response = await fetch(`/api/dashboard/leads/${leadId}`, {
+            await fetch(`/api/dashboard/leads/${leadId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus }),
             });
-
-            if (response.ok) {
-                startTransition(() => {
-                    router.refresh();
-                });
-            }
+            router.refresh();
         } catch (error) {
-            console.error('Failed to update status', error);
+            console.error(error);
+        } finally {
+            setIsUpdating(false);
         }
     };
 
     return (
         <select
-            defaultValue={currentStatus}
-            onChange={(e) => handleChange(e.target.value)}
-            disabled={isPending}
-            className="text-xs border border-slate-200 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-teal-500 disabled:opacity-50"
+            value={status}
+            onChange={handleChange}
+            disabled={isUpdating}
+            className={`text-xs font-semibold rounded-full px-3 py-1 bg-slate-100 border-none cursor-pointer hover:bg-slate-200 transition-colors ${
+                isUpdating ? 'opacity-50' : ''
+            }`}
         >
-            {statuses.map((status) => (
-                <option key={status} value={status}>{status}</option>
+            {statuses.map((s) => (
+                <option key={s} value={s}>
+                    {s.replace(/_/g, ' ')}
+                </option>
             ))}
         </select>
     );

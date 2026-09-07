@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getStatusColor } from '@/lib/utils';
 import LeadStatusSelect from './LeadStatusSelect';
@@ -44,6 +44,9 @@ interface LeadsTableProps {
 }
 
 export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: LeadsTableProps) {
+    const [localLeads, setLocalLeads] = useState<Lead[]>(leads);
+    useEffect(() => { setLocalLeads(leads); }, [leads]);
+
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
     const [callLead, setCallLead] = useState<Lead | null>(null);
 
@@ -52,9 +55,18 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
     const [bulkAssignUser, setBulkAssignUser] = useState<string>('');
     const [isBulkAssigning, setIsBulkAssigning] = useState(false);
 
+    
+    const handleStatusUpdate = (id: string, newStatus: string) => {
+        setLocalLeads(prev => prev.map(l => l.id === id ? { ...l, status: newStatus } : l));
+    };
+
+    const handleModalUpdate = (id: string, data: any) => {
+        setLocalLeads(prev => prev.map(l => l.id === id ? { ...l, ...data } : l));
+    };
+
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
-            setSelectedLeads(leads.map(l => l.id));
+            setSelectedLeads(localLeads.map(l => l.id));
         } else {
             setSelectedLeads([]);
         }
@@ -138,14 +150,14 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {leads.length === 0 ? (
+                            {localLeads.length === 0 ? (
                                 <tr>
                                     <td colSpan={8} className="px-4 py-8 text-center text-slate-500">
                                         No leads found. Adjust your filters or wait for new inquiries.
                                     </td>
                                 </tr>
                             ) : (
-                                leads.map((lead) => (
+                                localLeads.map((lead) => (
                                     <tr key={lead.id} className={`transition-colors ${selectedLeads.includes(lead.id) ? 'bg-teal-50/30' : 'hover:bg-slate-50'}`}>
                                         <td className="px-4 py-3">
                                             <input 
