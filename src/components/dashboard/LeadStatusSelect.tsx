@@ -29,7 +29,7 @@ export default function LeadStatusSelect({ leadId, currentStatus, statuses, onUp
             body: JSON.stringify({ status: newStatus }),
         }).then(() => {
             // Silently update Next.js cache in the background
-            router.refresh();
+            // router.refresh() removed for ultimate speed
         }).catch((err) => {
             console.error("Failed to update status in background", err);
             // Revert on failure
