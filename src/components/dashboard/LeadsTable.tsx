@@ -128,7 +128,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                         onChange={handleSelectAll}
                                     />
                                 </th>
-                                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Reference</th>
+                                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date Added</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Patient</th>
                                 <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Surgery</th>
                                 <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">City</th>
@@ -156,7 +156,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                             />
                                         </td>
                                         <td className="hidden md:table-cell px-4 py-3">
-                                            <span className="font-mono text-xs text-slate-600">{lead.referenceId}</span>
+                                            <span className="text-xs text-slate-600 font-medium whitespace-nowrap">{new Date(lead.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}</span>
                                         </td>
                                         <td className="px-4 py-3">
                                             <div>
