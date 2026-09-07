@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { Activity, AlertTriangle, PhoneCall, Calendar, UserPlus } from 'lucide-react';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus, Prisma } from '@/generated/prisma';
@@ -11,6 +12,7 @@ import { CSVUploader } from '@/components/dashboard/CSVUploader';
 export const dynamic = 'force-dynamic';
 
 interface SearchParams {
+    quickFilter?: string;
     query?: string;
     status?: string;
     assignedUserId?: string;
@@ -48,6 +50,25 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
     }
 
     
+    
+    const now = new Date();
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+    if (searchParams.quickFilter) {
+        if (searchParams.quickFilter === 'uncontacted') {
+            where.status = 'NEW';
+        } else if (searchParams.quickFilter === 'overdue') {
+            where.status = { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] };
+            where.followUpDate = { lt: now };
+        } else if (searchParams.quickFilter === 'today_followups') {
+            where.status = { notIn: ['CLOSED', 'LOST'] };
+            where.followUpDate = { gte: startOfToday, lte: endOfToday };
+        } else if (searchParams.quickFilter === 'today_opds') {
+            where.opdDate = { gte: startOfToday, lte: endOfToday };
+        }
+    }
+
     if (searchParams.query) {
         where.OR = [
             { phone: { contains: searchParams.query, mode: 'insensitive' } },
@@ -129,24 +150,21 @@ export default async function AdminLeadsPage({
     }
 
     
-    let opdsBookedToday = 0;
+    
+    let uncontactedCount = 0;
     let overdueFollowUps = 0;
     let todaysFollowUps = 0;
+    let todaysOpds = 0;
 
     if (session) {
         const now = new Date();
         const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-        // Calculate stats for the user (or team if admin)
-        const whereClause: Prisma.LeadWhereInput = session.role === 'team' ? { assignedUserId: session.adminId } : {};
+        const whereClause = session.role === 'team' ? { assignedUserId: session.adminId } : {};
         
-        opdsBookedToday = await prisma.lead.count({
-            where: {
-                ...whereClause,
-                status: 'OPD_SCHEDULED',
-                updatedAt: { gte: startOfToday }
-            }
+        uncontactedCount = await prisma.lead.count({
+            where: { ...whereClause, status: 'NEW' }
         });
 
         overdueFollowUps = await prisma.lead.count({
@@ -164,9 +182,15 @@ export default async function AdminLeadsPage({
                 followUpDate: { gte: startOfToday, lte: endOfToday }
             }
         });
+        
+        todaysOpds = await prisma.lead.count({
+            where: {
+                ...whereClause,
+                opdDate: { gte: startOfToday, lte: endOfToday }
+            }
+        });
     }
-
-    const { leads, total, totalPages } = data;
+const { leads, total, totalPages } = data;
     const currentPage = parseInt(searchParamsData.page || '1');
 
     return (
@@ -182,33 +206,42 @@ export default async function AdminLeadsPage({
                     </div>
 
                     
+                    
                     {/* Quick Stats Banner */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <div className="bg-teal-50 rounded-xl p-4 border border-teal-100 flex items-center justify-between">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <Link href={`/${lang}/dashboard/leads?quickFilter=uncontacted`} className={`bg-blue-50 hover:bg-blue-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'uncontacted' ? 'border-blue-400 ring-2 ring-blue-200' : 'border-blue-100'} flex items-center justify-between`}>
                             <div>
-                                <p className="text-teal-800 text-xs font-bold uppercase tracking-wider">OPDs Booked (Today)</p>
-                                <p className="text-2xl font-black text-teal-600 mt-1">{opdsBookedToday}</p>
+                                <p className="text-blue-800 text-xs font-bold uppercase tracking-wider">New Leads</p>
+                                <p className="text-2xl font-black text-blue-600 mt-1">{uncontactedCount}</p>
                             </div>
-                            <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center text-teal-600 text-xl">??</div>
-                        </div>
-                        <div className="bg-red-50 rounded-xl p-4 border border-red-100 flex items-center justify-between">
+                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"><UserPlus className="w-5 h-5" /></div>
+                        </Link>
+
+                        <Link href={`/${lang}/dashboard/leads?quickFilter=overdue`} className={`bg-red-50 hover:bg-red-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'overdue' ? 'border-red-400 ring-2 ring-red-200' : 'border-red-100'} flex items-center justify-between`}>
                             <div>
-                                <p className="text-red-800 text-xs font-bold uppercase tracking-wider">Overdue Follow-ups</p>
+                                <p className="text-red-800 text-xs font-bold uppercase tracking-wider">Overdue</p>
                                 <p className="text-2xl font-black text-red-600 mt-1">{overdueFollowUps}</p>
                             </div>
-                            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 text-xl">??</div>
-                        </div>
-                        <div className="bg-amber-50 rounded-xl p-4 border border-amber-100 flex items-center justify-between">
+                            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600"><AlertTriangle className="w-5 h-5" /></div>
+                        </Link>
+                        
+                        <Link href={`/${lang}/dashboard/leads?quickFilter=today_followups`} className={`bg-amber-50 hover:bg-amber-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'today_followups' ? 'border-amber-400 ring-2 ring-amber-200' : 'border-amber-100'} flex items-center justify-between`}>
                             <div>
-                                <p className="text-amber-800 text-xs font-bold uppercase tracking-wider">Today's Follow-ups</p>
+                                <p className="text-amber-800 text-xs font-bold uppercase tracking-wider">Today's Calls</p>
                                 <p className="text-2xl font-black text-amber-600 mt-1">{todaysFollowUps}</p>
                             </div>
-                            <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 text-xl">??</div>
-                        </div>
+                            <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-600"><PhoneCall className="w-5 h-5" /></div>
+                        </Link>
+                        
+                        <Link href={`/${lang}/dashboard/leads?quickFilter=today_opds`} className={`bg-indigo-50 hover:bg-indigo-100 transition-colors rounded-xl p-4 border ${searchParamsData.quickFilter === 'today_opds' ? 'border-indigo-400 ring-2 ring-indigo-200' : 'border-indigo-100'} flex items-center justify-between`}>
+                            <div>
+                                <p className="text-indigo-800 text-xs font-bold uppercase tracking-wider">Today's OPDs</p>
+                                <p className="text-2xl font-black text-indigo-600 mt-1">{todaysOpds}</p>
+                            </div>
+                            <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600"><Calendar className="w-5 h-5" /></div>
+                        </Link>
                     </div>
-
-
-                    {/* Filters */}
+{/* Filters */}
                     <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-100">
                         <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 gap-4">
                             <div>
