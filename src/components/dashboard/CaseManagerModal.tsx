@@ -61,7 +61,7 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
         const d = new Date(dateObj);
         return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16);
     };
-const [opdDate, setOpdDate] = useState(formatDateForInput(lead.opdDate));
+const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
     const [followUpDate, setFollowUpDate] = useState(formatDateTimeForInput(lead.followUpDate));
 
     const handleSave = async () => {
@@ -132,10 +132,13 @@ const [opdDate, setOpdDate] = useState(formatDateForInput(lead.opdDate));
                             >
                                 <option value="NEW">New</option>
                                 <option value="CONTACTED">Contacted</option>
+                                                                <option value="FOLLOW_UP">Follow Up</option>
                                 <option value="OPD_SCHEDULED">OPD Scheduled</option>
                                 <option value="OPD_DONE">OPD Done</option>
+                                <option value="OPD_RESCHEDULE">OPD Reschedule</option>
                                 <option value="SURGERY_SCHEDULED">Surgery Scheduled</option>
                                 <option value="SURGERY_DONE">Surgery Done</option>
+                                <option value="SURGERY_RESCHEDULE">Surgery Reschedule</option>
                                 <option value="LOST">Lost</option>
                             </select>
                         </div>
@@ -183,7 +186,7 @@ const [opdDate, setOpdDate] = useState(formatDateForInput(lead.opdDate));
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">OPD Date</label>
                             <input
-                                type="date"
+                                type="datetime-local"
                                 value={opdDate}
                                 onChange={e => setOpdDate(e.target.value)}
                                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
