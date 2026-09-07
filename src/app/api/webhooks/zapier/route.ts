@@ -88,6 +88,18 @@ export async function POST(request: NextRequest) {
             }
         });
 
+        if (assignedUserId) {
+            await prisma.notification.create({
+                data: {
+                    userId: assignedUserId,
+                    title: 'New Lead Assigned ??',
+                    message: `${name} (${cleanedPhone}) from ${source} has been assigned to you.`,
+                    type: 'LEAD_ASSIGNED',
+                    link: `/en/dashboard/leads`
+                }
+            });
+        }
+
         return NextResponse.json({ success: true, id: newLead.id, referenceId });
 
     } catch (error) {

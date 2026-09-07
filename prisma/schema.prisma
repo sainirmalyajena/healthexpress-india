@@ -106,6 +106,7 @@ model Lead {
   feedback       String?
   assignedUserId String?
   followUpDate   DateTime?
+  followUpNotified Boolean @default(false)
   firstContactedAt DateTime?
   documents      Document[]
   activityLogs   ActivityLog[]
@@ -140,6 +141,7 @@ model User {
   dailyCallQuota Int           @default(50)
   assignedLeads  Lead[]
   activityLogs   ActivityLog[]
+    notifications  Notification[]
 }
 
 model PartnerRequest {
@@ -278,4 +280,17 @@ enum ActivityType {
   NOTE_ADDED
   LEAD_ASSIGNED
   LOGIN
+}
+
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  type      String   @default("INFO")
+  link      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
