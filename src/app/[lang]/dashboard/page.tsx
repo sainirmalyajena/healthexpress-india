@@ -78,12 +78,12 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
 
     return (
         <DashboardShell userName={session.name || 'Admin'} userRole={session.role}>
-            <div className="p-8 max-w-7xl mx-auto space-y-8 bg-slate-50 min-h-full">
+            <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 bg-slate-50 min-h-full">
                 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-black text-slate-900 tracking-tight">Command Center</h1>
+                        <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Command Center</h1>
                         <p className="text-slate-500 mt-1">Here is what's happening today across your clinic.</p>
                     </div>
                     <Link href={`/${lang}/dashboard/leads`} className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm transition-all flex items-center gap-2">
@@ -102,7 +102,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                     <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><AlertTriangle className="w-6 h-6 text-white" /></div>
                                     <ChevronRight className="w-5 h-5 text-red-200 group-hover:translate-x-1 transition-transform" />
                                 </div>
-                                <h3 className="text-5xl font-black mb-1">{overdueFollowUps}</h3>
+                                <h3 className="text-4xl md:text-5xl font-black mb-1">{overdueFollowUps}</h3>
                                 <p className="font-semibold text-red-50 tracking-wide text-sm">Overdue Follow-ups</p>
                             </div>
                             <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-red-400 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
@@ -114,7 +114,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                     <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><PhoneCall className="w-6 h-6 text-white" /></div>
                                     <ChevronRight className="w-5 h-5 text-amber-100 group-hover:translate-x-1 transition-transform" />
                                 </div>
-                                <h3 className="text-5xl font-black mb-1">{todaysFollowUps}</h3>
+                                <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysFollowUps}</h3>
                                 <p className="font-semibold text-amber-50 tracking-wide text-sm">Today's Scheduled Calls</p>
                             </div>
                             <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-300 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
@@ -126,7 +126,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                     <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Calendar className="w-6 h-6 text-white" /></div>
                                     <ChevronRight className="w-5 h-5 text-indigo-200 group-hover:translate-x-1 transition-transform" />
                                 </div>
-                                <h3 className="text-5xl font-black mb-1">{todaysOpds}</h3>
+                                <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysOpds}</h3>
                                 <p className="font-semibold text-indigo-50 tracking-wide text-sm">OPDs Arriving Today</p>
                             </div>
                         </Link>
@@ -137,7 +137,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                     <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><UserPlus className="w-6 h-6 text-white" /></div>
                                     <ChevronRight className="w-5 h-5 text-blue-200 group-hover:translate-x-1 transition-transform" />
                                 </div>
-                                <h3 className="text-5xl font-black mb-1">{newLeads}</h3>
+                                <h3 className="text-4xl md:text-5xl font-black mb-1">{newLeads}</h3>
                                 <p className="font-semibold text-blue-50 tracking-wide text-sm">New / Uncontacted Leads</p>
                             </div>
                         </Link>

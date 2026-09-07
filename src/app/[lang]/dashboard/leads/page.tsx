@@ -203,7 +203,7 @@ const { leads, total, totalPages } = data;
     return (
         <div className="min-h-screen bg-slate-50">
             <DashboardShell userName={session.name || 'Admin'} userRole={session.role}>
-                <div className="p-8">
+                <div className="p-4 md:p-8">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
