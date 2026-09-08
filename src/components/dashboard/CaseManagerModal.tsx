@@ -134,6 +134,8 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 <option value="NEW">New</option>
                                 <option value="CONTACTED">Contacted</option>
                                                                 <option value="FOLLOW_UP">Follow Up</option>
+                                <option value="CALL_BACK">Call Back</option>
+                                <option value="DNP">DNP (Did Not Pick Up)</option>
                                 <option value="OPD_SCHEDULED">OPD Scheduled</option>
                                 <option value="OPD_DONE">OPD Done</option>
                                 <option value="OPD_RESCHEDULE">OPD Reschedule</option>
@@ -141,6 +143,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 <option value="SURGERY_DONE">Surgery Done</option>
                                 <option value="SURGERY_RESCHEDULE">Surgery Reschedule</option>
                                 <option value="LOST">Lost</option>
+                                <option value="CLOSED">Closed</option>
                             </select>
                         </div>
                         <div>
