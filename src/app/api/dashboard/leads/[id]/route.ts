@@ -10,7 +10,7 @@ export async function PATCH(
     const session = await getAdminSession();
 
     if (!session?.adminId) {
-        return NextResponse.json({ error: 'Unauthorized � please log in again' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id } = await props.params;
@@ -35,56 +35,50 @@ export async function PATCH(
     } = body;
 
     try {
-        // Calculate revenue if hospital and cost are provided
-        let discountedCost = null;
-        let revenue = null;
+        let discountedCost = undefined;
+        let revenue = undefined;
 
-        if (originalCost && hospitalId) {
+        if (originalCost !== undefined && hospitalId !== undefined && originalCost && hospitalId) {
             const hospital = await prisma.hospital.findUnique({
                 where: { id: hospitalId }
             });
-
             if (hospital) {
                 const discount = hasCard ? (originalCost * (hospital.discountPercent / 100)) : 0;
                 discountedCost = originalCost - discount;
-                revenue = discountedCost * 0.15; // 15% platform fee
+                revenue = discountedCost * 0.15;
             }
         }
 
-        // Get the old lead to check if status changed or firstContactedAt is missing
         const oldLead = await prisma.lead.findUnique({ where: { id } });
         
-        const dataToUpdate: any = {
-            ...(status && { status: status as LeadStatus }),
-            hospitalId: hospitalId || null,
-            originalCost: originalCost || null,
-            discountedCost,
-            revenue,
-            isEmergency: isEmergency ?? false,
-            hasCard: hasCard ?? false,
-            notes: notes || null,
-            opdDate: opdDate ? new Date(opdDate) : null,
-            followUpDate: followUpDate ? new Date(followUpDate) : null,
-            assignedUserId: assignedUserId || null
-        };
+        const dataToUpdate: any = {};
+        if (status !== undefined) dataToUpdate.status = status as LeadStatus;
+        if (hospitalId !== undefined) dataToUpdate.hospitalId = hospitalId || null;
+        if (originalCost !== undefined) dataToUpdate.originalCost = originalCost || null;
+        if (discountedCost !== undefined) dataToUpdate.discountedCost = discountedCost;
+        if (revenue !== undefined) dataToUpdate.revenue = revenue;
+        if (isEmergency !== undefined) dataToUpdate.isEmergency = isEmergency;
+        if (hasCard !== undefined) dataToUpdate.hasCard = hasCard;
+        if (notes !== undefined) dataToUpdate.notes = notes || null;
+        if (opdDate !== undefined) dataToUpdate.opdDate = opdDate ? new Date(opdDate) : null;
+        if (followUpDate !== undefined) dataToUpdate.followUpDate = followUpDate ? new Date(followUpDate) : null;
+        if (assignedUserId !== undefined) dataToUpdate.assignedUserId = assignedUserId || null;
 
-        // Automatic Activity Logging triggers
         const logsToCreate: any[] = [];
 
-        if (oldLead && status && status !== oldLead.status) {
+        if (oldLead && status !== undefined && status !== oldLead.status) {
             logsToCreate.push({
                 userId: session.adminId,
                 leadId: id,
                 actionType: 'STATUS_CHANGED',
                 details: JSON.stringify({ from: oldLead.status, to: status })
             });
-            // Update first contact if first interaction
             if (!oldLead.firstContactedAt) {
                 dataToUpdate.firstContactedAt = new Date();
             }
         }
 
-        if (oldLead && assignedUserId && assignedUserId !== oldLead.assignedUserId) {
+        if (oldLead && assignedUserId !== undefined && assignedUserId !== oldLead.assignedUserId) {
             logsToCreate.push({
                 userId: session.adminId,
                 leadId: id,
@@ -96,7 +90,7 @@ export async function PATCH(
             }
         }
 
-        if (oldLead && notes && notes !== oldLead.notes) {
+        if (oldLead && notes !== undefined && notes !== oldLead.notes) {
             logsToCreate.push({
                 userId: session.adminId,
                 leadId: id,
@@ -115,10 +109,7 @@ export async function PATCH(
         });
 
         if (logsToCreate.length > 0) {
-            // Write to ActivityLog
-            await prisma.activityLog.createMany({
-                data: logsToCreate
-            });
+            await prisma.activityLog.createMany({ data: logsToCreate });
         }
 
         return NextResponse.json({ success: true, lead: updatedLead });
@@ -128,7 +119,6 @@ export async function PATCH(
     }
 }
 
-// GET /api/dashboard/leads/export � CSV download (id='export' used as route)
 export async function GET(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
