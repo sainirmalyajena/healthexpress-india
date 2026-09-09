@@ -66,6 +66,12 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
     const [followUpDate, setFollowUpDate] = useState(formatDateTimeForInput(lead.followUpDate));
 
     const handleSave = async () => {
+        const noFollowUpNeeded = ['NEW', 'LOST', 'CLOSED'].includes(status);
+        if (!noFollowUpNeeded && !followUpDate) {
+            setError('A Follow-up Date and Time is mandatory when status is ' + status.replace('_', ' ') + '.');
+            return;
+        }
+
         setSaving(true);
         setError('');
         try {
@@ -179,7 +185,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     {/* Dates */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date {!['NEW', 'LOST', 'CLOSED'].includes(status) && <span className="text-red-500">*</span>}</label>
                             <input
                                 type="datetime-local"
                                 value={followUpDate}
