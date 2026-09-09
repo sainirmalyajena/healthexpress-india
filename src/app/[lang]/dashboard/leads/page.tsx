@@ -8,6 +8,7 @@ import LeadsTable from '@/components/dashboard/LeadsTable';
 import DailyProgressBar from '@/components/dashboard/DailyProgressBar';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import { CSVUploader } from '@/components/dashboard/CSVUploader';
+import AddLeadModal from '@/components/dashboard/AddLeadModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -140,6 +141,11 @@ export default async function AdminLeadsPage({
         select: { id: true, name: true, email: true },
         orderBy: { name: 'asc' }
     });
+    
+    const surgeries = await prisma.surgery.findMany({
+        select: { id: true, name: true },
+        orderBy: { name: 'asc' }
+    });
 
     try {
         data = await getLeads(searchParamsData, session.adminId, session.role);
@@ -209,7 +215,10 @@ const { leads, total, totalPages } = data;
                             <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
                             <p className="text-sm text-slate-500">Track and manage patient inquiries from all channels.</p>
                         </div>
-                        {session.role !== 'team' && <CSVUploader teamMembers={teamMembers} />}
+                        <div className="flex gap-3">
+                            <AddLeadModal surgeries={surgeries} />
+                            {session.role !== 'team' && <CSVUploader teamMembers={teamMembers} />}
+                        </div>
                     </div>
 
                     
