@@ -210,15 +210,19 @@ const { leads, total, totalPages } = data;
         <div className="min-h-screen bg-slate-50">
             <DashboardShell userName={session.name || 'Admin'} userRole={session.role}>
                 <div className="p-4 md:p-8">
-                    <div className="flex items-center justify-between mb-8">
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
-                            <p className="text-sm text-slate-500">Track and manage patient inquiries from all channels.</p>
-                        </div>
-                        <div className="flex gap-3">
+                    <div className="flex flex-col gap-6 mb-8">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h1 className="text-2xl font-bold text-slate-900">Leads Management</h1>
+                                <p className="text-sm text-slate-500">Track and manage patient inquiries from all channels.</p>
+                            </div>
                             <AddLeadModal surgeries={surgeries} />
-                            {session.role !== 'team' && <CSVUploader teamMembers={teamMembers} />}
                         </div>
+                        {session.role !== 'team' && (
+                            <div className="w-full max-w-4xl">
+                                <CSVUploader teamMembers={teamMembers} />
+                            </div>
+                        )}
                     </div>
 
                     
