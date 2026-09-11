@@ -161,3 +161,26 @@ export async function GET(
         },
     });
 }
+
+export async function DELETE(
+    request: NextRequest,
+    props: { params: Promise<{ id: string }> }
+) {
+    const session = await getAdminSession();
+    if (!session?.adminId || session.role !== 'admin') {
+        return NextResponse.json({ error: 'Unauthorized. Only admins can delete leads.' }, { status: 401 });
+    }
+
+    const { id } = await props.params;
+
+    try {
+        await prisma.lead.delete({
+            where: { id }
+        });
+
+        return NextResponse.json({ success: true });
+    } catch (error: any) {
+        console.error('Error deleting lead:', error);
+        return NextResponse.json({ error: error.message || 'Failed to delete lead' }, { status: 500 });
+    }
+}

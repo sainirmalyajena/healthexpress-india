@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -55,9 +55,25 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
     const [bulkAssignUser, setBulkAssignUser] = useState<string>('');
     const [isBulkAssigning, setIsBulkAssigning] = useState(false);
 
-    
     const handleStatusUpdate = (id: string, newStatus: string) => {
         setLocalLeads(prev => prev.map(l => l.id === id ? { ...l, status: newStatus } : l));
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!window.confirm('Are you sure you want to permanently delete this lead?')) return;
+        
+        try {
+            const res = await fetch(`/api/dashboard/leads/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                setLocalLeads(prev => prev.filter(l => l.id !== id));
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Failed to delete lead');
+            }
+        } catch (error) {
+            console.error('Failed to delete lead:', error);
+            alert('An error occurred while deleting.');
+        }
     };
 
     const handleModalUpdate = (id: string, data: any) => {
@@ -227,6 +243,13 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                     className="p-1 px-2 text-xs font-bold text-teal-600 bg-teal-50 border border-teal-100 rounded hover:bg-teal-100 transition-all shadow-sm"
                                                 >
                                                     Manage
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(lead.id)}
+                                                    className="p-1 px-2 text-xs font-bold text-red-600 bg-red-50 border border-red-100 rounded hover:bg-red-100 transition-all shadow-sm"
+                                                    title="Delete Lead"
+                                                >
+                                                    Delete
                                                 </button>
                                             </div>
                                         </td>
