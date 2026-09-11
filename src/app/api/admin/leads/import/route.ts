@@ -55,6 +55,15 @@ export async function POST(req: NextRequest) {
                 }
             }
 
+            const existingLead = await prisma.lead.findFirst({
+                where: { phone: cleanPhone }
+            });
+
+            if (existingLead) {
+                // Skip if lead already exists
+                continue;
+            }
+
             await prisma.lead.create({
                 data: {
                     fullName: rawFullName,
