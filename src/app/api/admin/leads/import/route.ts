@@ -19,16 +19,14 @@ export async function POST(req: NextRequest) {
 
         let importedCount = 0;
 
+        // Collect all clean phones from the CSV
+        const validLeadsData = [];
         for (const row of leads) {
-            // Smart mapping for Meta Ads / Google Sheets columns
             const rawFullName = row.full_name || row.fullName || row['Full Name'] || row.Name;
             const rawPhone = row.phone || row.Phone || row['Phone Number'];
-            
             if (!rawFullName || !rawPhone) continue;
 
-            // Meta sometimes prepends 'p:' to phone numbers (e.g. 'p:+919867929432')
             const cleanPhone = String(rawPhone).replace(/^p:/i, '').trim();
-
             const rawCity = row.city || row.City || 'Unknown';
             const notesField = row['Notes '] || row.Notes || row.notes || '';
             const followUpsField = row['Follow ups'] || row['Follow up'] || '';
@@ -46,12 +44,10 @@ export async function POST(req: NextRequest) {
                 if (notesField) combinedDescription += `Notes: ${notesField}`;
             }
 
-            // Parse created_time if available
             let createdAtDate = undefined;
             let rawDate = row.created_time || row.Date || row.created_at || row.createdAt || row.Timestamp || row['Created At'] || row['Date Created'] || row['Submission Date'] || row['date'] || row['time'];
             
             if (!rawDate) {
-                // Dynamically search for any column that looks like a date column
                 const possibleKeys = Object.keys(row).filter(k => {
                     const kl = k.toLowerCase();
                     return kl.includes('date') || kl.includes('time') || kl.includes('created') || kl.includes('submitted');
@@ -63,22 +59,16 @@ export async function POST(req: NextRequest) {
             
             if (rawDate) {
                 let parsedDate = new Date(rawDate);
-                
-                // If invalid date, try fallback formats
                 if (isNaN(parsedDate.getTime()) && typeof rawDate === 'string') {
-                    // Try replacing spaces with 'T' (e.g. 2024-09-11 14:00:00 -> 2024-09-11T14:00:00)
                     let cleanStr = rawDate.trim().replace(' ', 'T');
                     parsedDate = new Date(cleanStr);
-                    
                     if (isNaN(parsedDate.getTime())) {
                         const parts = rawDate.split(/[\s/:-]/);
                         if (parts.length >= 3) {
-                            // Assume DD/MM/YYYY or MM/DD/YYYY based on values
                             const p0 = parseInt(parts[0], 10);
                             const p1 = parseInt(parts[1], 10);
                             const p2 = parseInt(parts[2], 10);
-                            
-                            if (p2 > 2000) { // DD/MM/YYYY or MM/DD/YYYY
+                            if (p2 > 2000) {
                                 const m = p1 > 12 ? p0 : p1;
                                 const d = p1 > 12 ? p1 : p0;
                                 parsedDate = new Date(`${p2}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}T${parts[3] || '00'}:${parts[4] || '00'}:00`);
@@ -86,38 +76,45 @@ export async function POST(req: NextRequest) {
                         }
                     }
                 }
-                
                 if (!isNaN(parsedDate.getTime())) {
                     createdAtDate = parsedDate;
                 }
             }
 
-            const existingLead = await prisma.lead.findFirst({
-                where: { phone: cleanPhone }
+            validLeadsData.push({
+                fullName: rawFullName,
+                phone: cleanPhone,
+                email: row.email || null,
+                city: rawCity,
+                description: combinedDescription.trim(),
+                status: LeadStatus.NEW,
+                sourcePage: 'CSV Import',
+                utmSource: platform || 'csv_upload',
+                utmCampaign: row.campaign_name || null,
+                referenceId: 'CSV-' + Date.now() + '-' + Math.floor(Math.random() * 10000) + '-' + validLeadsData.length,
+                assignedUserId: assignedUserId || null,
+                ...(createdAtDate && { createdAt: createdAtDate })
             });
+        }
 
-            if (existingLead) {
-                // Skip if lead already exists
-                continue;
-            }
+        // Fetch existing phones in one query to avoid sequential reads
+        const phonesToCheck = validLeadsData.map(l => l.phone);
+        const existingRecords = await prisma.lead.findMany({
+            where: { phone: { in: phonesToCheck } },
+            select: { phone: true }
+        });
+        const existingPhonesSet = new Set(existingRecords.map(r => r.phone));
 
-            await prisma.lead.create({
-                data: {
-                    fullName: rawFullName,
-                    phone: cleanPhone,
-                    email: row.email || null,
-                    city: rawCity,
-                    description: combinedDescription.trim(),
-                    status: LeadStatus.NEW,
-                    sourcePage: 'CSV Import',
-                    utmSource: platform || 'csv_upload',
-                    utmCampaign: row.campaign_name || null,
-                    referenceId: 'CSV-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
-                    assignedUserId: assignedUserId || null,
-                    ...(createdAtDate && { createdAt: createdAtDate })
-                }
+        // Filter out duplicates
+        const leadsToCreate = validLeadsData.filter(l => !existingPhonesSet.has(l.phone));
+
+        if (leadsToCreate.length > 0) {
+            // Bulk insert
+            const createResult = await prisma.lead.createMany({
+                data: leadsToCreate,
+                skipDuplicates: true
             });
-            importedCount++;
+            importedCount = createResult.count;
         }
 
         return NextResponse.json({ success: true, count: importedCount });
