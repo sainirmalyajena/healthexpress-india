@@ -109,14 +109,23 @@ export async function POST(req: NextRequest) {
 
         // Filter out duplicates
         const leadsToCreate = validLeadsData.filter(l => !existingPhonesSet.has(l.phone));
+        const leadsToUpdate = validLeadsData.filter(l => existingPhonesSet.has(l.phone) && l.createdAt);
 
         if (leadsToCreate.length > 0) {
-            // Bulk insert
+            // Bulk insert new leads
             const createResult = await prisma.lead.createMany({
                 data: leadsToCreate,
                 skipDuplicates: true
             });
             importedCount = createResult.count;
+        }
+
+        // Bulk update timestamps for existing leads if they have a valid past date
+        for (const l of leadsToUpdate) {
+            await prisma.lead.updateMany({
+                where: { phone: l.phone },
+                data: { createdAt: l.createdAt }
+            });
         }
 
         return NextResponse.json({ success: true, count: importedCount });
