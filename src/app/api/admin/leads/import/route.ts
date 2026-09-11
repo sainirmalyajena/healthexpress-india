@@ -30,15 +30,17 @@ export async function POST(req: NextRequest) {
             const rawCity = row.city || row.City || 'Unknown';
             const notesField = row['Notes '] || row.Notes || row.notes || '';
             const followUpsField = row['Follow ups'] || row['Follow up'] || '';
-            const centrePref = row['which_centre_would_you_prefer?'] || '';
-            const healthIns = row['do_you_have_health_insurance?'] || '';
-            const platform = row.platform || '';
+            const centrePref = row['which_centre_would_you_prefer?'] || row['Preferred Centre'] || '';
+            const healthIns = row['do_you_have_health_insurance?'] || row['Health Insurance'] || '';
+            const platform = row.platform || row.Platform || '';
+            const lasikInterest = row['LASIK Interest'] || '';
             
             let combinedDescription = row.description || 'Imported from CSV';
-            if (notesField || followUpsField || centrePref || healthIns) {
+            if (notesField || followUpsField || centrePref || healthIns || lasikInterest) {
                 combinedDescription = `Imported from CSV.\n`;
                 if (centrePref) combinedDescription += `Centre Preference: ${centrePref}\n`;
                 if (healthIns) combinedDescription += `Health Insurance: ${healthIns}\n`;
+                if (lasikInterest) combinedDescription += `LASIK Interest: ${lasikInterest}\n`;
                 if (platform) combinedDescription += `Platform: ${platform}\n`;
                 if (followUpsField) combinedDescription += `Follow ups: ${followUpsField}\n`;
                 if (notesField) combinedDescription += `Notes: ${notesField}`;
