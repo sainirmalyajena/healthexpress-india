@@ -48,7 +48,18 @@ export async function POST(req: NextRequest) {
 
             // Parse created_time if available
             let createdAtDate = undefined;
-            const rawDate = row.created_time || row.Date || row.created_at || row.createdAt || row.Timestamp || row['Created At'] || row['Date Created'] || row['Submission Date'] || row['date'] || row['time'];
+            let rawDate = row.created_time || row.Date || row.created_at || row.createdAt || row.Timestamp || row['Created At'] || row['Date Created'] || row['Submission Date'] || row['date'] || row['time'];
+            
+            if (!rawDate) {
+                // Dynamically search for any column that looks like a date column
+                const possibleKeys = Object.keys(row).filter(k => {
+                    const kl = k.toLowerCase();
+                    return kl.includes('date') || kl.includes('time') || kl.includes('created') || kl.includes('submitted');
+                });
+                if (possibleKeys.length > 0) {
+                    rawDate = row[possibleKeys[0]];
+                }
+            }
             
             if (rawDate) {
                 let parsedDate = new Date(rawDate);
