@@ -19,6 +19,8 @@ interface SearchParams {
     assignedUserId?: string;
     surgery?: string;
     city?: string;
+    opdDate?: string;
+    followUpDate?: string;
     page?: string;
 }
 
@@ -89,6 +91,24 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
         where.city = {
             contains: searchParams.city
         };
+    }
+
+    if (searchParams.opdDate) {
+        const opdDate = new Date(searchParams.opdDate);
+        if (!isNaN(opdDate.getTime())) {
+            const startOfOpd = new Date(opdDate.getFullYear(), opdDate.getMonth(), opdDate.getDate());
+            const endOfOpd = new Date(opdDate.getFullYear(), opdDate.getMonth(), opdDate.getDate(), 23, 59, 59, 999);
+            where.opdDate = { gte: startOfOpd, lte: endOfOpd };
+        }
+    }
+
+    if (searchParams.followUpDate) {
+        const followDate = new Date(searchParams.followUpDate);
+        if (!isNaN(followDate.getTime())) {
+            const startOfFollow = new Date(followDate.getFullYear(), followDate.getMonth(), followDate.getDate());
+            const endOfFollow = new Date(followDate.getFullYear(), followDate.getMonth(), followDate.getDate(), 23, 59, 59, 999);
+            where.followUpDate = { gte: startOfFollow, lte: endOfFollow };
+        }
     }
 
     const leads = await prisma.lead.findMany({
@@ -229,7 +249,7 @@ const { leads, total, totalPages } = data;
                     
                     {/* Filters */}
                     <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-slate-100">
-                        <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-3 gap-4">
+                        <form action={`/${lang}/dashboard/leads`} method="GET" className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Search</label>
                                 <input
@@ -294,6 +314,26 @@ const { leads, total, totalPages } = data;
                                     name="city"
                                     defaultValue={searchParamsData.city || ''}
                                     placeholder="e.g. Pune"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">OPD Date</label>
+                                <input
+                                    type="date"
+                                    name="opdDate"
+                                    defaultValue={searchParamsData.opdDate || ''}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Follow-up</label>
+                                <input
+                                    type="date"
+                                    name="followUpDate"
+                                    defaultValue={searchParamsData.followUpDate || ''}
                                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>

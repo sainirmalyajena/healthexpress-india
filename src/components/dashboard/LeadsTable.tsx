@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { getStatusColor } from '@/lib/utils';
 import LeadStatusSelect from './LeadStatusSelect';
 import CaseManagerModal from './CaseManagerModal';
-import LogCallModal from './LogCallModal';
 
 interface Lead {
     id: string;
@@ -48,7 +47,6 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
     useEffect(() => { setLocalLeads(leads); }, [leads]);
 
     const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-    const [callLead, setCallLead] = useState<Lead | null>(null);
 
     // Bulk selection state
     const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
@@ -245,12 +243,6 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                     Open
                                                 </Link>
                                                 <button
-                                                    onClick={() => setCallLead(lead)}
-                                                    className="p-1 px-2 text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 rounded hover:bg-indigo-100 transition-all shadow-sm"
-                                                >
-                                                    Call
-                                                </button>
-                                                <button
                                                     onClick={() => setSelectedLead(lead)}
                                                     className="p-1 px-2 text-xs font-bold text-teal-600 bg-teal-50 border border-teal-100 rounded hover:bg-teal-100 transition-all shadow-sm"
                                                 >
@@ -280,15 +272,8 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                     onClose={() => setSelectedLead(null)}
                 />
             )}
-            {callLead && (
-                <LogCallModal 
-                    leadId={callLead.id} 
-                    leadName={callLead.fullName} 
-                    onClose={() => setCallLead(null)} 
-                    onLogged={() => window.location.reload()} 
-                />
-            )}
         </>
     );
 }
+
 
