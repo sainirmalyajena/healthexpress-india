@@ -121,11 +121,18 @@ export async function POST(req: NextRequest) {
         }
 
         // Bulk update timestamps for existing leads if they have a valid past date
-        for (const l of leadsToUpdate) {
-            await prisma.lead.updateMany({
-                where: { phone: l.phone },
-                data: { createdAt: l.createdAt }
-            });
+        if (leadsToUpdate.length > 0) {
+            const updatePromises = leadsToUpdate.map(l => 
+                prisma.lead.updateMany({
+                    where: { phone: l.phone },
+                    data: { createdAt: l.createdAt }
+                })
+            );
+            
+            // Execute all updates in parallel chunks of 50 to avoid overloading the DB
+            for (let i = 0; i < updatePromises.length; i += 50) {
+                await Promise.all(updatePromises.slice(i, i + 50));
+            }
         }
 
         return NextResponse.json({ success: true, count: importedCount });
