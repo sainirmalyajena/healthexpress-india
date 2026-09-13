@@ -237,7 +237,9 @@ enum LeadStatus {
   DNP
   OPD_SCHEDULED
   OPD_DONE
+  RNR_POST_OPD
   SURGERY_SUGGESTED
+  TENTATIVE_IPD_DATE
   PRE_AUTHORIZATION_RAISED
   OPD_RESCHEDULE
   SURGERY_SCHEDULED
@@ -297,4 +299,5 @@ model Notification {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
 

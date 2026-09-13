@@ -158,7 +158,9 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 <option value="DNP">DNP (Did Not Pick Up)</option>
                                 <option value="OPD_SCHEDULED">OPD Scheduled</option>
                                 <option value="OPD_DONE">OPD Done</option>
+                                <option value="RNR_POST_OPD">RNR Post OPD</option>
                                 <option value="SURGERY_SUGGESTED">Surgery Suggested</option>
+                                <option value="TENTATIVE_IPD_DATE">Tentative IPD Date</option>
                                 <option value="PRE_AUTHORIZATION_RAISED">Pre-Authorization Raised</option>
                                 <option value="OPD_RESCHEDULE">OPD Reschedule</option>
                                 <option value="SURGERY_SCHEDULED">Surgery Scheduled</option>
@@ -218,7 +220,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
                             />
                         </div>
-                        {status === 'SURGERY_SCHEDULED' && (
+                        {(status === 'SURGERY_SCHEDULED' || status === 'TENTATIVE_IPD_DATE') && (
                             <div className="col-span-2">
                                 <label className="block text-sm font-bold text-slate-700 mb-1">IPD Date <span className="text-red-500">*</span></label>
                                 <input
