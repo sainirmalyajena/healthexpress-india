@@ -88,6 +88,7 @@ model Lead {
   status         LeadStatus      @default(NEW)
   notes          String?
   opdDate        DateTime?
+  ipdDate        DateTime?
   originalCost   Float?
   discountedCost Float?
   revenue        Float?
@@ -234,14 +235,16 @@ enum LeadStatus {
   FOLLOW_UP
   CALL_BACK
   DNP
-  CLOSED
   OPD_SCHEDULED
   OPD_DONE
+  SURGERY_SUGGESTED
+  PRE_AUTHORIZATION_RAISED
+  OPD_RESCHEDULE
   SURGERY_SCHEDULED
   SURGERY_DONE
-  OPD_RESCHEDULE
   SURGERY_RESCHEDULE
   LOST
+  CLOSED
 }
 
 enum InsuranceOption {
@@ -294,3 +297,4 @@ model Notification {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+

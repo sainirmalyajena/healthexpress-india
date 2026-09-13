@@ -20,6 +20,7 @@ interface SearchParams {
     surgery?: string;
     city?: string;
     opdDate?: string;
+    ipdDate?: string;
     followUpDate?: string;
     page?: string;
 }
@@ -108,6 +109,15 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
             const startOfFollow = new Date(followDate.getFullYear(), followDate.getMonth(), followDate.getDate());
             const endOfFollow = new Date(followDate.getFullYear(), followDate.getMonth(), followDate.getDate(), 23, 59, 59, 999);
             where.followUpDate = { gte: startOfFollow, lte: endOfFollow };
+        }
+    }
+
+    if (searchParams.ipdDate) {
+        const ipdDate = new Date(searchParams.ipdDate);
+        if (!isNaN(ipdDate.getTime())) {
+            const startOfIpd = new Date(ipdDate.getFullYear(), ipdDate.getMonth(), ipdDate.getDate());
+            const endOfIpd = new Date(ipdDate.getFullYear(), ipdDate.getMonth(), ipdDate.getDate(), 23, 59, 59, 999);
+            where.ipdDate = { gte: startOfIpd, lte: endOfIpd };
         }
     }
 
@@ -334,6 +344,16 @@ const { leads, total, totalPages } = data;
                                     type="date"
                                     name="followUpDate"
                                     defaultValue={searchParamsData.followUpDate || ''}
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">IPD Date</label>
+                                <input
+                                    type="date"
+                                    name="ipdDate"
+                                    defaultValue={searchParamsData.ipdDate || ''}
                                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>

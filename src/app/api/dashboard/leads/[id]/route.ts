@@ -30,6 +30,7 @@ export async function PATCH(
         hasCard,
         notes,
         opdDate,
+        ipdDate,
         followUpDate,
         assignedUserId
     } = body;
@@ -61,6 +62,7 @@ export async function PATCH(
         if (hasCard !== undefined) dataToUpdate.hasCard = hasCard;
         if (notes !== undefined) dataToUpdate.notes = notes || null;
         if (opdDate !== undefined) dataToUpdate.opdDate = opdDate ? new Date(opdDate) : null;
+        if (ipdDate !== undefined) dataToUpdate.ipdDate = ipdDate ? new Date(ipdDate) : null;
         if (followUpDate !== undefined) dataToUpdate.followUpDate = followUpDate ? new Date(followUpDate) : null;
         if (assignedUserId !== undefined) dataToUpdate.assignedUserId = assignedUserId || null;
 
