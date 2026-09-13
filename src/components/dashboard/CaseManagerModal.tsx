@@ -159,6 +159,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 <option value="OPD_SCHEDULED">OPD Scheduled</option>
                                 <option value="OPD_DONE">OPD Done</option>
                                 <option value="RNR_POST_OPD">RNR Post OPD</option>
+                                <option value="MEDICAL_MANAGEMENT">Medical Management</option>
                                 <option value="SURGERY_SUGGESTED">Surgery Suggested</option>
                                 <option value="TENTATIVE_IPD_DATE">Tentative IPD Date</option>
                                 <option value="PRE_AUTHORIZATION_RAISED">Pre-Authorization Raised</option>
