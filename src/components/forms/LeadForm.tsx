@@ -225,11 +225,6 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
             <input type="hidden" {...register('surgeryId')} />
             <input type="hidden" {...register('surgeryName')} />
 
-            {/* Honeypot field for spam protection */}
-            <div className="hidden" aria-hidden="true">
-                <input type="text" {...register('website')} tabIndex={-1} autoComplete="off" />
-            </div>
-
             <div className="grid grid-cols-2 gap-2.5">
                 <Input
                     placeholder="Full Name *"

@@ -31,8 +31,6 @@ export const leadFormSchema = z.object({
     consent: z.boolean().refine((val) => val === true, {
         message: 'You must agree to be contacted',
     }),
-    // Honeypot field - should be empty
-    website: z.string().max(0, 'Spam detected').optional(),
 });
 
 export type LeadFormData = z.infer<typeof leadFormSchema>;

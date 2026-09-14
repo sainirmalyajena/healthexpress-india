@@ -73,11 +73,6 @@ export async function POST(request: NextRequest) {
 
         const data = parsed.data;
 
-        // Honeypot
-        if (data.website && data.website.length > 0) {
-            return NextResponse.json({ success: true, referenceId: generateReferenceId() });
-        }
-
         // Verify surgery exists
         let surgery = await prisma.surgery.findFirst({
             where: {
