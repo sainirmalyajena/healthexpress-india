@@ -2,31 +2,24 @@ const fs = require('fs');
 
 let content = fs.readFileSync('src/components/dashboard/CaseManagerModal.tsx', 'utf8');
 
-// Change formatDateForInput to support datetime-local format if needed. 
-// We'll create a new one: formatDateTimeForInput
-const newFunc = `
-    const formatDateTimeForInput = (dateObj?: Date | null) => {
-        if (!dateObj) return '';
-        const d = new Date(dateObj);
-        return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16);
-    };
-`;
+// 1. Add validation logic inside handleSave
+const handleSaveStart = `const handleSave = async () => {`;
+const validationCode = `const handleSave = async () => {
+        const noFollowUpNeeded = ['NEW', 'LOST', 'CLOSED'].includes(status);
+        if (!noFollowUpNeeded && !followUpDate) {
+            setError('A Follow-up Date and Time is mandatory when status is ' + status.replace('_', ' ') + '.');
+            return;
+        }
 
-content = content.replace(
-    /const formatDateForInput = [^}]+};\s*/m,
-    `$&${newFunc}`
-);
+        setSaving(true);
+        setError('');`;
 
-// Now change `followUpDate` to use it
-content = content.replace(
-    /const \[followUpDate, setFollowUpDate\] = useState\(formatDateForInput\(lead\.followUpDate\)\);/,
-    `const [followUpDate, setFollowUpDate] = useState(formatDateTimeForInput(lead.followUpDate));`
-);
+content = content.replace(`const handleSave = async () => {\n        setSaving(true);\n        setError('');`, validationCode);
 
-// Change input type="date" to type="datetime-local" for followUpDate
-content = content.replace(
-    /type="date"([\s\S]*?)value=\{followUpDate\}/m,
-    `type="datetime-local"$1value={followUpDate}`
-);
+// 2. Add asterisk to label
+const followUpLabel = `<label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date</label>`;
+const newFollowUpLabel = `<label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date {!['NEW', 'LOST', 'CLOSED'].includes(status) && <span className="text-red-500">*</span>}</label>`;
+
+content = content.replace(followUpLabel, newFollowUpLabel);
 
 fs.writeFileSync('src/components/dashboard/CaseManagerModal.tsx', content);

@@ -121,21 +121,21 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
         }
     }
 
-    const leads = await prisma.lead.findMany({
-        where,
-        include: { surgery: true, hospital: true, assignedUser: true },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: ITEMS_PER_PAGE
-    });
-    const total = await prisma.lead.count({ where });
+    const [leads, total, surgeries, hospitals, citiesData] = await Promise.all([
+        prisma.lead.findMany({
+            where,
+            include: { surgery: true, hospital: true, assignedUser: true },
+            orderBy: { createdAt: 'desc' },
+            skip,
+            take: ITEMS_PER_PAGE
+        }),
+        prisma.lead.count({ where }),
+        prisma.surgery.findMany({ select: { id: true, name: true } }),
+        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true } }),
+        prisma.lead.findMany({ select: { city: true }, distinct: ['city'], where: { city: { not: '' } } })
+    ]);
 
     const totalPages = Math.ceil(total / ITEMS_PER_PAGE) || 1;
-
-    // Get filter data
-    const surgeries = await prisma.surgery.findMany({ select: { id: true, name: true } });
-    const hospitals = await prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true } });
-    const citiesData = await prisma.lead.findMany({ select: { city: true }, distinct: ['city'], where: { city: { not: '' } } });
 
     return {
         leads,
@@ -163,22 +163,32 @@ export default async function AdminLeadsPage({
     }
 
     const searchParamsData = await searchParams;
-    let data;
+    let data, teamMembers, surgeries, uncontactedCount = 0, overdueFollowUps = 0, todaysFollowUps = 0, todaysOpds = 0;
     const statuses = Object.values(LeadStatus);
-    
-    // Fetch team members for the CSV Uploader assignment dropdown
-    const teamMembers = await prisma.user.findMany({
-        select: { id: true, name: true, email: true },
-        orderBy: { name: 'asc' }
-    });
-    
-    const surgeries = await prisma.surgery.findMany({
-        select: { id: true, name: true },
-        orderBy: { name: 'asc' }
-    });
 
     try {
-        data = await getLeads(searchParamsData, session.adminId, session.role);
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        const whereClause = session.role === 'team' ? { assignedUserId: session.adminId } : {};
+
+        const results = await Promise.all([
+            getLeads(searchParamsData, session.adminId, session.role),
+            prisma.user.findMany({ select: { id: true, name: true, email: true }, orderBy: { name: 'asc' } }),
+            prisma.surgery.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
+            prisma.lead.count({ where: { ...whereClause, status: 'NEW' } }),
+            prisma.lead.count({ where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } } }),
+            prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] }, followUpDate: { gte: startOfToday, lte: endOfToday } } }),
+            prisma.lead.count({ where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } } })
+        ]);
+
+        data = results[0];
+        teamMembers = results[1];
+        surgeries = results[2];
+        uncontactedCount = results[3];
+        overdueFollowUps = results[4];
+        todaysFollowUps = results[5];
+        todaysOpds = results[6];
     } catch (error) {
         console.error('Dashboard Error:', error);
         return (
@@ -190,48 +200,6 @@ export default async function AdminLeadsPage({
                 </div>
             </div>
         );
-    }
-
-    
-    
-    let uncontactedCount = 0;
-    let overdueFollowUps = 0;
-    let todaysFollowUps = 0;
-    let todaysOpds = 0;
-
-    if (session) {
-        const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-
-        const whereClause = session.role === 'team' ? { assignedUserId: session.adminId } : {};
-        
-        uncontactedCount = await prisma.lead.count({
-            where: { ...whereClause, status: 'NEW' }
-        });
-
-        overdueFollowUps = await prisma.lead.count({
-            where: {
-                ...whereClause,
-                status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] },
-                followUpDate: { lt: now }
-            }
-        });
-
-        todaysFollowUps = await prisma.lead.count({
-            where: {
-                ...whereClause,
-                status: { notIn: ['CLOSED', 'LOST'] },
-                followUpDate: { gte: startOfToday, lte: endOfToday }
-            }
-        });
-        
-        todaysOpds = await prisma.lead.count({
-            where: {
-                ...whereClause,
-                opdDate: { gte: startOfToday, lte: endOfToday }
-            }
-        });
     }
 const { leads, total, totalPages } = data;
     const currentPage = parseInt(searchParamsData.page || '1');
