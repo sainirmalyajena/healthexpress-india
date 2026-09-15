@@ -122,6 +122,10 @@ export default async function DoctorProfilePage({ params }: PageProps) {
     const isHi = lang === 'hi';
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
+    
+    const coreExpertise = doctor.surgeries.length > 0 ? doctor.surgeries[0].name : 'Surgeon';
+    const city = doctor.hospital?.city || 'India';
+    const cleanName = doctor.name.replace(/^Dr\.?\s+/i, '');
 
     const physicianSchema = generatePhysicianSchema({
         name: doctor.name,
@@ -155,9 +159,12 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                     {/* Header - Full width, always on top */}
                     <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-10 mb-8">
                         <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-2">
-                            Dr. {doctor.name}
+                            Dr. {cleanName}
                         </h1>
-                        <p className="text-teal-600 font-bold text-lg md:text-xl">{doctor.qualification}</p>
+                        <h2 className="text-xl md:text-2xl font-extrabold text-slate-700 mb-2">
+                            Best {coreExpertise} Specialist in {city}
+                        </h2>
+                        <p className="text-teal-600 font-bold text-lg">{doctor.qualification}</p>
                         <div className="flex flex-wrap gap-2 mt-4">
                             <span className="inline-flex items-center gap-1.5 text-xs font-bold bg-green-50 text-green-700 border border-green-200/50 px-3 py-1 rounded-full shadow-sm">
                                 <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> NMC Verified
@@ -238,13 +245,13 @@ export default async function DoctorProfilePage({ params }: PageProps) {
                             <div className="sticky top-24">
                                 <DoctorLeadForm 
                                     doctorId={doctor.id} 
-                                    doctorName={`Dr. ${doctor.name}`} 
+                                    doctorName={`Dr. ${cleanName}`} 
                                     lang={lang} 
                                 />
                                 
                                 <div className="mt-4 hidden lg:block">
                                     <a
-                                        href={`https://wa.me/919307861041?text=${encodeURIComponent(isHi ? `नमस्ते, मैं डॉ. ${doctor.name} (${doctor.qualification}) से परामर्श करना चाहता हूँ` : `Hi, I want to consult Dr. ${doctor.name} (${doctor.qualification})`)}`}
+                                        href={`https://wa.me/919307861041?text=${encodeURIComponent(isHi ? `नमस्ते, मैं डॉ. ${cleanName} (${doctor.qualification}) से परामर्श करना चाहता हूँ` : `Hi, I want to consult Dr. ${cleanName} (${doctor.qualification})`)}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="w-full px-6 py-4 bg-white border-2 border-green-500 text-green-600 font-bold rounded-2xl hover:bg-green-50 transition-all flex items-center justify-center gap-2"
