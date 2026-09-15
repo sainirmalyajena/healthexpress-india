@@ -122,9 +122,9 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                             </a>
                             {(() => {
                                 let defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. How can we assist you today?`;
-                                if (lead.status === 'OPD_SCHEDULED') {
+                                if (status === 'OPD_SCHEDULED') {
                                     defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. Just checking in to see if you were able to attend your scheduled OPD consultation? Let us know if you need to reschedule or need any further assistance.`;
-                                } else if (lead.status === 'FOLLOW_UP') {
+                                } else if (status === 'FOLLOW_UP') {
                                     defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
                                 }
 
