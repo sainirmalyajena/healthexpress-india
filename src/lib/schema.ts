@@ -236,7 +236,7 @@ export function generatePhysicianSchema(doctor: PhysicianSchemaOptions) {
         '@context': 'https://schema.org',
         '@type': 'Physician',
         '@id': doctor.url,
-        name: `Dr. ${doctor.name}`,
+        name: doctor.name.startsWith('Dr.') ? doctor.name : `Dr. ${doctor.name}`,
         image: doctor.image.startsWith('http') ? doctor.image : `${baseUrl}${doctor.image}`,
         description: doctor.description,
         medicalSpecialty: 'SurgicalSpecialty',

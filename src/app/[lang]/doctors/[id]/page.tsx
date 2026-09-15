@@ -38,16 +38,53 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://healthexpressindia.com';
     const canonical = `${baseUrl}/${lang}/doctors/${id}`;
+    
+    const coreExpertise = doctor.surgeries.length > 0 ? doctor.surgeries[0].name : 'Surgeon';
+    const city = doctor.hospital?.city || 'India';
+    
+    // Clean name from "Dr." if it already exists to avoid "Dr. Dr. Name"
+    const cleanName = doctor.name.replace(/^Dr\.?\s+/i, '');
+    const title = `Dr. ${cleanName} - Best ${coreExpertise} in ${city} | HealthExpress`;
+    
+    // Optimize description (max 160 chars)
+    let description = doctor.about.trim();
+    if (description.length > 155) {
+        description = description.substring(0, 155) + '...';
+    } else if (description.length < 50) {
+        description = `Consult Dr. ${cleanName}, highly experienced ${coreExpertise} at ${doctor.hospital?.name || 'HealthExpress'}. Book your appointment today.`;
+    }
 
     return {
-        title: `Dr. ${doctor.name} - ${doctor.qualification} | HealthExpress India`,
-        description: doctor.about,
+        title,
+        description,
         alternates: {
             canonical: canonical,
             languages: {
                 'en-IN': `${baseUrl}/en/doctors/${id}`,
                 'hi-IN': `${baseUrl}/hi/doctors/${id}`,
             },
+        },
+        openGraph: {
+            title,
+            description,
+            url: canonical,
+            siteName: 'HealthExpress India',
+            images: [
+                {
+                    url: doctor.image || `${baseUrl}/default-doctor.jpg`,
+                    width: 800,
+                    height: 600,
+                    alt: `Dr. ${cleanName}`,
+                },
+            ],
+            locale: lang === 'hi' ? 'hi_IN' : 'en_IN',
+            type: 'profile',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [doctor.image || `${baseUrl}/default-doctor.jpg`],
         },
     };
 }
