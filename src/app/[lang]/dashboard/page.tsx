@@ -22,41 +22,42 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
 
     const whereClause: Prisma.LeadWhereInput = session.role === 'team' ? { assignedUserId: session.adminId } : {};
     
-    // Quick Stats
-    const activeLeads = await prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] } } });
-    const newLeads = await prisma.lead.count({ where: { ...whereClause, status: 'NEW' } });
-    const overdueFollowUps = await prisma.lead.count({
-        where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } }
-    });
-    const todaysFollowUps = await prisma.lead.count({
-        where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] }, followUpDate: { gte: startOfToday, lte: endOfToday } }
-    });
-    const todaysOpds = await prisma.lead.count({
-        where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } }
-    });
-    const surgeriesScheduled = await prisma.lead.count({
-        where: { ...whereClause, status: 'SURGERY_SCHEDULED' }
-    });
-
-    // Funnel Analytics
-    const totalInquiries = await prisma.lead.count({ where: whereClause });
-    const opdScheduledCount = await prisma.lead.count({
-        where: { ...whereClause, status: { in: ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SCHEDULED', 'SURGERY_DONE'] } }
-    });
-    const surgeryDoneCount = await prisma.lead.count({
-        where: { ...whereClause, status: 'SURGERY_DONE' }
-    });
+    // Run all KPI queries in parallel for massive performance boost
+    const [
+        activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, 
+        surgeriesScheduled, totalInquiries, opdScheduledCount, surgeryDoneCount, urgentLeads
+    ] = await Promise.all([
+        prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] } } }),
+        prisma.lead.count({ where: { ...whereClause, status: 'NEW' } }),
+        prisma.lead.count({
+            where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } }
+        }),
+        prisma.lead.count({
+            where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] }, followUpDate: { gte: startOfToday, lte: endOfToday } }
+        }),
+        prisma.lead.count({
+            where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } }
+        }),
+        prisma.lead.count({
+            where: { ...whereClause, status: 'SURGERY_SCHEDULED' }
+        }),
+        prisma.lead.count({ where: whereClause }),
+        prisma.lead.count({
+            where: { ...whereClause, status: { in: ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SCHEDULED', 'SURGERY_DONE'] } }
+        }),
+        prisma.lead.count({
+            where: { ...whereClause, status: 'SURGERY_DONE' }
+        }),
+        prisma.lead.findMany({
+            where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } },
+            take: 5,
+            orderBy: { followUpDate: 'asc' },
+            include: { assignedUser: true, hospital: true }
+        })
+    ]);
 
     const opdConversionRate = totalInquiries ? Math.round((opdScheduledCount / totalInquiries) * 100) : 0;
     const surgeryConversionRate = opdScheduledCount ? Math.round((surgeryDoneCount / opdScheduledCount) * 100) : 0;
-
-    // Mini Urgent Leads Table
-    const urgentLeads = await prisma.lead.findMany({
-        where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } },
-        take: 5,
-        orderBy: { followUpDate: 'asc' },
-        include: { assignedUser: true, hospital: true }
-    });
 
     // Team Leaderboard (Only for Admin)
     let teamPerformance: { name: string; todaysBookings: number; totalActive: number; initials: string; }[] = [];

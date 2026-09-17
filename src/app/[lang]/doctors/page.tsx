@@ -9,7 +9,7 @@ import { getDictionary } from '@/get-dictionary';
 import { Locale } from '@/i18n-config';
 import { generateCollectionPageSchema } from '@/lib/schema';
 
-export const revalidate = 86400; // ISR: revalidate once a day
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
     params: Promise<{ lang: string }>;
