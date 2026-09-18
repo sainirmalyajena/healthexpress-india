@@ -174,21 +174,12 @@ export default async function AdminLeadsPage({
 
         const results = await Promise.all([
             getLeads(searchParamsData, session.adminId, session.role),
-            prisma.user.findMany({ select: { id: true, name: true, email: true }, orderBy: { name: 'asc' } }),
-            prisma.surgery.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } }),
-            prisma.lead.count({ where: { ...whereClause, status: 'NEW' } }),
-            prisma.lead.count({ where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } } }),
-            prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] }, followUpDate: { gte: startOfToday, lte: endOfToday } } }),
-            prisma.lead.count({ where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } } })
+            prisma.user.findMany({ select: { id: true, name: true, email: true }, orderBy: { name: 'asc' } })
         ]);
 
         data = results[0];
         teamMembers = results[1];
-        surgeries = results[2];
-        uncontactedCount = results[3];
-        overdueFollowUps = results[4];
-        todaysFollowUps = results[5];
-        todaysOpds = results[6];
+        surgeries = data.surgeries;
     } catch (error) {
         console.error('Dashboard Error:', error);
         return (

@@ -12,7 +12,7 @@ datasource db {
 model Surgery {
   id              String       @id @default(cuid())
   name            String
-  slug            String       @unique
+  slug String @unique
   category        Category
   overview        String
   indications     String
