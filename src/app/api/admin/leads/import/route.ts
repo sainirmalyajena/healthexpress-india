@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         const validLeadsData = [];
         for (const row of leads) {
             const rawFullName = row.full_name || row.fullName || row['Full Name'] || row.Name;
-            const rawPhone = row.phone || row.Phone || row['Phone Number'];
+            const rawPhone = row.phone || row.Phone || row['Phone Number'] || row.phone_number;
             if (!rawFullName || !rawPhone) continue;
 
             const cleanPhone = String(rawPhone).replace(/^p:/i, '').trim();
