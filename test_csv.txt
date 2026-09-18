@@ -1,0 +1,2 @@
+id	created_time	ad_id	ad_name	adset_id	adset_name	campaign_id	campaign_name	form_id	form_name	is_organic	platform	which_centre_would_you_prefer?	do_you_have_health_insurance?	are_you_looking_for_lasik_surgery	full_name	phone_number	city
+"l:3589596094533105"	2026-09-18T15:31:18+05:30	ag:52524681724174	"New Engagement Ad"	as:52524681723774	"New Engagement Ad Set"	c:52524681723974	"New Campaign Video"	f:1010420755350301	"LASIK Special Offer – Consultation new-copy"	false	fb	kalyan	yes	yes	"Vikash Kumar"	p:+917033715086	Narkatiaganjnarkatiaganj

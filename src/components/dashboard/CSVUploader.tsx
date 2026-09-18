@@ -95,7 +95,9 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
                 parsedLeads = parseMetaAdsCsv(text);
             } else {
                 // Standard CSV with proper headers
-                const result = Papa.parse(text, { header: true, skipEmptyLines: true });
+                // Facebook sometimes exports TSV wrapped in full-line quotes which breaks PapaParse
+                const cleanText = text.replace(/^"/gm, '').replace(/"\s*$/gm, '');
+                const result = Papa.parse(cleanText, { header: true, skipEmptyLines: true });
                 parsedLeads = result.data as Record<string, string>[];
             }
 
