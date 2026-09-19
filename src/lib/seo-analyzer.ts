@@ -14,33 +14,30 @@ export async function analyzeQueryIntent(query: string, position: number, impres
     }
     try {
         const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-        const prompt = \
-You are an expert SEO strategist for HealthExpress India, a surgical hospital chain.
-Analyze this search query: "\"
-Current position: \
-Impressions: \
-Current Landing Page: \
-
-Classify the query into one of these intents: "Informational", "Commercial Investigation", "Transactional", "Local".
-Then, determine the opportunity type:
-- QUICK_WIN: if position is between 4 and 20.
-- GROWTH: if position is between 21 and 50.
-- GAP: if there is no dedicated page (or landing page is just the homepage /).
-- CANNIBALIZATION: if multiple pages compete (you won't know this directly from one query, but leave open).
-
-Return ONLY a JSON object (no markdown, no code blocks):
-{
-    "intent": "...",
-    "type": "QUICK_WIN" | "GROWTH" | "GAP" | "CANNIBALIZATION",
-    "recommendations": {
-        "title": "Suggested SEO Title",
-        "h1": "Suggested H1",
-        "action": "expand | restructure | internal_links | new_page",
-        "supportingContent": "Brief description of content to add"
-    },
-    "score": 0-100 (Prioritize high commercial intent and healthcare relevance)
-}
-\;
+        const prompt = "You are an expert SEO strategist for HealthExpress India, a surgical hospital chain.\n" +
+            "Analyze this search query: " + query + "\n" +
+            "Current position: " + position + "\n" +
+            "Impressions: " + impressions + "\n" +
+            "Current Landing Page: " + (currentLandingPage || 'None') + "\n\n" +
+            "Classify the query into one of these intents: 'Informational', 'Commercial Investigation', 'Transactional', 'Local'.\n" +
+            "Then, determine the opportunity type:\n" +
+            "- QUICK_WIN: if position is between 4 and 20.\n" +
+            "- GROWTH: if position is between 21 and 50.\n" +
+            "- GAP: if there is no dedicated page (or landing page is just the homepage /).\n" +
+            "- CANNIBALIZATION: if multiple pages compete.\n\n" +
+            "Return ONLY a JSON object (no markdown, no code blocks):\n" +
+            "{\n" +
+            "    \"intent\": \"...\",\n" +
+            "    \"type\": \"QUICK_WIN\",\n" +
+            "    \"recommendations\": {\n" +
+            "        \"title\": \"Suggested SEO Title\",\n" +
+            "        \"h1\": \"Suggested H1\",\n" +
+            "        \"action\": \"expand | restructure | internal_links | new_page\",\n" +
+            "        \"supportingContent\": \"Brief description of content to add\"\n" +
+            "    },\n" +
+            "    \"score\": 85\n" +
+            "}";
+            
         const result = await model.generateContent(prompt);
         let text = result.response.text().trim();
         text = text.replace(/\\\json/g, '').replace(/\\\/g, '').trim();
@@ -64,8 +61,8 @@ function generateMockAnalysis(query: string, pos: number, url: string | null) {
         intent,
         type,
         recommendations: {
-            title: \\ - HealthExpress\,
-            h1: \Everything about \\,
+            title: query + ' - HealthExpress',
+            h1: 'Everything about ' + query,
             action: type === 'GAP' ? 'new_page' : 'expand',
             supportingContent: 'Add FAQ schema and pricing tables.'
         },
