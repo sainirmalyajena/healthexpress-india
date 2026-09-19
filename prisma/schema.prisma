@@ -303,3 +303,41 @@ model Notification {
 
 
 
+
+model SeoQueryData {
+  id           String   @id @default(cuid())
+  query        String
+  landingPage  String?
+  impressions  Int
+  clicks       Int
+  ctr          Float
+  position     Float
+  device       String?
+  country      String?
+  isBranded    Boolean  @default(false)
+  intent       String?
+  date         DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([query])
+  @@index([isBranded])
+  @@index([date])
+}
+
+model SeoOpportunity {
+  id             String   @id @default(cuid())
+  type           String   // QUICK_WIN, GROWTH, GAP, CANNIBALIZATION
+  query          String
+  landingPage    String?
+  impressions    Int
+  position       Float?
+  intent         String?  // Informational, Commercial Investigation, Transactional, Local
+  score          Int      @default(0)
+  recommendation String   // JSON string containing detailed recommendations
+  status         String   @default("OPEN") // OPEN, IN_PROGRESS, IMPLEMENTED, REJECTED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@index([type])
+  @@index([status])
+}
