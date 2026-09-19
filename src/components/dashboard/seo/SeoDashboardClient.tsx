@@ -35,13 +35,13 @@ export default function SeoDashboardClient({ rawData, opportunities }: { rawData
             <div className="flex gap-4 border-b border-slate-200">
                 <button 
                     onClick={() => setView('NON_BRAND')}
-                    className={\py-2 px-4 border-b-2 font-medium transition-colors \\}
+                    className={`py-2 px-4 border-b-2 font-medium transition-colors ${view === 'NON_BRAND' ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                 >
                     Non-Branded SEO
                 </button>
                 <button 
                     onClick={() => setView('BRAND')}
-                    className={\py-2 px-4 border-b-2 font-medium transition-colors \\}
+                    className={`py-2 px-4 border-b-2 font-medium transition-colors ${view === 'BRAND' ? 'border-teal-600 text-teal-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
                 >
                     Branded SEO
                 </button>

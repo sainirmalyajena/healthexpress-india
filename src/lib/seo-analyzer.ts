@@ -83,7 +83,7 @@ export async function analyzeQueryIntent(query: string, position: number, impres
             
         const result = await model.generateContent(prompt);
         let text = result.response.text().trim();
-        text = text.replace(/\\\json/g, '').replace(/\\\/g, '').trim();
+        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
         const parsed = JSON.parse(text);
         
         // Guardrails
