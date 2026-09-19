@@ -4,10 +4,6 @@ import { getGscData } from '@/lib/gsc';
 import { isBranded, analyzeQueryIntent } from '@/lib/seo-analyzer';
 
 export async function GET(req: Request) {
-    // In production, you would verify the cron secret here
-    // const authHeader = req.headers.get('authorization');
-    // if (authHeader !== \Bearer \\) return new Response('Unauthorized', { status: 401 });
-
     try {
         const siteUrl = 'https://healthexpressindia.com/';
         const today = new Date();
@@ -16,17 +12,12 @@ export async function GET(req: Request) {
         const startDate = sevenDaysAgo.toISOString().split('T')[0];
         const endDate = today.toISOString().split('T')[0];
 
-        // 1. Fetch GSC Data
         const gscData = await getGscData(siteUrl, startDate, endDate);
 
-        // 2. Clear old opportunities (or keep history depending on strategy)
-        // For simplicity, we just clear and repopulate weekly opportunities
-        await prisma.seoOpportunity.deleteMany({});
-        // await prisma.seoQueryData.deleteMany({}); // Optional: clear old raw data
+        // Keep historical data for trend analysis, so don't delete SeoQueryData
+        // But we DO want to refresh SeoOpportunities that are OPEN
+        await prisma.seoOpportunity.deleteMany({ where: { status: 'OPEN' } });
 
-        // 3. Process and Store Data
-        const opportunities = [];
-        
         for (const row of gscData) {
             const query = row.keys?.[0] || '';
             const page = row.keys?.[1] || '';
@@ -40,7 +31,6 @@ export async function GET(req: Request) {
 
             const branded = isBranded(query);
 
-            // Save raw query data
             await prisma.seoQueryData.create({
                 data: {
                     query,
@@ -56,9 +46,7 @@ export async function GET(req: Request) {
                 }
             });
 
-            // Analyze non-branded queries with meaningful impressions or positions
-            if (!branded && impressions > 50) {
-                // Rate limit/batching would be needed for real Gemini usage across 5000 queries
+            if (!branded && impressions > 20) {
                 const analysis = await analyzeQueryIntent(query, position, impressions, page);
                 
                 if (analysis) {
@@ -68,8 +56,13 @@ export async function GET(req: Request) {
                             query,
                             landingPage: page,
                             impressions,
+                            clicks,
+                            ctr,
                             position,
                             intent: analysis.intent,
+                            businessCapability: analysis.businessCapability,
+                            revenueIntent: analysis.revenueIntent,
+                            trendStatus: 'New', // Simple trend for now
                             score: analysis.score,
                             recommendation: JSON.stringify(analysis.recommendations),
                             status: 'OPEN'
@@ -79,7 +72,7 @@ export async function GET(req: Request) {
             }
         }
 
-        return NextResponse.json({ success: true, message: 'SEO Sync Complete' });
+        return NextResponse.json({ success: true, message: 'Production SEO Sync Complete' });
     } catch (e) {
         console.error(e);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

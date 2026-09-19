@@ -325,19 +325,56 @@ model SeoQueryData {
 }
 
 model SeoOpportunity {
-  id             String   @id @default(cuid())
-  type           String   // QUICK_WIN, GROWTH, GAP, CANNIBALIZATION
-  query          String
-  landingPage    String?
-  impressions    Int
-  position       Float?
-  intent         String?  // Informational, Commercial Investigation, Transactional, Local
-  score          Int      @default(0)
-  recommendation String   // JSON string containing detailed recommendations
-  status         String   @default("OPEN") // OPEN, IN_PROGRESS, IMPLEMENTED, REJECTED
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  type               String   // TOP, NEAR_TOP, PAGE_2, GROWTH, DISCOVERY, GAP, CANNIBALIZATION
+  query              String
+  landingPage        String?
+  impressions        Int
+  clicks             Int      @default(0)
+  ctr                Float    @default(0)
+  position           Float?
+  intent             String?  // Navigational, Informational, Commercial Investigation, Transactional, Local
+  businessCapability String?  // Supported, Potential, Not Supported, Unknown
+  revenueIntent      String?  // Low, Medium, High, Very High
+  trendStatus        String?  // Rising, Falling, New, Lost, Stable
+  score              Int      @default(0)
+  recommendation     String   // JSON string containing detailed recommendations
+  status             String   @default("OPEN") // OPEN, APPROVED, REJECTED, IN_PROGRESS, IMPLEMENTED
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
   
   @@index([type])
   @@index([status])
+}
+
+model SeoChangeLog {
+  id             String   @id @default(cuid())
+  opportunityId  String?
+  query          String
+  url            String?
+  recommendation String
+  oldValue       String?
+  newValue       String?
+  approvedBy     String?
+  deploymentDate DateTime?
+  createdAt      DateTime @default(now())
+}
+
+model SeoExperiment {
+  id             String   @id @default(cuid())
+  opportunityId  String   @unique
+  changeDate     DateTime
+  url            String
+  query          String
+  oldCtr         Float?
+  newCtr         Float?
+  oldPosition    Float?
+  newPosition    Float?
+  oldImpressions Int?
+  newImpressions Int?
+  oldClicks      Int?
+  newClicks      Int?
+  resultStatus   String?  // IMPROVED, DECLINED, STABLE
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
