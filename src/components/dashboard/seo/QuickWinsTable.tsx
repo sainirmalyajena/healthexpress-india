@@ -32,7 +32,7 @@ export default function QuickWinsTable({ opportunities }: { opportunities: any[]
                                     <td className="p-4 align-top">
                                         <div className="text-lg font-bold text-slate-800">{opp.score}</div>
                                         {opp.trendStatus && (
-                                            <div className={\	ext-xs mt-1 font-medium \\}>
+                                            <div className={`text-xs mt-1 font-medium ${opp.trendStatus === 'Rising' ? 'text-green-600' : opp.trendStatus === 'Falling' ? 'text-red-600' : 'text-slate-500'}`}>
                                                 {opp.trendStatus}
                                             </div>
                                         )}

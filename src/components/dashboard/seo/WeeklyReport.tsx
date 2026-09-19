@@ -30,7 +30,7 @@ export default function WeeklyReport({ pos4to10, pos11to20, gaps, cannibalizatio
                     <div>
                         <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">What Should We Stop?</h3>
                         <p className="text-sm text-slate-300">
-                            {cannibalization.length > 0 ? \\ cannibalization conflicts detected. Stop creating redundant pages for \.\ : 'No destructive cannibalization detected.'}
+                            {cannibalization.length > 0 ? `${cannibalization.length} cannibalization conflicts detected. Stop creating redundant pages for ${cannibalization[0]?.query}.` : 'No destructive cannibalization detected.'}
                         </p>
                     </div>
                 </div>
