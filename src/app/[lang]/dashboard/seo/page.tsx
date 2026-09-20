@@ -3,10 +3,11 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import SeoDashboardClient from '@/components/dashboard/seo/SeoDashboardClient';
 
-export default async function SeoDashboardPage({ params }: { params: { lang: string } }) {
+export default async function SeoDashboardPage({ params }: { params: Promise<{ lang: string }> }) {
+    const { lang } = await params;
     const session = await getAdminSession();
     if (!session || session.role !== 'admin') {
-        redirect('/' + params.lang + '/login');
+        redirect('/' + lang + '/login');
     }
 
     const rawData = await prisma.seoQueryData.findMany({
