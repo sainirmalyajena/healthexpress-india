@@ -1,4 +1,27 @@
+'use client';
+import { useRouter } from 'next/navigation';
+
 export default function QuickWinsTable({ opportunities }: { opportunities: any[] }) {
+    const router = useRouter();
+
+    const handleStatusUpdate = async (id: string, status: string) => {
+        try {
+            const res = await fetch('/api/admin/seo/update-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, status })
+            });
+            if (res.ok) {
+                router.refresh();
+            } else {
+                alert('Failed to update status');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error updating status');
+        }
+    };
+
     if (!opportunities.length) return <p className="text-slate-500">No opportunities found in this category.</p>;
 
     return (
@@ -57,12 +80,12 @@ export default function QuickWinsTable({ opportunities }: { opportunities: any[]
                                         <div className="flex flex-col gap-2">
                                             {opp.status === 'OPEN' ? (
                                                 <>
-                                                    <button className="px-3 py-1 bg-green-600 text-white text-xs font-bold rounded shadow-sm hover:bg-green-700">Approve</button>
-                                                    <button className="px-3 py-1 bg-red-50 text-red-600 text-xs font-bold rounded border border-red-200 hover:bg-red-100">Reject</button>
-                                                    <button className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded border border-slate-200 hover:bg-slate-200">Edit</button>
+                                                    <button onClick={() => handleStatusUpdate(opp.id, 'APPROVED')} className="px-3 py-1 bg-green-600 text-white text-xs font-bold rounded shadow-sm hover:bg-green-700">Approve</button>
+                                                    <button onClick={() => handleStatusUpdate(opp.id, 'REJECTED')} className="px-3 py-1 bg-red-50 text-red-600 text-xs font-bold rounded border border-red-200 hover:bg-red-100">Reject</button>
+                                                    <button onClick={() => alert('Edit modal coming soon')} className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded border border-slate-200 hover:bg-slate-200">Edit</button>
                                                 </>
                                             ) : (
-                                                <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded uppercase text-center border border-slate-200">
+                                                <span className={`px-2 py-1 text-xs font-bold rounded uppercase text-center border ${opp.status === 'APPROVED' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
                                                     {opp.status}
                                                 </span>
                                             )}
