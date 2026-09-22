@@ -236,6 +236,16 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                     currentStatus={lead.status || 'NEW'}
                                                     statuses={statuses}
                                                 />
+                                                {lead.status === 'FOLLOW_UP' && lead.followUpDate && (
+                                                    <div className="text-[10px] font-semibold text-slate-500 mt-1 whitespace-nowrap bg-amber-50 px-2 py-0.5 rounded border border-amber-100 w-max">
+                                                        {new Date(lead.followUpDate).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                    </div>
+                                                )}
+                                                {lead.status === 'OPD_SCHEDULED' && lead.opdDate && (
+                                                    <div className="text-[10px] font-semibold text-slate-500 mt-1 whitespace-nowrap bg-teal-50 px-2 py-0.5 rounded border border-teal-100 w-max">
+                                                        {new Date(lead.opdDate).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                    </div>
+                                                )}
                                                 <Link
                                                     href={`/dashboard/leads/${lead.id}`}
                                                     className="p-1 px-2 text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 rounded hover:bg-slate-200 transition-all shadow-sm"

@@ -97,7 +97,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
 
             if (response.ok) {
                 startTransition(() => {
-                    // router.refresh() removed for ultimate speed
+                    router.refresh();
                     onClose();
                 });
             } else {
