@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getSession } from '@/lib/auth';
@@ -308,3 +309,4 @@ export default async function LeadDetailPage({ params }: PageProps) {
 
 // Utility for cn (needed since I used it above)
 import { cn } from '@/lib/utils';
+

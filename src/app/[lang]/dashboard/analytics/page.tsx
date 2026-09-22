@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export default async function AnalyticsPage() {
     const session = await getAdminSession();
     if (!session?.adminId) redirect('/en/dashboard/login');
-    if (session.role !== 'admin') redirect('/en/dashboard/leads');
+
 
     // Get all team members
     const teamMembers = await prisma.user.findMany({
