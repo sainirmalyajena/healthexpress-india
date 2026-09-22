@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface TeamMember {
     id: string;
@@ -97,6 +98,13 @@ const getTimeAgo = (dateStr: string | null) => {
 };
 
 export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps) {
+    const router = useRouter();
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.refresh();
+        }, 15000);
+        return () => clearInterval(interval);
+    }, [router]);
     const [activeTab, setActiveTab] = useState<'team' | 'feed'>('team');
 
     const totalCallsToday = team.reduce((sum, m) => sum + m.todayCalls, 0);

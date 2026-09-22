@@ -34,8 +34,7 @@ export default async function AnalyticsPage() {
             user: { select: { name: true } },
             lead: { select: { fullName: true, phone: true } }
         },
-        orderBy: { createdAt: 'desc' },
-        take: 100
+        orderBy: { createdAt: 'desc' }
     });
 
     // Get today's call counts per user
