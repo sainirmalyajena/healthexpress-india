@@ -8,6 +8,7 @@ import DashboardShell from '@/components/dashboard/DashboardShell';
 import { getStatusColor, formatCurrency } from '@/lib/utils';
 import LeadStatusSelect from '@/components/dashboard/LeadStatusSelect';
 import ManageCaseButton from '@/components/dashboard/ManageCaseButton';
+import TimelineFormatter from '@/components/dashboard/TimelineFormatter';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -235,9 +236,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                                             <time className="text-xs text-slate-500 font-medium">{new Date(log.createdAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</time>
                                                         </div>
                                                         <div className="text-sm text-slate-600">
-                                                            {log.details ? (
-                                                                <span className="italic">{log.details.replace(/"/g, '')}</span>
-                                                            ) : 'Action performed'}
+                                                            <TimelineFormatter details={log.details} />
                                                             <div className="text-xs text-slate-400 mt-2">By: {log.user?.name || 'System'}</div>
                                                         </div>
                                                     </div>

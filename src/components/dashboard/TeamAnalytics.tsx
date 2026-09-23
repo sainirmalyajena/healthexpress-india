@@ -63,8 +63,16 @@ function getActionLabel(actionType: string, details: string | null): string {
             }
             return 'Logged a call';
         }
-        case 'NOTE_ADDED':
+        case 'NOTE_ADDED': {
+            if (details) {
+                try {
+                    const d = JSON.parse(details);
+                    if (d.note) return `Added a note: "${d.note.substring(0, 50)}${d.note.length > 50 ? '...' : ''}"`;
+                    if (d.noteSnippet) return `Added a note: "${d.noteSnippet}"`;
+                } catch { /* fall through */ }
+            }
             return 'Added a note';
+        }
         case 'LEAD_ASSIGNED':
             return 'Lead assigned';
         case 'LOGIN':

@@ -97,7 +97,7 @@ export async function PATCH(
                 userId: session.adminId,
                 leadId: id,
                 actionType: 'NOTE_ADDED',
-                details: JSON.stringify({ noteSnippet: notes.substring(0, 100) })
+                details: JSON.stringify({ note: notes.substring(0, 1000) })
             });
         }
 
