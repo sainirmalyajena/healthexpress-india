@@ -40,10 +40,7 @@ const nextConfig: any = {
   compress: true,
   reactStrictMode: true,
   poweredByHeader: false,
-  
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   typescript: {
     ignoreBuildErrors: true,
   },

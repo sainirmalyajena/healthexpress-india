@@ -21,8 +21,9 @@ interface Lead {
     isEmergency: boolean;
     hasCard: boolean;
     notes?: string | null;
-    opdDate?: Date | null;
-    followUpDate?: Date | null;
+    opdDate?: Date | string | null;
+    ipdDate?: Date | string | null;
+    followUpDate?: Date | string | null;
     assignedUserId?: string | null;
     hospital?: { name: string } | null;
     surgery: { name: string } | null;
@@ -51,13 +52,12 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
     const [saving, setSaving] = useState(false);
 
     // Format dates for date input fields (YYYY-MM-DD)
-    const formatDateForInput = (dateObj?: Date | null) => {
+    const formatDateForInput = (dateObj?: Date | string | null) => {
         if (!dateObj) return '';
         return new Date(dateObj).toISOString().split('T')[0];
     };
 
-    
-    const formatDateTimeForInput = (dateObj?: Date | null) => {
+    const formatDateTimeForInput = (dateObj?: Date | string | null) => {
         if (!dateObj) return '';
         const d = new Date(dateObj);
         return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16);

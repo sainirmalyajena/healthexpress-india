@@ -27,9 +27,9 @@ export async function POST(req: Request) {
                 data: {
                     opportunityId: updated.id,
                     query: updated.query,
-                    actionTaken: 'Sent to content team for implementation',
-                    deployedAt: new Date(),
-                    status: 'PENDING'
+                    recommendation: updated.recommendation || 'Sent to content team for implementation',
+                    approvedBy: session.email,
+                    deploymentDate: new Date(),
                 }
             });
         }

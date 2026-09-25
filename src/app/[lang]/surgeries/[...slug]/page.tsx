@@ -1,4 +1,4 @@
-﻿import { notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -88,7 +88,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: {
         'en-IN': `${baseUrl}/en/surgeries/${slug}`,
         'hi-IN': `${baseUrl}/hi/surgeries/${slug}`,
-        'bn-IN': `${baseUrl}/bn/surgeries/${slug}`,
       },
     },
   };

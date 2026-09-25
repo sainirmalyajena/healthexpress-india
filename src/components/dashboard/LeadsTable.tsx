@@ -29,6 +29,9 @@ interface Lead {
     utmSource: string | null;
     utmCampaign: string | null;
     notes: string | null;
+    opdDate?: Date | string | null;
+    ipdDate?: Date | string | null;
+    followUpDate?: Date | string | null;
     assignedUserId: string | null;
     assignedUser?: {
         name: string;
