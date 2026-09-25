@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import {
     Phone,
@@ -11,7 +12,6 @@ import {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Search,
     X,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ChevronRight,
     ArrowUpRight
 } from 'lucide-react';
@@ -24,8 +24,28 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
     const isHome = pathname === `/${lang}`;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileMenuOpen]);
+
+    // Close mobile menu on route change
+    useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [pathname]);
 
     // Handle scroll effect
     useEffect(() => {
@@ -185,62 +205,110 @@ export function Header({ lang, dict }: { lang: string; dict: any }) {
                 </div>
             </nav>
 
-            {/* Mobile Navigation Drawer */}
-            {mobileMenuOpen && (
-                <div className="fixed inset-0 z-50 xl:hidden">
+            {/* Mobile Navigation Drawer (Mounted to document.body to avoid header backdrop-blur and height bugs) */}
+            {mounted && mobileMenuOpen && createPortal(
+                <div className="fixed inset-0 z-[9999] xl:hidden">
                     {/* Backdrop */}
                     <div
-                        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
                         onClick={() => setMobileMenuOpen(false)}
+                        aria-hidden="true"
                     />
 
-                    {/* Drawer Content */}
-                    <div className="absolute top-0 right-0 w-[280px] h-full bg-white shadow-2xl flex flex-col">
-                        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-                            <span className="font-bold text-lg text-slate-800">Menu</span>
-                            <button
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
+                    {/* Drawer Panel */}
+                    <div className="fixed top-0 right-0 bottom-0 w-[85%] max-w-[320px] h-[100dvh] bg-white shadow-2xl flex flex-col z-[10000] border-l border-slate-100 animate-in slide-in-from-right duration-300">
+                        {/* Drawer Header */}
+                        <div className="p-4 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
+                            <div className="flex items-center gap-2.5">
+                                <div className="relative w-8 h-8 rounded-lg overflow-hidden">
+                                    <Image
+                                        src="/logo.png"
+                                        alt="HealthExpress Logo"
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="font-black text-base leading-tight text-slate-900">HealthExpress</span>
+                                    <span className="text-[10px] font-bold text-teal-600 uppercase tracking-widest">Menu</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                {/* Language Switcher inside Drawer */}
+                                <div className="flex items-center bg-slate-100 rounded-full p-0.5">
+                                    <Link
+                                        href={redirectedPathname('en')}
+                                        className={cn(
+                                            "px-2.5 py-1 text-[11px] font-bold rounded-full transition-all",
+                                            lang === 'en' ? "bg-white text-teal-700 shadow-sm" : "text-slate-500"
+                                        )}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        EN
+                                    </Link>
+                                    <Link
+                                        href={redirectedPathname('hi')}
+                                        className={cn(
+                                            "px-2.5 py-1 text-[11px] font-bold rounded-full transition-all",
+                                            lang === 'hi' ? "bg-white text-teal-700 shadow-sm" : "text-slate-500"
+                                        )}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        HI
+                                    </Link>
+                                </div>
+
+                                <button
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center"
+                                    aria-label="Close menu"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+                        {/* Nav Links */}
+                        <div className="flex-1 overflow-y-auto py-3 px-3 space-y-1 bg-white">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
                                     href={link.href}
                                     className={cn(
-                                        'block px-4 py-3 rounded-xl text-base font-medium transition-all',
+                                        'flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all',
                                         isActive(link.href)
-                                            ? 'bg-teal-50 text-teal-700'
-                                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                                            ? 'bg-teal-50 text-teal-800 font-bold'
+                                            : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
                                     )}
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    {link.label}
+                                    <span>{link.label}</span>
+                                    <ChevronRight className="w-4 h-4 text-slate-400" />
                                 </Link>
                             ))}
                         </div>
 
-                        <div className="p-4 border-t border-slate-100 space-y-4 pb-8">
+                        {/* Drawer Footer Actions */}
+                        <div className="p-4 border-t border-slate-100 space-y-2.5 bg-slate-50/80 shrink-0">
                             <Link
-                                href={`/${lang}/surgeries`}
-                                className="block w-full py-3 px-4 bg-teal-600 text-white text-center font-semibold rounded-xl shadow-md active:scale-95 transition-transform"
+                                href={`/${lang}/contact`}
+                                className="block w-full py-3 px-4 bg-teal-700 hover:bg-teal-800 text-white text-center font-bold rounded-xl shadow-md active:scale-95 transition-all text-sm"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
-                                {dict.surgeries}
+                                {lang === 'hi' ? 'मुफ्त अनुमान प्राप्त करें' : 'Get Free Estimate'}
                             </Link>
                             <a
                                 href={`tel:${process.env.NEXT_PUBLIC_PHONE?.replace(/\D/g, '') || '9307861041'}`}
-                                className="block w-full py-3 px-4 bg-slate-50 text-slate-700 text-center font-semibold rounded-xl border border-slate-200"
+                                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-white hover:bg-slate-50 text-slate-700 text-center font-semibold rounded-xl border border-slate-200 shadow-sm active:scale-95 transition-all text-sm"
                             >
-                                {dict.call_support}
+                                <Phone className="w-4 h-4 text-teal-600" />
+                                <span>{dict.call_support || 'Call Support'}</span>
                             </a>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
 
         </header>
