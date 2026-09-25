@@ -83,7 +83,12 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
             if (data.success) {
                 alert(`✅ AI Call initiated! Sarah (Bland AI) is calling ${lead.fullName} now. (Call ID: ${data.callId || 'active'})`);
             } else {
-                alert(`❌ AI Call failed: ${data.message || data.error || 'Check Bland AI configuration'}`);
+                const errorMsg = data.message || data.error || 'Check Bland AI configuration';
+                if (errorMsg.toLowerCase().includes('international calling requires a completed purchase')) {
+                    alert(`❌ Bland AI Notice: International calls to Indian (+91) numbers are locked on trial accounts.\n\nTo unlock AI calling to India:\n1. Log into your Bland AI dashboard at https://app.bland.ai\n2. Go to Billing and make a minimum $10 credit purchase.\n\n💡 In the meantime, you can message ${lead.fullName} directly for ₹0 using the green WhatsApp button!`);
+                } else {
+                    alert(`❌ AI Call failed: ${errorMsg}`);
+                }
             }
         } catch (err: any) {
             alert(`❌ AI Call error: ${err.message}`);
