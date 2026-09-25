@@ -58,7 +58,13 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
     const [callingLeadId, setCallingLeadId] = useState<string | null>(null);
 
     const handleAiCall = async (lead: Lead) => {
-        if (!window.confirm(`Trigger automated AI Voice Call to ${lead.fullName} (${lead.phone})?\n\nOur AI Receptionist (Sarah) will dial the patient, inquire about their consultation for "${lead.surgery?.name || 'medical consultation'}", and attempt to book an appointment automatically.`)) {
+        if (!window.confirm(
+            `🤖 Trigger Bland AI Voice Call to ${lead.fullName} (${lead.phone})?\n\n` +
+            `⚠️ COST NOTICE: Bland AI charges ~$0.09 (₹7.50) per minute from your Bland balance.\n` +
+            `Your current account balance is ~$1.96 (~15-20 minutes total).\n\n` +
+            `Sarah (AI Voice Receptionist) will dial the patient, inquire about their "${lead.surgery?.name || 'medical consultation'}", and attempt to book an appointment automatically.\n\n` +
+            `Do you want to proceed with this call?`
+        )) {
             return;
         }
 
@@ -84,6 +90,60 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
         } finally {
             setCallingLeadId(null);
         }
+    };
+
+    const handleExportCSV = (targetLeads: Lead[]) => {
+        if (targetLeads.length === 0) {
+            alert('No leads to export.');
+            return;
+        }
+        const headers = ['Full Name', 'Phone', 'City', 'Surgery', 'Status', 'Notes', 'Created At'];
+        const rows = targetLeads.map(l => [
+            `"${(l.fullName || '').replace(/"/g, '""')}"`,
+            `"${l.phone || ''}"`,
+            `"${(l.city || '').replace(/"/g, '""')}"`,
+            `"${(l.surgery?.name || 'General Inquiry').replace(/"/g, '""')}"`,
+            `"${l.status || ''}"`,
+            `"${(l.notes || '').replace(/"/g, '""')}"`,
+            `"${new Date(l.createdAt).toLocaleDateString('en-IN')}"`
+        ]);
+        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', `healthexpress_leads_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handleExportVCF = (targetLeads: Lead[]) => {
+        if (targetLeads.length === 0) {
+            alert('No leads to export.');
+            return;
+        }
+        const vcards = targetLeads.map(l => {
+            const cleanPhone = l.phone.replace(/[^0-9]/g, '');
+            const formattedPhone = cleanPhone.length === 10 ? `+91${cleanPhone}` : `+${cleanPhone}`;
+            const surgery = l.surgery?.name ? ` (${l.surgery.name})` : '';
+            return [
+                'BEGIN:VCARD',
+                'VERSION:3.0',
+                `FN:HE - ${l.fullName}${surgery}`,
+                `TEL;TYPE=CELL:${formattedPhone}`,
+                `NOTE:HealthExpress Lead | City: ${l.city || 'N/A'} | Status: ${l.status}`,
+                'END:VCARD'
+            ].join('\n');
+        }).join('\n\n');
+
+        const blob = new Blob([vcards], { type: 'text/vcard;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `healthexpress_contacts_${new Date().toISOString().slice(0, 10)}.vcf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     const handleStatusUpdate = (id: string, newStatus: string) => {
@@ -147,32 +207,74 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
 
     return (
         <>
-            {selectedLeads.length > 0 && (
-                <div className="bg-teal-50 border border-teal-100 rounded-xl p-3 mb-4 flex items-center justify-between">
-                    <div className="text-teal-800 font-medium text-sm">
-                        {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} selected
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                {selectedLeads.length > 0 ? (
+                    <div className="bg-teal-50 border border-teal-100 rounded-xl p-3 w-full flex flex-wrap items-center justify-between gap-3">
+                        <div className="text-teal-800 font-medium text-sm">
+                            {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} selected
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() => handleExportCSV(localLeads.filter(l => selectedLeads.includes(l.id)))}
+                                className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
+                                title="Export selected leads to CSV"
+                            >
+                                📊 Export Selected CSV
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleExportVCF(localLeads.filter(l => selectedLeads.includes(l.id)))}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
+                                title="Import selected leads to phone contacts for WhatsApp broadcast"
+                            >
+                                📇 Export Phone Contacts (.vcf)
+                            </button>
+                            <select
+                                value={bulkAssignUser}
+                                onChange={(e) => setBulkAssignUser(e.target.value)}
+                                className="text-sm border-teal-200 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-1.5 px-3"
+                            >
+                                <option value="">Assign to...</option>
+                                {teamMembers.map(tm => (
+                                    <option key={tm.id} value={tm.id}>{tm.name}</option>
+                                ))}
+                            </select>
+                            <button
+                                onClick={handleBulkAssign}
+                                disabled={!bulkAssignUser || isBulkAssigning}
+                                className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors"
+                            >
+                                {isBulkAssigning ? 'Assigning...' : 'Apply'}
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <select
-                            value={bulkAssignUser}
-                            onChange={(e) => setBulkAssignUser(e.target.value)}
-                            className="text-sm border-teal-200 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-1.5 px-3"
-                        >
-                            <option value="">Assign to Team Member...</option>
-                            {teamMembers.map(tm => (
-                                <option key={tm.id} value={tm.id}>{tm.name}</option>
-                            ))}
-                        </select>
-                        <button
-                            onClick={handleBulkAssign}
-                            disabled={!bulkAssignUser || isBulkAssigning}
-                            className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-1.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors"
-                        >
-                            {isBulkAssigning ? 'Assigning...' : 'Apply'}
-                        </button>
+                ) : (
+                    <div className="flex items-center justify-between w-full">
+                        <p className="text-xs text-slate-500">
+                            Total Leads: <span className="font-semibold text-slate-700">{localLeads.length}</span>
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() => handleExportCSV(localLeads)}
+                                className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
+                                title="Export all leads to CSV"
+                            >
+                                📊 Export All CSV
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleExportVCF(localLeads)}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
+                                title="Export all contacts to VCF file for phone / WhatsApp broadcast"
+                            >
+                                📇 Export All Contacts (.vcf)
+                            </button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
