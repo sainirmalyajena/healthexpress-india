@@ -8,6 +8,17 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: 'Phone number is required' }, { status: 400 });
         }
 
+        let cleanedPhone = patientPhone.replace(/[^0-9]/g, '');
+        if (cleanedPhone.length === 10) {
+            cleanedPhone = `+91${cleanedPhone}`;
+        } else if (cleanedPhone.startsWith('91') && cleanedPhone.length === 12) {
+            cleanedPhone = `+${cleanedPhone}`;
+        } else if (!patientPhone.startsWith('+')) {
+            cleanedPhone = `+${cleanedPhone}`;
+        } else {
+            cleanedPhone = patientPhone;
+        }
+
         const apiKey = process.env.BLAND_API_KEY;
         if (!apiKey) {
             return NextResponse.json({ success: false, message: 'Bland API Key is missing' }, { status: 500 });
@@ -64,7 +75,7 @@ Rules:
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                phone_number: patientPhone,
+                phone_number: cleanedPhone,
                 task: prompt,
                 voice: "maya", // Professional female voice
                 language: "en-US",
@@ -72,7 +83,7 @@ Rules:
                 tools: tools,
                 metadata: {
                     patientName,
-                    patientPhone,
+                    patientPhone: cleanedPhone,
                     reason
                 }
             })
