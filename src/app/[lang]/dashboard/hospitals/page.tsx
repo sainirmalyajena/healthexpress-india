@@ -36,6 +36,12 @@ export default async function HospitalsManagementPage() {
                             <h1 className="text-2xl font-bold text-slate-900">Hospital Partners</h1>
                             <p className="text-sm text-slate-500 mt-1">Manage portal access and track performance for approved hospitals.</p>
                         </div>
+                        <Link
+                            href="/dashboard/settings"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700 shadow-sm transition-all"
+                        >
+                            ⚙️ Add &amp; Customise in Settings
+                        </Link>
                     </div>
 
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
