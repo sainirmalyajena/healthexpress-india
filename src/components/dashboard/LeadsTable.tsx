@@ -74,8 +74,10 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    leadId: lead.id,
                     patientName: lead.fullName,
                     patientPhone: lead.phone,
+                    city: lead.city,
                     reason: lead.surgery?.name || 'medical consultation'
                 })
             });
