@@ -26,14 +26,25 @@ export async function sendEmail({
     react: React.ReactElement;
     text: string;
 }) {
-    // Fallback if SMTP not configured
+    // Fallback to Resend Gateway if SMTP credentials not configured
     if (!process.env.SMTP_PASS) {
-        console.log('--- MOCK EMAIL (SMTP Credentials Missing) ---');
-        console.log(`To: ${to}`);
-        console.log(`Subject: ${subject}`);
-        console.log(`Body: ${text}`);
-        console.log('-------------------------------------------');
-        return { id: 'mock-id' };
+        try {
+            const { getResendClient } = await import('./resend');
+            const resendClient = await getResendClient();
+            const html = await render(react);
+            const fromEmail = process.env.EMAIL_FROM || 'HealthExpress India <onboarding@resend.dev>';
+            const res = await resendClient.emails.send({
+                from: fromEmail,
+                to,
+                subject,
+                text,
+                html,
+            });
+            return res;
+        } catch (resendErr) {
+            console.error('Error sending email via Resend gateway:', resendErr);
+            return { id: 'mock-id' };
+        }
     }
 
     try {

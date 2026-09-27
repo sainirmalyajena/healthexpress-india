@@ -165,6 +165,8 @@ export default function SettingsClient({
     const [blandTestResult, setBlandTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
     const [testEmailAddr, setTestEmailAddr] = useState(currentUser.email || '');
+    const [customResendKey, setCustomResendKey] = useState('');
+    const [showKeyInput, setShowKeyInput] = useState(false);
     const [emailTesting, setEmailTesting] = useState(false);
     const [emailTestResult, setEmailTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -196,13 +198,20 @@ export default function SettingsClient({
             const res = await fetch('/api/dashboard/settings/test-email', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: testEmailAddr })
+                body: JSON.stringify({ 
+                    email: testEmailAddr,
+                    apiKey: customResendKey.trim() || undefined
+                })
             });
             const data = await res.json();
             if (res.ok && data.success) {
                 setEmailTestResult({ success: true, message: data.message });
+                setShowKeyInput(false);
             } else {
                 setEmailTestResult({ success: false, message: data.error || 'Email dispatch failed' });
+                if (data.error && data.error.toLowerCase().includes('api key')) {
+                    setShowKeyInput(true);
+                }
             }
         } catch {
             setEmailTestResult({ success: false, message: 'Network error sending test email' });
@@ -1208,23 +1217,63 @@ export default function SettingsClient({
                                     </div>
                                     {emailTestResult && (
                                         <p className={`text-[11px] font-medium mt-1.5 p-2 rounded-lg ${
-                                            emailTestResult.success ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                                            emailTestResult.success ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
                                         }`}>
                                             {emailTestResult.message}
                                         </p>
                                     )}
+
+                                    {/* Update Resend API Key Accordion */}
+                                    <div className="pt-2">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowKeyInput(!showKeyInput)}
+                                                className="text-[11px] font-bold text-amber-700 hover:text-amber-800 underline flex items-center gap-1"
+                                            >
+                                                <Key className="w-3 h-3" />
+                                                {showKeyInput ? 'Hide Key Input' : 'Update / Enter Resend API Key'}
+                                            </button>
+                                            <a
+                                                href="https://resend.com/api-keys"
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="text-[11px] text-slate-400 hover:text-amber-600 flex items-center gap-0.5"
+                                            >
+                                                Get free key ↗
+                                            </a>
+                                        </div>
+
+                                        {showKeyInput && (
+                                            <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl space-y-2 mt-1.5">
+                                                <p className="text-[11px] text-amber-900 leading-tight">
+                                                    Paste your active API key from <strong>resend.com/api-keys</strong> (starts with <code className="font-mono bg-white px-1 rounded">re_</code>):
+                                                </p>
+                                                <input
+                                                    type="password"
+                                                    value={customResendKey}
+                                                    onChange={(e) => setCustomResendKey(e.target.value)}
+                                                    placeholder="re_..."
+                                                    className="w-full px-3 py-1.5 text-xs bg-white border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
+                                                />
+                                                <p className="text-[10px] text-slate-500">
+                                                    Entering your key and clicking &quot;Send Test&quot; will verify and save it to your CRM database automatically.
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </form>
                             </div>
 
                             <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
                                 <span className="text-slate-400">Sender: sai@healthexpressindia.com</span>
                                 <a
-                                    href="https://resend.com/emails"
+                                    href="https://resend.com/api-keys"
                                     target="_blank"
                                     rel="noreferrer"
                                     className="text-amber-600 hover:text-amber-800 font-bold flex items-center gap-1"
                                 >
-                                    Resend Logs <ExternalLink className="w-3 h-3" />
+                                    Resend Keys <ExternalLink className="w-3 h-3" />
                                 </a>
                             </div>
                         </div>
