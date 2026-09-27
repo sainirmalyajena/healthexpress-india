@@ -77,9 +77,17 @@ export default function LasikCampaignForm() {
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 mb-2">Request Received!</h3>
                 <p className="text-slate-600 mb-6">Our eye-care counselor will call you within 15 minutes to confirm your free consultation.</p>
-                <div className="bg-slate-50 p-4 rounded-xl text-sm font-medium text-slate-700">
+                <div className="bg-slate-50 p-4 rounded-xl text-sm font-medium text-slate-700 mb-4">
                     <p>Free Cab Service will be coordinated during the call.</p>
                 </div>
+                <a
+                    href={`https://wa.me/919307861041?text=${encodeURIComponent(`Hello HealthExpress, I just requested a LASIK consultation in ${formData.city || 'Mumbai'}. Can I get instant slot confirmation and cost details?`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-200 transition-all hover:scale-[1.02]"
+                >
+                    💬 Connect with Eye Counselor on WhatsApp (Instant)
+                </a>
             </div>
         );
     }

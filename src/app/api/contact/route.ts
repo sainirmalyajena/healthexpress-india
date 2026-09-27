@@ -28,6 +28,16 @@ export async function POST(request: NextRequest) {
             ? descriptionParts.join(' | ')
             : 'General inquiry from contact page';
 
+        // Auto-assign to least loaded team counselor via round-robin
+        let assignedCounselor = null;
+        try {
+            assignedCounselor = await prisma.user.findFirst({
+                where: { role: 'team' },
+                orderBy: { assignedLeads: { _count: 'asc' } },
+                select: { id: true, name: true, email: true }
+            });
+        } catch { /* fallback to unassigned */ }
+
         // Save to Database without requiring a dummy surgery
         const lead = await prisma.lead.create({
             data: {
@@ -39,9 +49,37 @@ export async function POST(request: NextRequest) {
                 description,
                 sourcePage: '/contact',
                 referenceId,
-                status: 'NEW'
+                status: 'NEW',
+                assignedUserId: assignedCounselor?.id || null,
             }
         });
+
+        // Automated Email Notifications via Resend
+        try {
+            const { sendEmail, emailTemplates } = await import('@/lib/mailer');
+
+            if (body.email) {
+                const template = emailTemplates.leadConfirmation(body.name, referenceId, 'Medical Consultation');
+                await sendEmail({ to: body.email, ...template });
+            }
+
+            const adminTemplate = emailTemplates.adminInquiry({
+                referenceId,
+                fullName: body.name,
+                phone: body.phone,
+                email: body.email || undefined,
+                city: body.city || 'Not specified',
+                surgeryName: `General Contact Form${assignedCounselor ? ` [Assigned: ${assignedCounselor.name}]` : ''}`,
+                sourcePage: '/contact',
+            });
+
+            await sendEmail({
+                to: process.env.OPS_EMAIL || 'sai@healthexpressindia.com',
+                ...adminTemplate,
+            });
+        } catch (emailErr) {
+            console.error('Contact email alert error:', emailErr);
+        }
 
         console.log('Contact form lead created:', {
             id: lead.id,

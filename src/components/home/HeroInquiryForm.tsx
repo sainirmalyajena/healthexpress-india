@@ -99,10 +99,18 @@ export default function HeroInquiryForm() {
                 </div>
                 <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Request Received!</h3>
                 <p className="text-slate-600 mb-6 text-lg font-medium">Our medical expert will call you within <span className="text-slate-900 font-bold">15 minutes</span> to discuss your case.</p>
-                <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl text-sm font-medium text-slate-700 w-full mb-6">
+                <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl text-sm font-medium text-slate-700 w-full mb-4">
                     <p className="mb-2">Your Tracking ID:</p>
                     <p className="text-2xl font-black text-teal-600 tracking-wider font-mono">{trackingId}</p>
                 </div>
+                <a
+                    href={`https://wa.me/919307861041?text=${encodeURIComponent(`Hello HealthExpress, I just requested an inquiry on the website for ${formData.surgeryName || 'consultation'}. Tracking ID: ${trackingId}. Can I get instant consultation details?`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-200 transition-all hover:scale-[1.02] mb-3"
+                >
+                    💬 Chat with Coordinator on WhatsApp (Instant)
+                </a>
                 <button
                     onClick={() => {
                         setIsSuccess(false);
