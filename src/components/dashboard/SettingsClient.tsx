@@ -26,7 +26,15 @@ import {
     Percent,
     MapPin,
     GraduationCap,
-    Award
+    Award,
+    ExternalLink,
+    Copy,
+    Send,
+    RefreshCw,
+    Zap,
+    BarChart3,
+    ArrowRight,
+    Activity
 } from 'lucide-react';
 
 interface TeamMember {
@@ -142,6 +150,101 @@ export default function SettingsClient({
     } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteFeedback, setDeleteFeedback] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+
+    // Integrations interactive testing state
+    const [dbTesting, setDbTesting] = useState(false);
+    const [dbTestResult, setDbTestResult] = useState<{
+        latencyMs: number;
+        pooler: string;
+        counts: { leads: number; doctors: number; hospitals: number; teamMembers: number };
+        timestamp: string;
+    } | null>(null);
+
+    const [testPhone, setTestPhone] = useState('+91');
+    const [blandTesting, setBlandTesting] = useState(false);
+    const [blandTestResult, setBlandTestResult] = useState<{ success: boolean; message: string } | null>(null);
+
+    const [testEmailAddr, setTestEmailAddr] = useState(currentUser.email || '');
+    const [emailTesting, setEmailTesting] = useState(false);
+    const [emailTestResult, setEmailTestResult] = useState<{ success: boolean; message: string } | null>(null);
+
+    const [scriptCopied, setScriptCopied] = useState(false);
+
+    const handleDbPing = async () => {
+        setDbTesting(true);
+        setDbTestResult(null);
+        try {
+            const res = await fetch('/api/dashboard/settings/test-db');
+            const data = await res.json();
+            if (res.ok) {
+                setDbTestResult(data);
+            } else {
+                alert(data.error || 'Failed to ping database pooler');
+            }
+        } catch {
+            alert('Database ping timed out');
+        } finally {
+            setDbTesting(false);
+        }
+    };
+
+    const handleSendTestEmail = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setEmailTesting(true);
+        setEmailTestResult(null);
+        try {
+            const res = await fetch('/api/dashboard/settings/test-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: testEmailAddr })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setEmailTestResult({ success: true, message: data.message });
+            } else {
+                setEmailTestResult({ success: false, message: data.error || 'Email dispatch failed' });
+            }
+        } catch {
+            setEmailTestResult({ success: false, message: 'Network error sending test email' });
+        } finally {
+            setEmailTesting(false);
+        }
+    };
+
+    const handleTriggerBlandTest = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setBlandTesting(true);
+        setBlandTestResult(null);
+        try {
+            const res = await fetch('/api/ai/call-patient', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    patientName: currentUser.name || 'Admin',
+                    patientPhone: testPhone,
+                    reason: 'HealthExpress Live Voice AI Test'
+                })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                setBlandTestResult({ success: true, message: `Calling ${testPhone} now! Please answer to speak with Sarah.` });
+            } else {
+                const err = data.message || data.error || 'Bland AI test failed';
+                setBlandTestResult({ success: false, message: err });
+            }
+        } catch {
+            setBlandTestResult({ success: false, message: 'Network error triggering Bland AI' });
+        } finally {
+            setBlandTesting(false);
+        }
+    };
+
+    const handleCopyScript = () => {
+        const text = `Namaste! HealthExpress India se baat kar rahe hain. Aapne LASIK / Cataract surgery ke regarding inquiry ki thi. Hum aapko certified eye surgeons se direct consultation aur 0% EMI cashless options provide karte hain. Kya hum aapki appointment schedule karein?`;
+        navigator.clipboard.writeText(text);
+        setScriptCopied(true);
+        setTimeout(() => setScriptCopied(false), 3000);
+    };
 
     // Password submit handler
     const handlePasswordChange = async (e: React.FormEvent) => {
@@ -956,131 +1059,364 @@ export default function SettingsClient({
 
             {/* TAB: INTEGRATIONS & AI HEALTH */}
             {activeTab === 'integrations' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Database */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-                                    <Database className="w-5 h-5" />
-                                </div>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Connected
+                <div className="space-y-6">
+                    {/* Visual End-to-End Automation Pipeline */}
+                    <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 rounded-2xl p-6 text-white shadow-lg border border-slate-700/60">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30 mb-2">
+                                    <Zap className="w-3.5 h-3.5 text-teal-400" />
+                                    Automated Patient Acquisition Engine
                                 </span>
+                                <h2 className="text-xl font-bold tracking-tight">How Your CRM Integrations Convert Inquiries Into Surgeries</h2>
+                                <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                                    Every integration below plays a distinct role in turning patient clicks into confirmed hospital OPD consultations. Test each service below to ensure your pipeline is firing at 100%.
+                                </p>
                             </div>
-                            <h3 className="font-bold text-slate-900 text-base">Supabase PostgreSQL</h3>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                Real-time transaction pooler hosting leads, counselors, surgeries, and consultation logs.
-                            </p>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 text-xs font-mono text-slate-400">
-                            Pooler: aws-0-ap-northeast-1 (SSL Mode)
+
+                        {/* Funnel Steps */}
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400">Step 1: Traffic</span>
+                                <p className="font-bold text-white mt-1 text-sm">Meta &amp; Google Ads</p>
+                                <p className="text-slate-400 mt-1 text-[11px] leading-snug">Targeted ads on FB/IG &amp; Google Search capture patient interest for LASIK/Cataract.</p>
+                            </div>
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400">Step 2: Capture</span>
+                                <p className="font-bold text-white mt-1 text-sm">Supabase DB</p>
+                                <p className="text-slate-400 mt-1 text-[11px] leading-snug">Patient phone &amp; city instantly saved with zero lag (&lt;50ms pooler response).</p>
+                            </div>
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400">Step 3: Alert</span>
+                                <p className="font-bold text-white mt-1 text-sm">Resend Email</p>
+                                <p className="text-slate-400 mt-1 text-[11px] leading-snug">Immediate confirmation sent to patient &amp; instant lead alert to medical team.</p>
+                            </div>
+                            <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 backdrop-blur-sm">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400">Step 4: Contact</span>
+                                <p className="font-bold text-white mt-1 text-sm">Bland AI &amp; WhatsApp</p>
+                                <p className="text-slate-400 mt-1 text-[11px] leading-snug">Sarah AI dials patient in &lt;60s or counselors send WhatsApp welcome greeting.</p>
+                            </div>
+                            <div className="bg-teal-500/10 border border-teal-500/30 rounded-xl p-3.5 backdrop-blur-sm">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-teal-300">Step 5: Booking</span>
+                                <p className="font-bold text-teal-200 mt-1 text-sm">OPD Scheduled</p>
+                                <p className="text-teal-300/80 mt-1 text-[11px] leading-snug">Patient booked with preferred doctor &amp; cashless discount at partner hospital.</p>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Bland AI */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
-                                    <Bot className="w-5 h-5" />
+                    {/* Interactive Actionable Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {/* 1. BLAND AI VOICE RECEPTIONIST */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
+                                        <Bot className="w-5 h-5" />
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> API Key Active
+                                    </span>
                                 </div>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> API Key Active
-                                </span>
-                            </div>
-                            <h3 className="font-bold text-slate-900 text-base">Bland AI Autonomous Caller</h3>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                AI Receptionist &quot;Sarah&quot; dispatches outbound calls, qualifies patient urgency, and assists with appointment booking.
-                            </p>
-                        </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500 flex justify-between items-center">
-                            <span>Carrier Routing:</span>
-                            <span className="font-semibold text-purple-700">Indian Mobile Network (+91)</span>
-                        </div>
-                    </div>
+                                <h3 className="font-bold text-slate-900 text-base">Bland AI Autonomous Caller</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    AI Voice receptionist &quot;Sarah&quot; calls patients immediately upon form submission, answers treatment questions, and books OPD appointments.
+                                </p>
 
-                    {/* Resend Email */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
-                                    <Mail className="w-5 h-5" />
-                                </div>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
-                                </span>
+                                {/* Live Test Call Tool */}
+                                <form onSubmit={handleTriggerBlandTest} className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                                        Test Live AI Voice Call
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={testPhone}
+                                            onChange={(e) => setTestPhone(e.target.value)}
+                                            placeholder="+91..."
+                                            className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                                        />
+                                        <button
+                                            type="submit"
+                                            disabled={blandTesting}
+                                            className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold whitespace-nowrap shadow-sm disabled:opacity-50 flex items-center gap-1"
+                                        >
+                                            <Phone className="w-3 h-3" />
+                                            {blandTesting ? 'Dialing...' : 'Call Me'}
+                                        </button>
+                                    </div>
+                                    {blandTestResult && (
+                                        <p className={`text-[11px] font-medium mt-1.5 p-2 rounded-lg ${
+                                            blandTestResult.success ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                                        }`}>
+                                            {blandTestResult.message}
+                                        </p>
+                                    )}
+                                </form>
                             </div>
-                            <h3 className="font-bold text-slate-900 text-base">Resend Email Gateway</h3>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                Transactional email pipeline for consultation confirmations, partner approvals, and doctor notifications.
-                            </p>
-                        </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500">
-                            Sender: <span className="font-medium text-slate-700">sai@healthexpressindia.com</span>
-                        </div>
-                    </div>
 
-                    {/* Meta Ads & Pixel */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                                    M
-                                </div>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tracking Active
-                                </span>
+                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                                <span className="text-slate-400">Voice: Maya (En-US)</span>
+                                <a
+                                    href="https://app.bland.ai"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-purple-600 hover:text-purple-800 font-bold flex items-center gap-1"
+                                >
+                                    Bland Portal <ExternalLink className="w-3 h-3" />
+                                </a>
                             </div>
-                            <h3 className="font-bold text-slate-900 text-base">Meta Pixel &amp; Conversion API</h3>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                Tracks ad campaign conversions across Facebook &amp; Instagram for Lasik, Cataract, and Laparoscopy campaigns.
-                            </p>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 text-xs font-mono text-slate-500">
-                            Pixel ID: 2647191662345776
-                        </div>
-                    </div>
 
-                    {/* Google Analytics & Ads */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
-                                    G
+                        {/* 2. RESEND EMAIL GATEWAY */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                                        <Mail className="w-5 h-5" />
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+                                    </span>
                                 </div>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Connected
-                                </span>
-                            </div>
-                            <h3 className="font-bold text-slate-900 text-base">Google Analytics &amp; Ads</h3>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                GA4 Measurement &amp; Google Ads tag tracking high-intent landing page submissions and click-to-call conversions.
-                            </p>
-                        </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 text-xs font-mono text-slate-500">
-                            GA4: G-HJ1V4B9QQQ | Ads: AW-16966558904
-                        </div>
-                    </div>
+                                <h3 className="font-bold text-slate-900 text-base">Resend Email Gateway</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    Dispatches branded email confirmations for patient appointments, partner registrations, and counselor notifications.
+                                </p>
 
-                    {/* WhatsApp Business */}
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-10 h-10 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center text-green-600">
-                                    <Phone className="w-5 h-5" />
-                                </div>
-                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live
-                                </span>
+                                {/* Live Test Email Tool */}
+                                <form onSubmit={handleSendTestEmail} className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                                        Test Live Email Delivery
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="email"
+                                            value={testEmailAddr}
+                                            onChange={(e) => setTestEmailAddr(e.target.value)}
+                                            placeholder="your@email.com"
+                                            className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+                                        />
+                                        <button
+                                            type="submit"
+                                            disabled={emailTesting}
+                                            className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold whitespace-nowrap shadow-sm disabled:opacity-50 flex items-center gap-1"
+                                        >
+                                            <Send className="w-3 h-3" />
+                                            {emailTesting ? 'Sending...' : 'Send Test'}
+                                        </button>
+                                    </div>
+                                    {emailTestResult && (
+                                        <p className={`text-[11px] font-medium mt-1.5 p-2 rounded-lg ${
+                                            emailTestResult.success ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
+                                        }`}>
+                                            {emailTestResult.message}
+                                        </p>
+                                    )}
+                                </form>
                             </div>
-                            <h3 className="font-bold text-slate-900 text-base">WhatsApp Support Gateway</h3>
-                            <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                Real-time patient concierge button routing instant chat consultations to medical coordinators.
-                            </p>
+
+                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                                <span className="text-slate-400">Sender: sai@healthexpressindia.com</span>
+                                <a
+                                    href="https://resend.com/emails"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-amber-600 hover:text-amber-800 font-bold flex items-center gap-1"
+                                >
+                                    Resend Logs <ExternalLink className="w-3 h-3" />
+                                </a>
+                            </div>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-700 font-semibold">
-                            +91 93078 61041
+
+                        {/* 3. WHATSAPP SUPPORT GATEWAY */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center text-green-600">
+                                        <Phone className="w-5 h-5" />
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live
+                                    </span>
+                                </div>
+                                <h3 className="font-bold text-slate-900 text-base">WhatsApp Support Gateway</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    Connects patients to medical coordinators over WhatsApp. Instant ₹0 cost channel for converting hesitant patients.
+                                </p>
+
+                                {/* WhatsApp Actions */}
+                                <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                                    <a
+                                        href="https://wa.me/919307861041?text=Hello%20HealthExpress,%20I%20want%20to%20test%20the%20patient%20concierge%20chat."
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
+                                    >
+                                        <Phone className="w-3.5 h-3.5" />
+                                        Launch Test Patient Chat
+                                    </a>
+                                    <button
+                                        type="button"
+                                        onClick={handleCopyScript}
+                                        className="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+                                    >
+                                        <Copy className="w-3.5 h-3.5" />
+                                        {scriptCopied ? 'Script Copied to Clipboard!' : 'Copy Tele-Counselor Greeting Script'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                                <span className="font-semibold text-slate-700">+91 93078 61041</span>
+                                <span className="text-emerald-600 font-bold">Free Channel</span>
+                            </div>
+                        </div>
+
+                        {/* 4. SUPABASE POSTGRESQL DATABASE */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                                        <Database className="w-5 h-5" />
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Connected
+                                    </span>
+                                </div>
+                                <h3 className="font-bold text-slate-900 text-base">Supabase PostgreSQL</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    Cloud transaction database pooler hosting leads, counselors, surgeries, and consultation logs.
+                                </p>
+
+                                {/* Database Diagnostic Ping Tool */}
+                                <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleDbPing}
+                                        disabled={dbTesting}
+                                        className="w-full py-2 px-3 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                                    >
+                                        <Activity className="w-3.5 h-3.5 text-blue-600" />
+                                        {dbTesting ? 'Measuring Latency...' : 'Run Diagnostic Ping'}
+                                    </button>
+
+                                    {dbTestResult && (
+                                        <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1">
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500">Query Latency:</span>
+                                                <span className="font-bold text-emerald-600">{dbTestResult.latencyMs} ms (Optimal)</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-500">Records in DB:</span>
+                                                <span className="font-bold text-slate-800">
+                                                    {dbTestResult.counts.leads} leads | {dbTestResult.counts.doctors} doctors
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                                <span className="text-slate-400 font-mono">aws-0-ap-northeast-1</span>
+                                <a
+                                    href="https://supabase.com/dashboard"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1"
+                                >
+                                    Supabase Console <ExternalLink className="w-3 h-3" />
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* 5. META ADS PIXEL & CAPI */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                                        M
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tracking Active
+                                    </span>
+                                </div>
+                                <h3 className="font-bold text-slate-900 text-base">Meta Pixel &amp; Conversion API</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    Tracks ad campaign conversions across Facebook &amp; Instagram for Lasik, Cataract, and Laparoscopy campaigns.
+                                </p>
+
+                                <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                                    <div className="p-2.5 bg-slate-50 rounded-lg text-xs space-y-1">
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-500">Pixel ID:</span>
+                                            <span className="font-mono font-bold text-slate-800">2647191662345776</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-500">Conversion Event:</span>
+                                            <span className="font-bold text-teal-700">Lead &amp; Contact</span>
+                                        </div>
+                                    </div>
+                                    <a
+                                        href="https://business.facebook.com/events_manager2/list/pixel/2647191662345776/test_events"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                                    >
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                        Launch Meta Test Events Tool
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                                <span>Optimization: Cost-Per-Lead (CPL)</span>
+                            </div>
+                        </div>
+
+                        {/* 6. GOOGLE ANALYTICS 4 & ADS */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+                                        G
+                                    </div>
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Connected
+                                    </span>
+                                </div>
+                                <h3 className="font-bold text-slate-900 text-base">Google Analytics &amp; Ads</h3>
+                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                                    GA4 Measurement &amp; Google Ads tag tracking high-intent landing page submissions and click-to-call conversions.
+                                </p>
+
+                                <div className="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                                    <div className="p-2.5 bg-slate-50 rounded-lg text-xs space-y-1">
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-500">GA4 Tag:</span>
+                                            <span className="font-mono font-bold text-slate-800">G-HJ1V4B9QQQ</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-500">Google Ads:</span>
+                                            <span className="font-mono font-bold text-slate-800">AW-16966558904</span>
+                                        </div>
+                                    </div>
+                                    <a
+                                        href="https://analytics.google.com"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                                    >
+                                        <BarChart3 className="w-3.5 h-3.5" />
+                                        Open GA4 Realtime Analytics
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                                <span>Tracks: generate_lead, phone_call</span>
+                            </div>
                         </div>
                     </div>
                 </div>
