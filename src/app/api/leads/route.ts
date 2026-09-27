@@ -124,6 +124,16 @@ export async function POST(request: NextRequest) {
             aiResult.suggestedNotes,
         ].filter(Boolean).join(' ');
 
+        // Auto-assign to least loaded team counselor via round-robin
+        let assignedCounselor = null;
+        try {
+            assignedCounselor = await prisma.user.findFirst({
+                where: { role: 'team' },
+                orderBy: { assignedLeads: { _count: 'asc' } },
+                select: { id: true, name: true, email: true }
+            });
+        } catch { /* fallback to unassigned */ }
+
         // Save to DB
         await prisma.lead.create({
             data: {
@@ -144,6 +154,7 @@ export async function POST(request: NextRequest) {
                 referenceId,
                 status: initialStatus,
                 notes: notesContent || null,
+                assignedUserId: assignedCounselor?.id || null,
             },
         });
 
@@ -166,7 +177,7 @@ export async function POST(request: NextRequest) {
                 phone: data.phone,
                 email: data.email || undefined,
                 city: data.city,
-                surgeryName: `${urgencyPrefix}${surgery.name}`,
+                surgeryName: `${urgencyPrefix}${surgery.name}${assignedCounselor ? ` [Assigned: ${assignedCounselor.name}]` : ''}`,
                 sourcePage: body.sourcePage || '/',
             });
 

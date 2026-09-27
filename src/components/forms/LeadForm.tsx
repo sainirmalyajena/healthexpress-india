@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { leadFormSchema, LeadFormData } from '@/lib/validations';
 import { Button, Input, Select, Textarea, Checkbox } from '@/components/ui';
-import { Lock, ShieldCheck, Clock, CheckCircle2, UserCheck, Stethoscope } from 'lucide-react';
+import { Lock, ShieldCheck, Clock, CheckCircle2, UserCheck, Stethoscope, MessageCircle } from 'lucide-react';
 
 interface LeadFormProps {
     surgeryId: string;
@@ -98,9 +98,23 @@ export function LeadForm({ surgeryId, surgeryName }: LeadFormProps) {
                 </p>
 
                 {/* Reference ID Pill */}
-                <div className="inline-flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 mb-10 shadow-sm">
+                <div className="inline-flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-5 py-3 mb-6 shadow-sm">
                     <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ref ID:</span>
                     <span className="text-lg font-mono font-bold text-teal-700 tracking-wider">{submitResult.referenceId}</span>
+                </div>
+
+                {/* Instant WhatsApp Connect Button */}
+                <div className="mb-8">
+                    <a
+                        href={`https://wa.me/919307861041?text=${encodeURIComponent(`Hello HealthExpress, I just requested an appointment for ${surgeryName}. Ref ID: ${submitResult.referenceId}. Can I get instant consultation details?`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 w-full max-w-sm px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-200 transition-all hover:scale-[1.02]"
+                    >
+                        <MessageCircle className="w-5 h-5" />
+                        Chat on WhatsApp Now (Instant &amp; Free)
+                    </a>
+                    <p className="text-[11px] text-slate-400 mt-1.5">Connect directly with a care coordinator on WhatsApp</p>
                 </div>
 
                 {/* What's Next Timeline */}
