@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       description: isHi ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें।" : "Find the right surgery at the right hospital across India.",
       images: [
         {
-          url: "/hero-elite.png",
+          url: `${baseUrl}/logo.png`,
           width: 1200,
           height: 630,
           alt: "HealthExpress India - Advanced Medical Care",
@@ -79,6 +79,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       card: "summary_large_image",
       title: isHi ? "HealthExpress India - सर्जरी और अस्पताल सहायता" : "HealthExpress India - Surgery & Hospitalization Support",
       description: isHi ? "भारत भर के सही अस्पताल में सही सर्जरी खोजें।" : "Find the right surgery at the right hospital across India.",
+      images: [`${baseUrl}/logo.png`],
     },
     robots: {
       index: true,

@@ -325,7 +325,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       description,
       url: canonical,
       siteName: "HealthExpress India",
-      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "HealthExpress India" }],
+      images: [{ url: `${baseUrl}/logo.png`, width: 1200, height: 630, alt: "HealthExpress India" }],
     },
   };
 }
