@@ -355,15 +355,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                             </a>
                                                         );
                                                     })()}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleAiCall(lead)}
-                                                        disabled={callingLeadId === lead.id}
-                                                        className="text-xs text-purple-700 hover:text-purple-900 font-medium flex items-center gap-1 bg-purple-50 hover:bg-purple-100 px-1.5 py-0.5 rounded border border-purple-200 transition-colors disabled:opacity-50"
-                                                        title="Trigger automated AI Voice Receptionist to call this patient"
-                                                    >
-                                                        {callingLeadId === lead.id ? '⏳ Calling...' : '🤖 AI Call'}
-                                                    </button>
+                                                    {/* AI Caller Button removed per user request */}
                                                 </div>
                                             </div>
                                         </td>

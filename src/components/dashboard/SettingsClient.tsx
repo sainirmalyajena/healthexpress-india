@@ -1116,67 +1116,7 @@ export default function SettingsClient({
 
                     {/* Interactive Actionable Cards Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {/* 1. BLAND AI VOICE RECEPTIONIST */}
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600">
-                                        <Bot className="w-5 h-5" />
-                                    </div>
-                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> API Key Active
-                                    </span>
-                                </div>
-                                <h3 className="font-bold text-slate-900 text-base">Bland AI Autonomous Caller</h3>
-                                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                                    AI Voice receptionist &quot;Sarah&quot; calls patients immediately upon form submission, answers treatment questions, and books OPD appointments.
-                                </p>
-
-                                {/* Live Test Call Tool */}
-                                <form onSubmit={handleTriggerBlandTest} className="mt-4 pt-4 border-t border-slate-100 space-y-2">
-                                    <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-                                        Test Live AI Voice Call
-                                    </label>
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="text"
-                                            value={testPhone}
-                                            onChange={(e) => setTestPhone(e.target.value)}
-                                            placeholder="+91..."
-                                            className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
-                                        />
-                                        <button
-                                            type="submit"
-                                            disabled={blandTesting}
-                                            className="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs font-bold whitespace-nowrap shadow-sm disabled:opacity-50 flex items-center gap-1"
-                                        >
-                                            <Phone className="w-3 h-3" />
-                                            {blandTesting ? 'Dialing...' : 'Call Me'}
-                                        </button>
-                                    </div>
-                                    {blandTestResult && (
-                                        <p className={`text-[11px] font-medium mt-1.5 p-2 rounded-lg ${
-                                            blandTestResult.success ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'
-                                        }`}>
-                                            {blandTestResult.message}
-                                        </p>
-                                    )}
-                                </form>
-                            </div>
-
-                            <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                                <span className="text-slate-400">Voice: Maya (En-US)</span>
-                                <a
-                                    href="https://app.bland.ai"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="text-purple-600 hover:text-purple-800 font-bold flex items-center gap-1"
-                                >
-                                    Bland Portal <ExternalLink className="w-3 h-3" />
-                                </a>
-                            </div>
-                        </div>
-
+                        {/* BLAND AI VOICE RECEPTIONIST (Temporarily Disabled per user request) */}
                         {/* 2. RESEND EMAIL GATEWAY */}
                         <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
                             <div>
