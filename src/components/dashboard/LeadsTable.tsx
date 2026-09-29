@@ -333,6 +333,9 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                     <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:text-teal-800 hover:underline font-medium flex items-center gap-1">
                                                         📞 {lead.phone}
                                                     </a>
+                                                      <div className="md:hidden mt-1 text-[10px] text-slate-500 font-medium w-full">
+                                                          Added: {new Date(lead.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                                      </div>
                                                     {(() => {
                                                         const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
                                                         const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
