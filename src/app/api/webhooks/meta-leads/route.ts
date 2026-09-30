@@ -99,8 +99,15 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
 
     // Phone is mandatory
     if (!phone) {
-        console.warn('Meta lead has no phone number, skipping:', leadgenId);
-        return;
+        if (!accessToken) {
+            phone = '+910000000000';
+            name = 'Test Lead (Missing Access Token)';
+            city = 'System Test';
+            console.log('Using fallback test data because token is missing.');
+        } else {
+            console.warn('Meta lead has no phone number, skipping:', leadgenId);
+            return;
+        }
     }
 
     const cleanedPhone = phone.toString().replace(/[^\d+]/g, '');
@@ -223,3 +230,4 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
         console.error('Meta lead email alert error:', emailErr);
     }
 }
+
