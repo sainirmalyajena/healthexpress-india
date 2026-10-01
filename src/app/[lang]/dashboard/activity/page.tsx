@@ -59,7 +59,7 @@ export default async function ActivityLogPage() {
                                         </td>
                                         <td className="px-4 py-3 text-blue-600">
                                             {log.lead ? (
-                                                <a href={"/en/dashboard/leads?query=${log.lead.referenceId}"} className="hover:underline">
+                                                <a href={`/en/dashboard/leads?query=${log.lead.referenceId}`} className="hover:underline">
                                                     {log.lead.fullName || 'View Lead'}
                                                 </a>
                                             ) : '-'}
@@ -81,5 +81,6 @@ export default async function ActivityLogPage() {
         </DashboardShell>
     );
 }
+
 
 
