@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+﻿import { prisma } from '@/lib/prisma';
 import LeadsTable from './LeadsTable';
 import { LeadStatus } from '@/generated/prisma';
 
@@ -77,7 +77,7 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
                     <h2 className="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
                         ?? Urgent: Overdue Follow-ups
                     </h2>
-                    <LeadsTable leads={overdueFollowUps as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} />
+                    <LeadsTable leads={overdueFollowUps as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} userRole="team" />
                 </div>
             )}
 
@@ -86,7 +86,7 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
                     <h2 className="text-xl font-bold text-amber-600 mb-4 flex items-center gap-2">
                         ?? Today's Scheduled Calls
                     </h2>
-                    <LeadsTable leads={todaysFollowUps as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} />
+                    <LeadsTable leads={todaysFollowUps as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} userRole="team" />
                 </div>
             )}
 
@@ -95,7 +95,7 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
                     <h2 className="text-xl font-bold text-indigo-600 mb-4 flex items-center gap-2">
                         ?? OPDs Arriving Today
                     </h2>
-                    <LeadsTable leads={todaysOPDs as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} />
+                    <LeadsTable leads={todaysOPDs as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} userRole="team" />
                 </div>
             )}
 
@@ -104,7 +104,7 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
                     <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
                         ?? Uncontacted Fresh Leads
                     </h2>
-                    <LeadsTable leads={uncontacted as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} />
+                    <LeadsTable leads={uncontacted as any} hospitals={hospitals} statuses={statuses} teamMembers={teamMembers} userRole="team" />
                 </div>
             )}
 
@@ -118,3 +118,4 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
         </div>
     );
 }
+

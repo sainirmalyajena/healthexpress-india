@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+﻿import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, AlertTriangle, PhoneCall, Calendar, UserPlus } from 'lucide-react';
 import { getAdminSession } from '@/lib/admin-auth';
@@ -342,10 +342,7 @@ const { leads, total, totalPages } = data;
                     </div>
 
                     {/* Table */}
-                    <LeadsTable
-                        leads={data.leads}
-                        hospitals={data.hospitals}
-                        statuses={statuses} teamMembers={teamMembers}
+                    <LeadsTable leads={data.leads} hospitals={data.hospitals} statuses={statuses} teamMembers={teamMembers} userRole={session.role}
                     />
 
                     {/* Pagination */}
@@ -385,6 +382,7 @@ const { leads, total, totalPages } = data;
         </div>
     );
 }
+
 
 
 

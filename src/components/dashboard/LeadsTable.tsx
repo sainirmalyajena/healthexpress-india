@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -39,13 +39,14 @@ interface Lead {
 }
 
 interface LeadsTableProps {
+    userRole?: string;
     leads: Lead[];
     statuses: string[];
     hospitals: { id: string, name: string, discountPercent: number }[];
     teamMembers: { id: string, name: string }[];
 }
 
-export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: LeadsTableProps) {
+export default function LeadsTable({ leads, statuses, hospitals, teamMembers, userRole = 'admin' }: LeadsTableProps) {
     const [localLeads, setLocalLeads] = useState<Lead[]>(leads);
     useEffect(() => { setLocalLeads(leads); }, [leads]);
 
@@ -59,8 +60,8 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
 
     const handleAiCall = async (lead: Lead) => {
         if (!window.confirm(
-            `🤖 Trigger Bland AI Voice Call to ${lead.fullName} (${lead.phone})?\n\n` +
-            `⚠️ COST NOTICE: Bland AI charges ~$0.09 (₹7.50) per minute from your Bland balance.\n` +
+            `ðŸ¤– Trigger Bland AI Voice Call to ${lead.fullName} (${lead.phone})?\n\n` +
+            `âš ï¸ COST NOTICE: Bland AI charges ~$0.09 (â‚¹7.50) per minute from your Bland balance.\n` +
             `Your current account balance is ~$1.96 (~15-20 minutes total).\n\n` +
             `Sarah (AI Voice Receptionist) will dial the patient, inquire about their "${lead.surgery?.name || 'medical consultation'}", and attempt to book an appointment automatically.\n\n` +
             `Do you want to proceed with this call?`
@@ -83,17 +84,17 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
             });
             const data = await res.json();
             if (data.success) {
-                alert(`✅ AI Call initiated! Sarah (Bland AI) is calling ${lead.fullName} now. (Call ID: ${data.callId || 'active'})`);
+                alert(`âœ… AI Call initiated! Sarah (Bland AI) is calling ${lead.fullName} now. (Call ID: ${data.callId || 'active'})`);
             } else {
                 const errorMsg = data.message || data.error || 'Check Bland AI configuration';
                 if (errorMsg.toLowerCase().includes('international calling requires a completed purchase')) {
-                    alert(`❌ Bland AI Notice: International calls to Indian (+91) numbers are locked on trial accounts.\n\nTo unlock AI calling to India:\n1. Log into your Bland AI dashboard at https://app.bland.ai\n2. Go to Billing and make a minimum $10 credit purchase.\n\n💡 In the meantime, you can message ${lead.fullName} directly for ₹0 using the green WhatsApp button!`);
+                    alert(`âŒ Bland AI Notice: International calls to Indian (+91) numbers are locked on trial accounts.\n\nTo unlock AI calling to India:\n1. Log into your Bland AI dashboard at https://app.bland.ai\n2. Go to Billing and make a minimum $10 credit purchase.\n\nðŸ’¡ In the meantime, you can message ${lead.fullName} directly for â‚¹0 using the green WhatsApp button!`);
                 } else {
-                    alert(`❌ AI Call failed: ${errorMsg}`);
+                    alert(`âŒ AI Call failed: ${errorMsg}`);
                 }
             }
         } catch (err: any) {
-            alert(`❌ AI Call error: ${err.message}`);
+            alert(`âŒ AI Call error: ${err.message}`);
         } finally {
             setCallingLeadId(null);
         }
@@ -221,6 +222,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                             {selectedLeads.length} lead{selectedLeads.length > 1 ? 's' : ''} selected
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
+                            {userRole === 'admin' && (<>
                             <button
                                 type="button"
                                 onClick={() => handleExportCSV(localLeads.filter(l => selectedLeads.includes(l.id)))}
@@ -235,8 +237,9 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
                                 title="Import selected leads to phone contacts for WhatsApp broadcast"
                             >
-                                📇 Export Phone Contacts (.vcf)
+                                📱 Export Phone Contacts (.vcf)
                             </button>
+                            </>)}
                             <select
                                 value={bulkAssignUser}
                                 onChange={(e) => setBulkAssignUser(e.target.value)}
@@ -261,14 +264,14 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                         <p className="text-xs text-slate-500">
                             Total Leads: <span className="font-semibold text-slate-700">{localLeads.length}</span>
                         </p>
-                        <div className="flex items-center gap-2">
+                        {userRole === 'admin' && (<div className="flex items-center gap-2">
                             <button
                                 type="button"
                                 onClick={() => handleExportCSV(localLeads)}
                                 className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
                                 title="Export all leads to CSV"
                             >
-                                📊 Export All CSV
+                                ?? Export All CSV
                             </button>
                             <button
                                 type="button"
@@ -276,9 +279,9 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
                                 title="Export all contacts to VCF file for phone / WhatsApp broadcast"
                             >
-                                📇 Export All Contacts (.vcf)
+                                ?? Export All Contacts (.vcf)
                             </button>
-                        </div>
+                        </div>)}
                     </div>
                 )}
             </div>
@@ -331,7 +334,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                 <p className="font-medium text-slate-900">{lead.fullName}</p>
                                                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                                                     <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:text-teal-800 hover:underline font-medium flex items-center gap-1">
-                                                        📞 {lead.phone}
+                                                        ðŸ“ž {lead.phone}
                                                     </a>
                                                       <div className="md:hidden mt-1 text-[10px] text-slate-500 font-medium w-full">
                                                           Added: {new Date(lead.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
@@ -340,7 +343,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
                                                         const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
                                                         const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
                                                         const msg = encodeURIComponent(
-                                                            `Hi ${lead.fullName}, this is HealthExpress India regarding your inquiry for ${lead.surgery?.name || 'medical consultation'}. We have NABH partner hospitals in ${lead.city || 'your city'} with 100% cashless insurance & 0% EMI. Would you like to check the cost estimate or book a ₹0 doctor OPD consultation?`
+                                                            `Hi ${lead.fullName}, this is HealthExpress India regarding your inquiry for ${lead.surgery?.name || 'medical consultation'}. We have NABH partner hospitals in ${lead.city || 'your city'} with 100% cashless insurance & 0% EMI. Would you like to check the cost estimate or book a â‚¹0 doctor OPD consultation?`
                                                         );
                                                         return (
                                                             <a 
@@ -440,5 +443,8 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers }: 
         </>
     );
 }
+
+
+
 
 
