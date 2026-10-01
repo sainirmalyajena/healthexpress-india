@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import NotificationBell from './NotificationBell';
@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import { Menu, X, LayoutDashboard, Users, BarChart, Handshake, Stethoscope, Settings as SettingsIcon } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Users, BarChart, Handshake, Stethoscope, Settings as SettingsIcon, ClipboardList } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Heartbeat from './Heartbeat';
 
@@ -24,6 +24,7 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
         { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Leads', href: '/dashboard/leads', icon: <Users className="w-5 h-5" /> },
         { name: 'Team Analytics', href: '/dashboard/analytics', icon: <BarChart className="w-5 h-5" /> },
+        { name: 'Audit Logs', href: '/dashboard/activity', icon: <ClipboardList className="w-5 h-5" /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <SettingsIcon className="w-5 h-5" /> },
     ] : [
         { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -31,6 +32,7 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
         { name: 'Team Analytics', href: '/dashboard/analytics', icon: <BarChart className="w-5 h-5" /> },
         { name: 'Partner Requests', href: '/dashboard/partners', icon: <Handshake className="w-5 h-5" /> },
         { name: 'Doctors', href: '/dashboard/doctors', icon: <Stethoscope className="w-5 h-5" /> },
+        { name: 'Audit Logs', href: '/dashboard/activity', icon: <ClipboardList className="w-5 h-5" /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <SettingsIcon className="w-5 h-5" /> },
     ];
 
@@ -160,4 +162,5 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
         </div>
     );
 }
+
 
