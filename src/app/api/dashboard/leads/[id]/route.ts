@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus } from '@/generated/prisma';
@@ -87,9 +87,6 @@ export async function PATCH(
                 actionType: 'LEAD_ASSIGNED',
                 details: JSON.stringify({ to: assignedUserId })
             });
-            if (!oldLead.firstContactedAt) {
-                dataToUpdate.firstContactedAt = new Date();
-            }
         }
 
         if (oldLead && notes !== undefined && notes !== oldLead.notes) {
@@ -186,3 +183,4 @@ export async function DELETE(
         return NextResponse.json({ error: error.message || 'Failed to delete lead' }, { status: 500 });
     }
 }
+
