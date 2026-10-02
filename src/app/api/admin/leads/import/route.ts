@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAdminSession } from '@/lib/admin-auth';
 import { LeadStatus } from '@/generated/prisma';
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             const centrePref = row['which_centre_would_you_prefer?'] || row['Preferred Centre'] || '';
             const healthIns = row['do_you_have_health_insurance?'] || row['Health Insurance'] || '';
             const platform = row.platform || row.Platform || '';
-            const lasikInterest = row['LASIK Interest'] || '';
+            const lasikInterest = row['LASIK Interest'] || row['are_you_looking_for_lasik_surgery'] || '';
             
             let combinedDescription = row.description || 'Imported from CSV';
             if (notesField || followUpsField || centrePref || healthIns || lasikInterest) {
@@ -141,3 +141,4 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
     }
 }
+

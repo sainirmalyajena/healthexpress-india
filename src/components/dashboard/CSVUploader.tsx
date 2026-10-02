@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { Upload } from 'lucide-react';
 import Papa from 'papaparse';
@@ -81,25 +81,24 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
         return firstLine.trimStart().startsWith('l:');
     };
 
-    const handleUpload = async () => {
+        const handleUpload = async () => {
         if (!file) return;
         setUploading(true);
         setMessage('');
 
         try {
             const text = await file.text();
-            let parsedLeads: Record<string, string>[];
-
-            if (isMetaAdsCsv(text)) {
-                // Meta Ads format: positional parsing
-                parsedLeads = parseMetaAdsCsv(text);
-            } else {
-                // Standard CSV with proper headers
-                // Facebook sometimes exports TSV wrapped in full-line quotes which breaks PapaParse
-                const cleanText = text.replace(/^"/gm, '').replace(/"\s*$/gm, '');
-                const result = Papa.parse(cleanText, { header: true, skipEmptyLines: true });
-                parsedLeads = result.data as Record<string, string>[];
-            }
+            
+            // PapaParse handles TSV and CSV natively. 
+            // We just need to parse it with headers.
+            const result = Papa.parse(text, { 
+                header: true, 
+                skipEmptyLines: true,
+                transformHeader: (header) => header.trim().replace(/^"|"$/g, ''),
+                transform: (value) => value.trim().replace(/^"|"$/g, '') 
+            });
+            
+            let parsedLeads = result.data as Record<string, string>[];
 
             if (parsedLeads.length === 0) {
                 setMessage('No valid leads found in the CSV. Check the file format.');
@@ -108,6 +107,13 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
             }
 
             const response = await fetch('/api/admin/leads/import', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    leads: parsedLeads,
+                    assignedUserId: assigneeId || null
+                })
+            });
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -174,3 +180,4 @@ export function CSVUploader({ teamMembers }: { teamMembers: any[] }) {
         </div>
     );
 }
+
