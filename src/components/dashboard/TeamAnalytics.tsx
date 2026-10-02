@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -58,7 +58,7 @@ function getActionLabel(actionType: string, details: string | null): string {
             if (details) {
                 try {
                     const d = JSON.parse(details);
-                    return `Logged call: ${d.outcome}${d.note ? ` � "${d.note}"` : ''}`;
+                    return `Logged call: ${d.outcome}${d.note ? ` ï¿½ "${d.note}"` : ''}`;
                 } catch { /* fall through */ }
             }
             return 'Logged a call';
@@ -131,7 +131,7 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
                     <p className="text-2xl font-bold text-green-600 mt-1">{onlineCount}</p>
                 </div>
                 <div className="bg-white border border-slate-200 rounded-xl p-4">
-                    <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">Calls Today</p>
+                    <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">ACTIONS TODAY</p>
                     <p className="text-2xl font-bold text-teal-600 mt-1">{totalCallsToday}</p>
                 </div>
                 <div className="bg-white border border-slate-200 rounded-xl p-4">
@@ -168,8 +168,8 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Agent</th>
                                 <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Status</th>
                                 <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Total Leads</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Calls Today</th>
-                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Call Progress</th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">ACTIONS TODAY</th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">DAILY GOAL</th>
                                 <th className="px-4 py-3 text-center text-xs font-semibold text-slate-500 uppercase">Speed to Lead</th>
                             </tr>
                         </thead>
@@ -215,7 +215,7 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
                                                     {member.avgSpeedToLead} min
                                                 </span>
                                             ) : (
-                                                <span className="text-xs text-slate-400">�</span>
+                                                <span className="text-xs text-slate-400">ï¿½</span>
                                             )}
                                         </td>
                                     </tr>
@@ -260,3 +260,4 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
         </div>
     );
 }
+

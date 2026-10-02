@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+﻿import { redirect } from 'next/navigation';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
@@ -41,7 +41,7 @@ export default async function AnalyticsPage() {
     const callCounts = await prisma.activityLog.groupBy({
         by: ['userId'],
         where: {
-            actionType: 'CALL_LOGGED',
+            actionType: { in: ['CALL_LOGGED', 'STATUS_CHANGED', 'NOTE_ADDED'] },
             createdAt: { gte: startOfDay }
         },
         _count: { id: true }
@@ -115,3 +115,4 @@ export default async function AnalyticsPage() {
         </DashboardShell>
     );
 }
+
