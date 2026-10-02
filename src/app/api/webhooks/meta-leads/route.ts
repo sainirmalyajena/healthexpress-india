@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
 const VERIFY_TOKEN = process.env.META_WEBHOOK_VERIFY_TOKEN || 'healthexpress_meta_leads_2026';
 
-// ─── GET: Meta Webhook Verification Challenge ───────────────────────
+// â”€â”€â”€ GET: Meta Webhook Verification Challenge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     const mode = url.searchParams.get('hub.mode');
@@ -13,14 +13,14 @@ export async function GET(request: NextRequest) {
     const challenge = url.searchParams.get('hub.challenge');
 
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-        console.log('✅ Meta Lead Ads Webhook Verified!');
+        console.log('âœ… Meta Lead Ads Webhook Verified!');
         return new NextResponse(challenge, { status: 200 });
     }
 
     return new NextResponse('Forbidden', { status: 403 });
 }
 
-// ─── POST: Receive Lead Ad Submissions ──────────────────────────────
+// â”€â”€â”€ POST: Receive Lead Ad Submissions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// ─── Fetch lead details from Graph API & save to CRM ────────────────
+// â”€â”€â”€ Fetch lead details from Graph API & save to CRM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function processMetaLead(leadgenId: string, formId?: string, pageId?: string) {
     const accessToken = process.env.META_PAGE_ACCESS_TOKEN;
 
@@ -168,7 +168,7 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
             }
         });
 
-        console.log('♻️ Meta Lead updated (dedup):', existingLead.id);
+        console.log('â™»ï¸ Meta Lead updated (dedup):', existingLead.id);
         return;
     }
 
@@ -193,14 +193,14 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
         }
     });
 
-    console.log('🆕 Meta Lead created:', newLead.id, referenceId);
+    console.log('ðŸ†• Meta Lead created:', newLead.id, referenceId);
 
     // In-app notification for assigned counselor
     if (assignedUserId) {
         await prisma.notification.create({
             data: {
                 userId: assignedUserId,
-                title: '🔥 New Facebook Lead!',
+                title: 'ðŸ”¥ New Facebook Lead!',
                 message: `${name} (${cleanedPhone}) just submitted a lead form on Facebook. Call within 2 minutes!`,
                 type: 'LEAD_ASSIGNED',
                 link: '/en/dashboard/leads'
@@ -218,7 +218,7 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
             phone: cleanedPhone,
             email: email || undefined,
             city,
-            surgeryName: `Meta Lead Ads${assignedName ? ` → ${assignedName}` : ''}`,
+            surgeryName: `Meta Lead Ads${assignedName ? ` â†’ ${assignedName}` : ''}`,
             sourcePage: 'Facebook Lead Ads (Direct Webhook)'
         });
 
@@ -230,4 +230,5 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
         console.error('Meta lead email alert error:', emailErr);
     }
 }
+
 
