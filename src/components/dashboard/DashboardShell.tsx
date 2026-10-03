@@ -24,6 +24,8 @@ export default function DashboardShell({ children, userName, userRole }: Dashboa
         { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
         { name: 'Leads', href: '/dashboard/leads', icon: <Users className="w-5 h-5" /> },
         { name: 'Team Analytics', href: '/dashboard/analytics', icon: <BarChart className="w-5 h-5" /> },
+        { name: 'Hospitals', href: '/dashboard/hospitals', icon: <Handshake className="w-5 h-5" /> },
+        { name: 'Doctors', href: '/dashboard/doctors', icon: <Stethoscope className="w-5 h-5" /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <SettingsIcon className="w-5 h-5" /> },
     ] : [
         { name: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },

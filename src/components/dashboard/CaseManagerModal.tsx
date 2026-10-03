@@ -197,26 +197,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                     <option key={h.id} value={h.id}>{h.name}</option>
                                 ))}
                             </select>
-                            {hospitalId && hospitals.find(h => h.id === hospitalId) && (
-                                <div className="mt-3 p-3 bg-teal-50 border border-teal-100 rounded-lg">
-                                    <h4 className="text-xs font-bold text-teal-800 uppercase mb-2">Hospital Pitch Details</h4>
-                                    {hospitals.find(h => h.id === hospitalId)?.doctors?.[0] && (
-                                        <div className="mb-1">
-                                            <span className="text-xs font-semibold text-slate-600">Doctor:</span>
-                                            <span className="ml-1 text-sm font-bold text-slate-900">{hospitals.find(h => h.id === hospitalId)?.doctors?.[0].name}</span>
-                                        </div>
-                                    )}
-                                    <div className="mb-1">
-                                        <span className="text-xs font-semibold text-slate-600">Location:</span>
-                                        <span className="ml-1 text-sm text-slate-800">{hospitals.find(h => h.id === hospitalId)?.city}</span>
-                                    </div>
-                                    {hospitals.find(h => h.id === hospitalId)?.doctors?.[0]?.about && (
-                                        <div className="mt-2 text-xs text-slate-600 italic">
-                                            "{hospitals.find(h => h.id === hospitalId)?.doctors?.[0].about}"
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            
                         </div>
                     </div>
 

@@ -27,7 +27,7 @@ export default async function HospitalsManagementPage() {
                             <h1 className="text-2xl font-bold text-slate-900">Hospital Directory & Analytics</h1>
                             <p className="text-sm text-slate-500 mt-1">Manage partner hospitals and track how many cases you are sharing.</p>
                         </div>
-                        <AddHospitalModal />
+                        {session.role === "admin" && <AddHospitalModal />}
                     </div>
 
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
@@ -47,7 +47,7 @@ export default async function HospitalsManagementPage() {
                                         <tr>
                                             <td colSpan={5} className="px-6 py-20 text-center">
                                                 <div className="flex flex-col items-center">
-                                                    <span className="text-4xl mb-4">dY?</span>
+                                                    <span className="text-4xl mb-4">🏥</span>
                                                     <p className="text-slate-500 font-medium">No partner hospitals found.</p>
                                                     <p className="text-sm text-slate-400 mt-1">Click Add Hospital to get started.</p>
                                                 </div>
