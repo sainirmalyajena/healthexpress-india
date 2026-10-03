@@ -131,7 +131,7 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
         }),
         prisma.lead.count({ where }),
         prisma.surgery.findMany({ select: { id: true, name: true } }),
-        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true } }),
+        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true, city: true, doctors: { select: { name: true, about: true } } } }),
         prisma.lead.findMany({ select: { city: true }, distinct: ['city'], where: { city: { not: '' } } })
     ]);
 
@@ -382,6 +382,7 @@ const { leads, total, totalPages } = data;
         </div>
     );
 }
+
 
 
 
