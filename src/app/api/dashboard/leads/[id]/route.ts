@@ -1,4 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus } from '@/generated/prisma';
@@ -111,6 +112,8 @@ export async function PATCH(
             await prisma.activityLog.createMany({ data: logsToCreate });
         }
 
+        revalidatePath('/[lang]/dashboard/leads');
+        revalidatePath('/[lang]/dashboard');
         return NextResponse.json({ success: true, lead: updatedLead });
     } catch (error: any) {
         console.error('Error updating lead:', error);
@@ -183,4 +186,5 @@ export async function DELETE(
         return NextResponse.json({ error: error.message || 'Failed to delete lead' }, { status: 500 });
     }
 }
+
 
