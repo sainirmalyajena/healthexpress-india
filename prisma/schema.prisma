@@ -41,6 +41,8 @@ model Hospital {
   id              String   @id @default(cuid())
   name            String
   city            String
+  address         String?
+  googleMapsUrl   String?
   specialties     String[]
   discountPercent Float    @default(0)
   email           String   @unique

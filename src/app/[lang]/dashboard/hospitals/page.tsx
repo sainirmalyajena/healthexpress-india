@@ -64,6 +64,17 @@ export default async function HospitalsManagementPage() {
                                                     <td className="px-6 py-4">
                                                         <p className="font-bold text-slate-900">{hospital.name}</p>
                                                         <p className="text-sm text-slate-500">{hospital.city}</p>
+                                                        {hospital.address && (
+                                                            <div className="mt-2 text-xs text-slate-600 bg-slate-100 p-2 rounded max-w-xs whitespace-pre-wrap">
+                                                                <span className="font-semibold block mb-1">Address:</span>
+                                                                {hospital.address}
+                                                                {hospital.googleMapsUrl && (
+                                                                    <a href={hospital.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="block mt-1 text-teal-600 hover:underline font-medium">
+                                                                        🗺️ View on Maps
+                                                                    </a>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <p className="text-sm font-semibold text-slate-700">{hospital.doctors?.[0]?.name || 'No Doctor Listed'}</p>
