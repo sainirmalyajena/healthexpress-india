@@ -59,107 +59,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
     const [callingLeadId, setCallingLeadId] = useState<string | null>(null);
 
     const handleAiCall = async (lead: Lead) => {
-        if (!window.confirm(
-            `ðŸ¤– Trigger Bland AI Voice Call to ${lead.fullName} (${lead.phone})?\n\n` +
-            `âš ï¸ COST NOTICE: Bland AI charges ~$0.09 (â‚¹7.50) per minute from your Bland balance.\n` +
-            `Your current account balance is ~$1.96 (~15-20 minutes total).\n\n` +
-            `Sarah (AI Voice Receptionist) will dial the patient, inquire about their "${lead.surgery?.name || 'medical consultation'}", and attempt to book an appointment automatically.\n\n` +
-            `Do you want to proceed with this call?`
-        )) {
-            return;
-        }
-
-        setCallingLeadId(lead.id);
-        try {
-            const res = await fetch('/api/ai/call-patient', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    leadId: lead.id,
-                    patientName: lead.fullName,
-                    patientPhone: lead.phone,
-                    city: lead.city,
-                    reason: lead.surgery?.name || 'medical consultation'
-                })
-            });
-            const data = await res.json();
-            if (data.success) {
-                alert(`âœ… AI Call initiated! Sarah (Bland AI) is calling ${lead.fullName} now. (Call ID: ${data.callId || 'active'})`);
-            } else {
-                const errorMsg = data.message || data.error || 'Check Bland AI configuration';
-                if (errorMsg.toLowerCase().includes('international calling requires a completed purchase')) {
-                    alert(`âŒ Bland AI Notice: International calls to Indian (+91) numbers are locked on trial accounts.\n\nTo unlock AI calling to India:\n1. Log into your Bland AI dashboard at https://app.bland.ai\n2. Go to Billing and make a minimum $10 credit purchase.\n\nðŸ’¡ In the meantime, you can message ${lead.fullName} directly for â‚¹0 using the green WhatsApp button!`);
-                } else {
-                    alert(`âŒ AI Call failed: ${errorMsg}`);
-                }
-            }
-        } catch (err: any) {
-            alert(`âŒ AI Call error: ${err.message}`);
-        } finally {
-            setCallingLeadId(null);
-        }
-    };
-
-    const handleExportCSV = (targetLeads: Lead[]) => {
-        if (targetLeads.length === 0) {
-            alert('No leads to export.');
-            return;
-        }
-        const headers = ['Full Name', 'Phone', 'City', 'Surgery', 'Status', 'Notes', 'Created At'];
-        const rows = targetLeads.map(l => [
-            `"${(l.fullName || '').replace(/"/g, '""')}"`,
-            `"${l.phone || ''}"`,
-            `"${(l.city || '').replace(/"/g, '""')}"`,
-            `"${(l.surgery?.name || 'General Inquiry').replace(/"/g, '""')}"`,
-            `"${l.status || ''}"`,
-            `"${(l.notes || '').replace(/"/g, '""')}"`,
-            `"${new Date(l.createdAt).toLocaleDateString('en-IN')}"`
-        ]);
-        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `healthexpress_leads_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    const handleExportVCF = (targetLeads: Lead[]) => {
-        if (targetLeads.length === 0) {
-            alert('No leads to export.');
-            return;
-        }
-        const vcards = targetLeads.map(l => {
-            const cleanPhone = l.phone.replace(/[^0-9]/g, '');
-            const formattedPhone = cleanPhone.length === 10 ? `+91${cleanPhone}` : `+${cleanPhone}`;
-            const surgery = l.surgery?.name ? ` (${l.surgery.name})` : '';
-            return [
-                'BEGIN:VCARD',
-                'VERSION:3.0',
-                `FN:HE - ${l.fullName}${surgery}`,
-                `TEL;TYPE=CELL:${formattedPhone}`,
-                `NOTE:HealthExpress Lead | City: ${l.city || 'N/A'} | Status: ${l.status}`,
-                'END:VCARD'
-            ].join('\n');
-        }).join('\n\n');
-
-        const blob = new Blob([vcards], { type: 'text/vcard;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `healthexpress_contacts_${new Date().toISOString().slice(0, 10)}.vcf`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    const handleStatusUpdate = (id: string, newStatus: string) => {
-        setLocalLeads(prev => prev.map(l => l.id === id ? { ...l, status: newStatus } : l));
-    };
-
-    const handleDelete = async (id: string) => {
-        if (!window.confirm('Are you sure you want to permanently delete this lead?')) return;
+        if (!window.confirm('🤖 Trigger Bland AI Voice Call to ' + lead.fullName + ' (' + lead.phone + ')?\n\n⚠️ COST NOTICE: Bland AI charges ~$0.09 (₹7.50) per minute from your Bland balance.\nYour current account balance is ~$1.96 (~15-20 minutes total).\n\nSarah (AI Voice Receptionist) will dial the patient, inquire about their "' + (lead.surgery?.name || 'medical consultation') + '", and attempt to book an appointment automatically.\n\nDo you want to proceed?')) return;
         
         try {
             const res = await fetch(`/api/dashboard/leads/${id}`, { method: 'DELETE' });
@@ -271,7 +171,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                 className="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
                                 title="Export all leads to CSV"
                             >
-                                ?? Export All CSV
+                                📄 Export All CSV
                             </button>
                             <button
                                 type="button"
@@ -279,7 +179,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1"
                                 title="Export all contacts to VCF file for phone / WhatsApp broadcast"
                             >
-                                ?? Export All Contacts (.vcf)
+                                📗 Export All Contacts (.vcf)
                             </button>
                         </div>)}
                     </div>
@@ -333,9 +233,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                             <div>
                                                 <p className="font-medium text-slate-900">{lead.fullName}</p>
                                                 <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                                    <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:text-teal-800 hover:underline font-medium flex items-center gap-1">
-                                                        ðŸ“ž {lead.phone}
-                                                    </a>
+                                                    <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:text-teal-800 hover:underline font-medium flex items-center gap-1">📞 {lead.phone}</a>
                                                       <div className="md:hidden mt-1 text-[10px] text-slate-500 font-medium w-full">
                                                           Added: {new Date(lead.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
                                                       </div>
