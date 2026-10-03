@@ -17,12 +17,14 @@ export async function POST(req: NextRequest) {
             email: body.email,
             status: 'ACTIVE',
             specialties: ['General'],
-            doctors: body.doctorName ? {
+                        doctors: (body.doctorName || body.address) ? {
                 create: {
-                    name: body.doctorName,
-                    qualification: 'MBBS, MD',
+                    name: body.doctorName || 'Partner Doctor',
+                    qualification: 'MS Ophthalmology',
                     experience: 5,
-                    about: 'Partner Surgeon'
+                    image: '',
+                    email: body.email ? dr.+body.email : '',
+                    about: body.address || 'Partner Surgeon'
                 }
             } : undefined
         }
@@ -31,3 +33,4 @@ export async function POST(req: NextRequest) {
     revalidatePath('/[lang]/dashboard/hospitals');
     return NextResponse.json(newHospital);
 }
+

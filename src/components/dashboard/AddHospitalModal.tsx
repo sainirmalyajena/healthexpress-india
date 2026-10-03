@@ -6,7 +6,7 @@ export default function AddHospitalModal() {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [formData, setFormData] = useState({ name: '', city: '', email: '', doctorName: '' });
+    const [formData, setFormData] = useState({ name: '', city: '', email: '', doctorName: '', address: '' });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,7 +18,7 @@ export default function AddHospitalModal() {
                 body: JSON.stringify(formData)
             });
             setIsOpen(false);
-            setFormData({ name: '', city: '', email: '', doctorName: '' });
+            setFormData({ name: '', city: '', email: '', doctorName: '', address: '' });
             router.refresh();
         } catch (err) {
             console.error(err);
@@ -42,7 +42,8 @@ export default function AddHospitalModal() {
                             <div><label className="block text-sm font-bold mb-1">Hospital Name</label><input required value={formData.name} onChange={e=>setFormData({...formData, name: e.target.value})} className="w-full border p-2 rounded-lg" /></div>
                             <div><label className="block text-sm font-bold mb-1">City / Location</label><input required value={formData.city} onChange={e=>setFormData({...formData, city: e.target.value})} className="w-full border p-2 rounded-lg" /></div>
                             <div><label className="block text-sm font-bold mb-1">Contact Email</label><input type="email" required value={formData.email} onChange={e=>setFormData({...formData, email: e.target.value})} className="w-full border p-2 rounded-lg" /></div>
-                            <div><label className="block text-sm font-bold mb-1">Doctor Name (Optional)</label><input value={formData.doctorName} onChange={e=>setFormData({...formData, doctorName: e.target.value})} className="w-full border p-2 rounded-lg" /></div>
+                                                        <div><label className="block text-sm font-bold mb-1">Doctor Name (Optional)</label><input value={formData.doctorName} onChange={e=>setFormData({...formData, doctorName: e.target.value})} className="w-full border p-2 rounded-lg" /></div>
+                            <div><label className="block text-sm font-bold mb-1">Exact Address (For Pitching)</label><textarea placeholder="Third Floor, Gandhar Nagar..." value={formData.address} onChange={e=>setFormData({...formData, address: e.target.value})} className="w-full border p-2 rounded-lg" rows={3}></textarea></div>
                             <button disabled={saving} className="w-full py-2 bg-teal-600 text-white rounded-lg font-bold">{saving ? 'Saving...' : 'Add Hospital'}</button>
                         </form>
                     </div>
@@ -51,3 +52,4 @@ export default function AddHospitalModal() {
         </>
     );
 }
+
