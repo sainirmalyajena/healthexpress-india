@@ -64,6 +64,7 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
     let email = '';
     let city = 'Unknown';
     let surgery = '';
+    let hasCard = false;
     let rawFields: Record<string, string> = {};
 
     // If we have a page access token, fetch the actual lead data from Graph API
@@ -89,6 +90,10 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
                         city = val;
                     } else if (fieldName.includes('surgery') || fieldName.includes('treatment') || fieldName.includes('procedure')) {
                         surgery = val;
+                    } else if (fieldName.includes('insurance') || fieldName.includes('health') || fieldName.includes('card')) {
+                        if (val.toLowerCase() === 'yes' || val.toLowerCase() === 'true') {
+                            hasCard = true;
+                        }
                     }
                 }
             }
@@ -118,7 +123,10 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
     if (formId) notes += `Form ID: ${formId}\n`;
     if (pageId) notes += `Page ID: ${pageId}\n`;
     if (Object.keys(rawFields).length > 0) {
-        notes += `Fields: ${JSON.stringify(rawFields)}\n`;
+        notes += '\n--- Lead Details ---\n';
+        for (const [key, val] of Object.entries(rawFields)) {
+            notes += `${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}: ${val}\n`;
+        }
     }
 
     // Match surgery
@@ -164,6 +172,7 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
                 notes: (existingLead.notes ? existingLead.notes + '\n\n' : '') + notes,
                 city: city !== 'Unknown' ? city : existingLead.city,
                 surgeryId: surgeryId || existingLead.surgeryId,
+                hasCard: hasCard || existingLead.hasCard,
                 assignedUserId: assignedUserId || existingLead.assignedUserId
             }
         });
