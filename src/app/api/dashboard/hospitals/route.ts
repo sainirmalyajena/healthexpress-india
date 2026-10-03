@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
                     qualification: 'MS Ophthalmology',
                     experience: 5,
                     image: '',
-                    email: body.email ? dr.+body.email : '',
+                    email: body.email ? 'dr.'+body.email : '',
                     about: body.address || 'Partner Surgeon'
                 }
             } : undefined
