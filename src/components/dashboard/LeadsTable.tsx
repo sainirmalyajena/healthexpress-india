@@ -245,7 +245,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                 onChange={(e) => setBulkAssignUser(e.target.value)}
                                 className="text-sm border-teal-200 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-1.5 px-3"
                             >
-                                <option value="">Assign to...</option>
+                                <option value="">Assign t✅..</option>
                                 {teamMembers.map(tm => (
                                     <option key={tm.id} value={tm.id}>{tm.name}</option>
                                 ))}
