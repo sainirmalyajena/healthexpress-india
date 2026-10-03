@@ -143,8 +143,7 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
     let assignedName = '';
     try {
         const counselor = await prisma.user.findFirst({
-            where: { role: 'team' },
-            orderBy: { assignedLeads: { _count: 'asc' } },
+            where: { name: { contains: 'Fatima', mode: 'insensitive' } },
             select: { id: true, name: true, email: true }
         });
         if (counselor) {
