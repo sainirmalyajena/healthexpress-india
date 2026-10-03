@@ -155,7 +155,7 @@ async function processMetaLead(leadgenId: string, formId?: string, pageId?: stri
 
     // Dedup: check if a lead with same phone exists within 30 days
     const thirtyDaysAgo = new Date();
-    thirtyDaysAg✅setDate(thirtyDaysAg✅getDate() - 30);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const existingLead = await prisma.lead.findFirst({
         where: {
