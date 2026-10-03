@@ -119,9 +119,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     <div>
                         <h2 className="text-lg font-bold text-slate-900">Update Lead: {lead.fullName}</h2>
                         <div className="flex items-center gap-3 mt-1">
-                            <a href={`tel:${lead.phone}`} className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">
-                                ðŸ“ž {lead.phone}
-                            </a>
+                            <a href={`tel:${lead.phone}`} className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">📞 {lead.phone}</a>
                             {(() => {
                                 let defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. How can we assist you today?`;
                                 if (status === 'OPD_SCHEDULED') {
@@ -148,7 +146,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                             })()}
                         </div>
                     </div>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-xl">âœ•</button>
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-2 text-xl">✕</button>
                 </div>
 
                 <div className="p-6 overflow-y-auto space-y-6 flex-1">
@@ -274,7 +272,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     {/* Cost & Economics */}
                     <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (â‚¹)</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (₹)</label>
                             <input
                                 type="number"
                                 value={originalCost}
