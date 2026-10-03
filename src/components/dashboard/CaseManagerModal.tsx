@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -86,9 +86,9 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     isEmergency,
                     hasCard,
                     notes,
-                    opdDate: opdDate || null,
-                    ipdDate: ipdDate || null,
-                    followUpDate: followUpDate || null,
+                    opdDate: opdDate ? new Date(opdDate).toISOString() : null,
+                    ipdDate: ipdDate ? new Date(ipdDate).toISOString() : null,
+                    followUpDate: followUpDate ? new Date(followUpDate).toISOString() : null,
                     assignedUserId: assignedUserId || null
                 }),
             });
@@ -105,7 +105,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
             }
         } catch (err) {
             console.error('Failed to update case', err);
-            setError('Network error — could not reach server');
+            setError('Network error â€” could not reach server');
         }
         setSaving(false);
     };
@@ -118,7 +118,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                         <h2 className="text-lg font-bold text-slate-900">Update Lead: {lead.fullName}</h2>
                         <div className="flex items-center gap-3 mt-1">
                             <a href={`tel:${lead.phone}`} className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">
-                                📞 {lead.phone}
+                                ðŸ“ž {lead.phone}
                             </a>
                             {(() => {
                                 let defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. How can we assist you today?`;
@@ -146,13 +146,13 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                             })()}
                         </div>
                     </div>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-xl">✕</button>
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-xl">âœ•</button>
                 </div>
 
                 <div className="p-6 overflow-y-auto space-y-6 flex-1">
                     {error && (
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
-                            ⚠️ {error}
+                            âš ï¸ {error}
                         </div>
                     )}
 
@@ -252,7 +252,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     {/* Cost & Economics */}
                     <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (₹)</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (â‚¹)</label>
                             <input
                                 type="number"
                                 value={originalCost}
@@ -299,3 +299,4 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
         </div>
     );
 }
+
