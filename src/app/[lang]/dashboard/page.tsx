@@ -272,7 +272,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                             <tr key={lead.id} className={`border-b border-slate-100 hover:bg-slate-50 ${idx === urgentLeads.length -1 ? 'border-b-0' : ''}`}>
                                                 <td className="px-4 py-3 font-bold text-slate-800">{lead.fullName}</td>
                                                 <td className="px-4 py-3 text-slate-600">{lead.phone}</td>
-                                                <td className="px-4 py-3 text-red-600 font-semibold">{lead.followUpDate ? new Date(lead.followUpDate).toLocaleString() : 'N/A'}</td>
+                                                <td className="px-4 py-3 text-red-600 font-semibold">{lead.followUpDate ? new Date(lead.followUpDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'N/A'}</td>
                                                 {session.role !== 'team' && <td className="px-4 py-3 text-slate-600">{lead.assignedUser?.name || 'Unassigned'}</td>}
                                                 <td className="px-4 py-3">
                                                     <a href={`tel:${lead.phone}`} className="px-3 py-1.5 bg-teal-50 text-teal-700 rounded-lg font-semibold hover:bg-teal-100 transition-colors">Call</a>
