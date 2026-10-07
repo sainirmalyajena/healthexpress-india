@@ -214,7 +214,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                         <div className="flex items-start justify-between mb-1.5">
                                             <p className="font-bold text-slate-800 text-sm truncate max-w-[140px]">{lead.fullName}</p>
                                             <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full whitespace-nowrap">
-                                                {lead.opdDate ? new Date(lead.opdDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : 'TBD'}
+                                                {lead.opdDate ? new Date(lead.opdDate).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }) : 'TBD'}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-3 text-xs text-slate-500">
