@@ -5,7 +5,7 @@ import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus } from '@/generated/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
-import { getStatusColor, formatCurrency } from '@/lib/utils';
+import { getStatusColor, formatCurrency, cleanLeadNotes } from '@/lib/utils';
 import LeadStatusSelect from '@/components/dashboard/LeadStatusSelect';
 import ManageCaseButton from '@/components/dashboard/ManageCaseButton';
 import TimelineFormatter from '@/components/dashboard/TimelineFormatter';
@@ -291,8 +291,8 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                     </div>
                                     <div className="pt-4 border-t border-slate-100">
                                         <p className="text-xs font-bold text-slate-400 uppercase mb-3">Ops Team Notes</p>
-                                        <div className="p-4 bg-amber-50/50 border border-amber-100 rounded-xl text-sm text-slate-700 min-h-[100px] italic">
-                                            {lead.notes || 'No internal notes found for this lead.'}
+                                        <div className="p-4 bg-amber-50/50 border border-amber-100 rounded-xl text-sm text-slate-700 min-h-[100px] italic whitespace-pre-wrap">
+                                            {cleanLeadNotes(lead.notes) || 'No internal notes found for this lead.'}
                                         </div>
                                     </div>
 

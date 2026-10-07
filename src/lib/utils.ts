@@ -115,3 +115,28 @@ export function extractUTMParams(url: string): Record<string, string> {
     }
     return params;
 }
+
+export function cleanLeadNotes(notes: string | null): string {
+    if (!notes) return '';
+    const junkPrefixes = [
+        '[Meta Lead Ads',
+        '[Meta Ads Import]',
+        'Leadgen ID:',
+        'Form ID:',
+        'Page ID:',
+        'Platform:',
+        'Form:',
+        'Campaign:',
+        'Ad Name:',
+        'Assigned To:',
+        '--- Lead Details ---',
+    ];
+    
+    return notes.split('\n').filter(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return false;
+        if (trimmed.startsWith('{') && trimmed.endsWith('}')) return false;
+        if (trimmed.toLowerCase().startsWith('fields:')) return false;
+        return !junkPrefixes.some(prefix => trimmed.startsWith(prefix));
+    }).join('\n').trim();
+}
