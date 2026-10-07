@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
-import { Users, AlertTriangle, PhoneCall, Calendar, Activity, CheckCircle, UserPlus, Stethoscope, ChevronRight, BarChart3, TrendingUp } from 'lucide-react';
+import { Users, AlertTriangle, PhoneCall, Calendar, Activity, CheckCircle, UserPlus, Stethoscope, ChevronRight, BarChart3, TrendingUp, PhoneOff, Clock } from 'lucide-react';
 import { Prisma } from '@/generated/prisma';
 
 export const dynamic = 'force-dynamic';
@@ -25,7 +25,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     // Run all KPI queries in parallel for massive performance boost
     const [
         activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, 
-        surgeriesScheduled, totalInquiries, opdScheduledCount, surgeryDoneCount, urgentLeads
+        surgeriesScheduled, totalInquiries, opdScheduledCount, surgeryDoneCount, urgentLeads,
+        dnpLeads, totalFollowUps
     ] = await Promise.all([
         prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] } } }),
         prisma.lead.count({ where: { ...whereClause, status: 'NEW' } }),
@@ -53,7 +54,9 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
             take: 5,
             orderBy: { followUpDate: 'asc' },
             include: { assignedUser: true, hospital: true }
-        })
+        }),
+        prisma.lead.count({ where: { ...whereClause, status: 'DNP' } }),
+        prisma.lead.count({ where: { ...whereClause, status: 'FOLLOW_UP' } })
     ]);
 
     const opdConversionRate = totalInquiries ? Math.round((opdScheduledCount / totalInquiries) * 100) : 0;
@@ -140,6 +143,28 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                                 </div>
                                 <h3 className="text-4xl md:text-5xl font-black mb-1">{newLeads}</h3>
                                 <p className="font-semibold text-blue-50 tracking-wide text-sm">New / Uncontacted Leads</p>
+                            </div>
+                        </Link>
+
+                        <Link href={`/${lang}/dashboard/leads?quickFilter=dnp`} className="group relative overflow-hidden bg-gradient-to-br from-slate-500 to-slate-600 p-6 rounded-3xl shadow-sm border border-slate-400/50 hover:shadow-md transition-all">
+                            <div className="relative z-10 text-white">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><PhoneOff className="w-6 h-6 text-white" /></div>
+                                    <ChevronRight className="w-5 h-5 text-slate-200 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <h3 className="text-4xl md:text-5xl font-black mb-1">{dnpLeads}</h3>
+                                <p className="font-semibold text-slate-50 tracking-wide text-sm">Did Not Pick Up (DNP)</p>
+                            </div>
+                        </Link>
+
+                        <Link href={`/${lang}/dashboard/leads?quickFilter=follow_up`} className="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 p-6 rounded-3xl shadow-sm border border-purple-400/50 hover:shadow-md transition-all">
+                            <div className="relative z-10 text-white">
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Clock className="w-6 h-6 text-white" /></div>
+                                    <ChevronRight className="w-5 h-5 text-purple-200 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                                <h3 className="text-4xl md:text-5xl font-black mb-1">{totalFollowUps}</h3>
+                                <p className="font-semibold text-purple-50 tracking-wide text-sm">Total in Follow-up</p>
                             </div>
                         </Link>
                     </div>
