@@ -121,7 +121,8 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                     <div>
                                         <p className="text-xs font-bold text-slate-400 uppercase mb-1">Inquiry Date</p>
                                         <p className="text-slate-900 font-medium">
-                                            {new Date(lead.createdAt).toLocaleString(undefined, {
+                                            {new Date(lead.createdAt).toLocaleString('en-IN', {
+                                                timeZone: 'Asia/Kolkata',
                                                 dateStyle: 'full',
                                                 timeStyle: 'short'
                                             })}
@@ -233,7 +234,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                                     <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded border border-slate-100 shadow-sm">
                                                         <div className="flex items-center justify-between space-x-2 mb-1">
                                                             <div className="font-bold text-slate-900 text-sm">{log.actionType.replace('_', ' ')}</div>
-                                                            <time className="text-xs text-slate-500 font-medium">{new Date(log.createdAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</time>
+                                                            <time className="text-xs text-slate-500 font-medium">{new Date(log.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</time>
                                                         </div>
                                                         <div className="text-sm text-slate-600">
                                                             <TimelineFormatter details={log.details} />
@@ -278,13 +279,13 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="text-slate-500 font-medium">OPD Date</span>
                                             <span className="font-bold text-teal-700">
-                                                {lead.opdDate ? new Date(lead.opdDate).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Not set'}
+                                                {lead.opdDate ? new Date(lead.opdDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Not set'}
                                             </span>
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="text-slate-500 font-medium">Next Follow-up</span>
                                             <span className="font-bold text-orange-600">
-                                                {lead.followUpDate ? new Date(lead.followUpDate).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Not set'}
+                                                {lead.followUpDate ? new Date(lead.followUpDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' }) : 'Not set'}
                                             </span>
                                         </div>
                                     </div>
