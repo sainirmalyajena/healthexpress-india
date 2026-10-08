@@ -304,8 +304,8 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                             )}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <div className="flex flex-col gap-2 min-w-[220px]">
-                                                <div className="flex flex-wrap items-center gap-2">
+                                            <div className="flex items-center gap-3 w-max">
+                                                <div className="flex items-center gap-2">
                                                     <LeadStatusSelect
                                                         leadId={lead.id}
                                                         currentStatus={lead.status || 'NEW'}
@@ -322,22 +322,22 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-2 border-l border-slate-200 pl-3">
                                                     <Link
                                                         href={`/dashboard/leads/${lead.id}`}
-                                                        className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 hover:border-slate-400 transition-all shadow-sm"
+                                                        className="px-3 py-1 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 hover:border-slate-400 transition-all shadow-sm"
                                                     >
                                                         Open
                                                     </Link>
                                                     <button
                                                         onClick={() => setSelectedLead(lead)}
-                                                        className="px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-md hover:bg-teal-100 hover:border-teal-300 transition-all shadow-sm"
+                                                        className="px-3 py-1 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-md hover:bg-teal-100 hover:border-teal-300 transition-all shadow-sm"
                                                     >
                                                         Manage
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(lead.id)}
-                                                        className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 hover:border-red-300 transition-all shadow-sm"
+                                                        className="px-3 py-1 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 hover:border-red-300 transition-all shadow-sm"
                                                         title="Delete Lead"
                                                     >
                                                         Delete
