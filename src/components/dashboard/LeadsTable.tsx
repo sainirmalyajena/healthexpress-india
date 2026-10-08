@@ -304,41 +304,45 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                             )}
                                         </td>
                                         <td className="px-4 py-3">
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <LeadStatusSelect
-                                                    leadId={lead.id}
-                                                    currentStatus={lead.status || 'NEW'}
-                                                    statuses={statuses}
-                                                />
-                                                {lead.status === 'FOLLOW_UP' && lead.followUpDate && (
-                                                    <div className="text-[10px] font-semibold text-slate-500 mt-1 whitespace-nowrap bg-amber-50 px-2 py-0.5 rounded border border-amber-100 w-max">
-                                                        {new Date(lead.followUpDate).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                    </div>
-                                                )}
-                                                {lead.status === 'OPD_SCHEDULED' && lead.opdDate && (
-                                                    <div className="text-[10px] font-semibold text-slate-500 mt-1 whitespace-nowrap bg-teal-50 px-2 py-0.5 rounded border border-teal-100 w-max">
-                                                        {new Date(lead.opdDate).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
-                                                    </div>
-                                                )}
-                                                <Link
-                                                    href={`/dashboard/leads/${lead.id}`}
-                                                    className="p-1 px-2 text-xs font-bold text-slate-600 bg-slate-100 border border-slate-200 rounded hover:bg-slate-200 transition-all shadow-sm"
-                                                >
-                                                    Open
-                                                </Link>
-                                                <button
-                                                    onClick={() => setSelectedLead(lead)}
-                                                    className="p-1 px-2 text-xs font-bold text-teal-600 bg-teal-50 border border-teal-100 rounded hover:bg-teal-100 transition-all shadow-sm"
-                                                >
-                                                    Manage
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(lead.id)}
-                                                    className="p-1 px-2 text-xs font-bold text-red-600 bg-red-50 border border-red-100 rounded hover:bg-red-100 transition-all shadow-sm"
-                                                    title="Delete Lead"
-                                                >
-                                                    Delete
-                                                </button>
+                                            <div className="flex flex-col gap-2 min-w-[220px]">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <LeadStatusSelect
+                                                        leadId={lead.id}
+                                                        currentStatus={lead.status || 'NEW'}
+                                                        statuses={statuses}
+                                                    />
+                                                    {lead.status === 'FOLLOW_UP' && lead.followUpDate && (
+                                                        <div className="text-[10px] font-semibold text-slate-500 whitespace-nowrap bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+                                                            {new Date(lead.followUpDate).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                        </div>
+                                                    )}
+                                                    {lead.status === 'OPD_SCHEDULED' && lead.opdDate && (
+                                                        <div className="text-[10px] font-semibold text-slate-500 whitespace-nowrap bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
+                                                            {new Date(lead.opdDate).toLocaleString('en-IN', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Link
+                                                        href={`/dashboard/leads/${lead.id}`}
+                                                        className="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 hover:border-slate-400 transition-all shadow-sm"
+                                                    >
+                                                        Open
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => setSelectedLead(lead)}
+                                                        className="px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-md hover:bg-teal-100 hover:border-teal-300 transition-all shadow-sm"
+                                                    >
+                                                        Manage
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(lead.id)}
+                                                        className="px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 hover:border-red-300 transition-all shadow-sm"
+                                                        title="Delete Lead"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
