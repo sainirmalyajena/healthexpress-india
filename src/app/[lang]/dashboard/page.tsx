@@ -26,7 +26,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     const [
         activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, 
         surgeriesScheduled, totalInquiries, opdScheduledCount, surgeryDoneCount, urgentLeads,
-        dnpLeads, totalFollowUps, todaysOpdList
+        dnpLeads, totalFollowUps, todaysOpdList, opdDoneCount
     ] = await Promise.all([
         prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] } } }),
         prisma.lead.count({ where: { ...whereClause, status: 'NEW' } }),
@@ -62,7 +62,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
             orderBy: { opdDate: 'asc' },
             take: 8,
             include: { assignedUser: true, hospital: true }
-        })
+        }),
+        prisma.lead.count({ where: { ...whereClause, status: 'OPD_DONE' } })
     ]);
 
     const opdConversionRate = totalInquiries ? Math.round((opdScheduledCount / totalInquiries) * 100) : 0;
@@ -117,27 +118,27 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Follow-up</p>
                         </div>
                     </Link>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-3">
-                        <div className="p-2 bg-teal-50 text-teal-600 rounded-xl"><Activity className="w-4 h-4" /></div>
+                    <Link href={`/${lang}/dashboard/leads?quickFilter=active`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-teal-300 hover:shadow-sm transition-all flex items-center gap-3">
+                        <div className="p-2 bg-teal-50 text-teal-600 rounded-xl group-hover:bg-teal-100 transition-colors"><Activity className="w-4 h-4" /></div>
                         <div>
                             <p className="text-2xl font-black text-slate-800 leading-none">{activeLeads}</p>
                             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Active</p>
                         </div>
-                    </div>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><TrendingUp className="w-4 h-4" /></div>
+                    </Link>
+                    <Link href={`/${lang}/dashboard/leads?status=OPD_DONE`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-emerald-300 hover:shadow-sm transition-all flex items-center gap-3">
+                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-100 transition-colors"><TrendingUp className="w-4 h-4" /></div>
                         <div>
-                            <p className="text-2xl font-black text-emerald-700 leading-none">{opdConversionRate}%</p>
-                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">OPD Rate</p>
+                            <p className="text-2xl font-black text-emerald-700 leading-none">{opdDoneCount}</p>
+                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">OPD Done</p>
                         </div>
-                    </div>
-                    <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-3 col-span-2 md:col-span-1">
-                        <div className="p-2 bg-teal-50 text-teal-600 rounded-xl"><Stethoscope className="w-4 h-4" /></div>
+                    </Link>
+                    <Link href={`/${lang}/dashboard/leads?status=SURGERY_DONE`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-teal-300 hover:shadow-sm transition-all flex items-center gap-3 col-span-2 md:col-span-1">
+                        <div className="p-2 bg-teal-50 text-teal-600 rounded-xl group-hover:bg-teal-100 transition-colors"><Stethoscope className="w-4 h-4" /></div>
                         <div>
-                            <p className="text-2xl font-black text-teal-700 leading-none">{surgeryConversionRate}%</p>
-                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Surgery Rate</p>
+                            <p className="text-2xl font-black text-teal-700 leading-none">{surgeryDoneCount}</p>
+                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Surgery Done</p>
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 {/* Primary Bento Box Grid */}

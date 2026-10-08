@@ -63,6 +63,8 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
     if (searchParams.quickFilter) {
         if (searchParams.quickFilter === 'uncontacted') {
             where.status = 'NEW';
+        } else if (searchParams.quickFilter === 'active') {
+            where.status = { notIn: ['CLOSED', 'LOST'] };
         } else if (searchParams.quickFilter === 'dnp') {
             where.status = 'DNP';
         } else if (searchParams.quickFilter === 'follow_up') {
