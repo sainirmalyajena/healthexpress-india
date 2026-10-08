@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, startTransition } from 'react';
 
 interface LeadStatusSelectProps {
     leadId: string;
@@ -29,7 +29,9 @@ export default function LeadStatusSelect({ leadId, currentStatus, statuses, onUp
             body: JSON.stringify({ status: newStatus }),
         }).then(() => {
             // Update Next.js cache so the timeline and page data reflect the new status immediately
-            router.refresh();
+            startTransition(() => {
+                router.refresh();
+            });
         }).catch((err) => {
             console.error("Failed to update status in background", err);
             // Revert on failure

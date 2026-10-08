@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, startTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function AddLeadModal({ surgeries }: { surgeries: { id: string, name: string }[] }) {
@@ -33,7 +33,9 @@ export default function AddLeadModal({ surgeries }: { surgeries: { id: string, n
             if (res.ok) {
                 setIsOpen(false);
                 setFormData({ fullName: '', phone: '', city: '', surgeryId: surgeries.length > 0 ? surgeries[0].id : '', description: '' });
-                router.refresh();
+                startTransition(() => {
+                    router.refresh();
+                });
             } else {
                 setError(data.error || 'Failed to add lead');
             }

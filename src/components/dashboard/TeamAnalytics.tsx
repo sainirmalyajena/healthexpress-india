@@ -1,6 +1,6 @@
-﻿'use client';
+'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface TeamMember {
@@ -109,7 +109,9 @@ export default function TeamAnalytics({ team, activityFeed }: TeamAnalyticsProps
     const router = useRouter();
     useEffect(() => {
         const interval = setInterval(() => {
-            router.refresh();
+            startTransition(() => {
+                router.refresh();
+            });
         }, 15000);
         return () => clearInterval(interval);
     }, [router]);
