@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { cleanLeadNotes } from '@/lib/utils';
 
 interface Hospital {
     city?: string;
@@ -49,7 +50,7 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
     const [hasCard, setHasCard] = useState(lead.hasCard);
     const [status, setStatus] = useState(lead.status);
     const [assignedUserId, setAssignedUserId] = useState(lead.assignedUserId || '');
-    const [notes, setNotes] = useState(lead.notes || '');
+    const [notes, setNotes] = useState(cleanLeadNotes(lead.notes) || '');
     const [error, setError] = useState('');
     const [saving, setSaving] = useState(false);
 

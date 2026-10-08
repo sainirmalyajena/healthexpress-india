@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import PartnerStatusUpdate from '@/components/partner/PartnerStatusUpdate';
 import PartnerDocumentUpload from '@/components/partner/PartnerDocumentUpload';
 import Link from 'next/link';
+import { cleanLeadNotes } from '@/lib/utils';
 
 export default async function PartnerLeadDetailPage({
     params,
@@ -107,9 +108,9 @@ export default async function PartnerLeadDetailPage({
                     <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
                         <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Coordination Log</h2>
                         <div className="space-y-4">
-                            {lead.notes ? (
+                            {cleanLeadNotes(lead.notes) ? (
                                 <div className="whitespace-pre-wrap text-sm text-slate-700 font-medium leading-relaxed bg-slate-50/30 p-4 rounded-xl border border-slate-100">
-                                    {lead.notes}
+                                    {cleanLeadNotes(lead.notes)}
                                 </div>
                             ) : (
                                 <p className="text-sm text-slate-400 italic">No historical logs available for this case.</p>

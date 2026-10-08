@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import Link from 'next/link';
 import { Phone, Calendar, Clock, ArrowRight, AlertTriangle } from 'lucide-react';
+import { cleanLeadNotes } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -164,10 +165,10 @@ export default async function TasksPage({ params }: { params: Promise<{ lang: st
                                                 {lead.followUpDate ? new Date(lead.followUpDate).toLocaleDateString() : 'Unknown'}
                                             </span>
                                         </div>
-                                        {lead.notes && (
+                                        {cleanLeadNotes(lead.notes) && (
                                             <div className="mt-3 bg-amber-50 border border-amber-100 p-3 rounded text-sm text-amber-900 whitespace-pre-wrap">
                                                 <span className="font-bold block mb-1">Notes:</span>
-                                                {lead.notes}
+                                                {cleanLeadNotes(lead.notes)}
                                             </div>
                                         )}
                                         <div className="mt-4 flex gap-2">
