@@ -103,14 +103,14 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
 
                 {/* Compact Stats Ribbon — DNP, Follow-up, Active, Conversion */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-                    <Link href={`/${lang}/dashboard/leads?quickFilter=dnp`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-slate-300 hover:shadow-sm transition-all flex items-center gap-3">
+                    <Link href={`/${lang}/dashboard/leads?status=DNP`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-slate-300 hover:shadow-sm transition-all flex items-center gap-3">
                         <div className="p-2 bg-slate-100 text-slate-600 rounded-xl group-hover:bg-slate-200 transition-colors"><PhoneOff className="w-4 h-4" /></div>
                         <div>
                             <p className="text-2xl font-black text-slate-800 leading-none">{dnpLeads}</p>
                             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">DNP</p>
                         </div>
                     </Link>
-                    <Link href={`/${lang}/dashboard/leads?quickFilter=follow_up`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-purple-300 hover:shadow-sm transition-all flex items-center gap-3">
+                    <Link href={`/${lang}/dashboard/leads?status=FOLLOW_UP`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-purple-300 hover:shadow-sm transition-all flex items-center gap-3">
                         <div className="p-2 bg-purple-50 text-purple-600 rounded-xl group-hover:bg-purple-100 transition-colors"><Clock className="w-4 h-4" /></div>
                         <div>
                             <p className="text-2xl font-black text-slate-800 leading-none">{totalFollowUps}</p>
@@ -180,7 +180,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                             </div>
                         </Link>
 
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=uncontacted`} className="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-3xl shadow-sm border border-blue-400/50 hover:shadow-md transition-all">
+                        <Link href={`/${lang}/dashboard/leads?status=NEW`} className="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-3xl shadow-sm border border-blue-400/50 hover:shadow-md transition-all">
                             <div className="relative z-10 text-white">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><UserPlus className="w-6 h-6 text-white" /></div>
