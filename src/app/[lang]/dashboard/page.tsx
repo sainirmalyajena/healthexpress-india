@@ -26,7 +26,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     const [
         activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, 
         surgeriesScheduled, totalInquiries, opdScheduledCount, surgeryDoneCount, urgentLeads,
-        dnpLeads, totalFollowUps, todaysOpdList, opdDoneCount
+        dnpLeads, totalFollowUps, todaysOpdList, opdDoneCount, surgerySuggestedCount
     ] = await Promise.all([
         prisma.lead.count({ where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] } } }),
         prisma.lead.count({ where: { ...whereClause, status: 'NEW' } }),
@@ -63,7 +63,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
             take: 8,
             include: { assignedUser: true, hospital: true }
         }),
-        prisma.lead.count({ where: { ...whereClause, status: 'OPD_DONE' } })
+        prisma.lead.count({ where: { ...whereClause, status: 'OPD_DONE' } }),
+        prisma.lead.count({ where: { ...whereClause, status: 'SURGERY_SUGGESTED' } })
     ]);
 
     const opdConversionRate = totalInquiries ? Math.round((opdScheduledCount / totalInquiries) * 100) : 0;
@@ -102,7 +103,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                     </Link>
                 </div>
 
-                {/* Compact Stats Ribbon — DNP, Follow-up, Active, Conversion */}
+                {/* Compact Stats Ribbon — DNP, Follow-up, OPD Done, Surgery Suggested, Surgery Done */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                     <Link href={`/${lang}/dashboard/leads?status=DNP`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-slate-300 hover:shadow-sm transition-all flex items-center gap-3">
                         <div className="p-2 bg-slate-100 text-slate-600 rounded-xl group-hover:bg-slate-200 transition-colors"><PhoneOff className="w-4 h-4" /></div>
@@ -118,18 +119,18 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Follow-up</p>
                         </div>
                     </Link>
-                    <Link href={`/${lang}/dashboard/leads?quickFilter=active`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-teal-300 hover:shadow-sm transition-all flex items-center gap-3">
-                        <div className="p-2 bg-teal-50 text-teal-600 rounded-xl group-hover:bg-teal-100 transition-colors"><Activity className="w-4 h-4" /></div>
-                        <div>
-                            <p className="text-2xl font-black text-slate-800 leading-none">{activeLeads}</p>
-                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Active</p>
-                        </div>
-                    </Link>
                     <Link href={`/${lang}/dashboard/leads?status=OPD_DONE`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-emerald-300 hover:shadow-sm transition-all flex items-center gap-3">
                         <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-100 transition-colors"><TrendingUp className="w-4 h-4" /></div>
                         <div>
                             <p className="text-2xl font-black text-emerald-700 leading-none">{opdDoneCount}</p>
                             <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">OPD Done</p>
+                        </div>
+                    </Link>
+                    <Link href={`/${lang}/dashboard/leads?status=SURGERY_SUGGESTED`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-teal-300 hover:shadow-sm transition-all flex items-center gap-3">
+                        <div className="p-2 bg-teal-50 text-teal-600 rounded-xl group-hover:bg-teal-100 transition-colors"><Activity className="w-4 h-4" /></div>
+                        <div>
+                            <p className="text-2xl font-black text-teal-700 leading-none">{surgerySuggestedCount}</p>
+                            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">Surg Suggested</p>
                         </div>
                     </Link>
                     <Link href={`/${lang}/dashboard/leads?status=SURGERY_DONE`} className="group bg-white rounded-2xl border border-slate-200 p-4 hover:border-teal-300 hover:shadow-sm transition-all flex items-center gap-3 col-span-2 md:col-span-1">
