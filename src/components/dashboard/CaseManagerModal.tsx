@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -98,16 +98,21 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
             const data = await response.json();
 
             if (response.ok) {
+                // Close immediately — don't wait for router.refresh() which causes 3-5 min delay.
+                // Instead, set a success flag and let the page refresh silently in background.
+                onClose();
+                setSaving(false);
+                // Silent background refresh so data is updated next time user navigates
                 startTransition(() => {
                     router.refresh();
-                    onClose();
                 });
+                return;
             } else {
                 setError(data.error || `Save failed (${response.status})`);
             }
         } catch (err) {
             console.error('Failed to update case', err);
-            setError('Network error â€” could not reach server');
+            setError('Network error — could not reach server');
         }
         setSaving(false);
     };
