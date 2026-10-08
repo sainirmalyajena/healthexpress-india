@@ -1,4 +1,4 @@
-﻿import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Activity, AlertTriangle, PhoneCall, Calendar, UserPlus } from 'lucide-react';
 import { getAdminSession } from '@/lib/admin-auth';
@@ -63,6 +63,10 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
     if (searchParams.quickFilter) {
         if (searchParams.quickFilter === 'uncontacted') {
             where.status = 'NEW';
+        } else if (searchParams.quickFilter === 'dnp') {
+            where.status = 'DNP';
+        } else if (searchParams.quickFilter === 'follow_up') {
+            where.status = 'FOLLOW_UP';
         } else if (searchParams.quickFilter === 'overdue') {
             where.status = { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] };
             where.followUpDate = { lt: now };
