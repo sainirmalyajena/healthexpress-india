@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -201,8 +201,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                 </th>
                                 <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date Added</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Patient</th>
-                                <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Surgery</th>
-                                <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">City</th>
+                                <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Location</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
                                 <th className="hidden xl:table-cell px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Assigned To</th>
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Actions</th>
@@ -260,8 +259,27 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="hidden lg:table-cell px-4 py-3 text-sm text-slate-700">{lead.surgery?.name || 'General Inquiry'}</td>
-                                        <td className="hidden sm:table-cell px-4 py-3 text-sm text-slate-700">{lead.city}</td>
+                                        <td className="hidden sm:table-cell px-4 py-3">
+                                            <p className="text-sm text-slate-900 font-medium">{lead.city}</p>
+                                            {(() => {
+                                                if (!lead.notes) return null;
+                                                const lines = lead.notes.split('\n');
+                                                let subloc = null;
+                                                for (const line of lines) {
+                                                    if (line.toLowerCase().includes('area') || line.toLowerCase().includes('location') || line.toLowerCase().includes('sublocation')) {
+                                                        const parts = line.split(':');
+                                                        if (parts.length > 1) {
+                                                            subloc = parts.slice(1).join(':').trim();
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                                if (subloc) {
+                                                    return <p className="text-[11px] text-slate-500 mt-0.5 max-w-[150px] truncate" title={subloc}>{subloc}</p>;
+                                                }
+                                                return null;
+                                            })()}
+                                        </td>
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-2">
                                                 <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(lead.status)}`}>
