@@ -1,8 +1,9 @@
-﻿import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import AddHospitalModal from '@/components/dashboard/AddHospitalModal';
+import HospitalDirectory from '@/components/dashboard/HospitalDirectory';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,15 @@ export default async function HospitalsManagementPage() {
     const hospitals = await prisma.hospital.findMany({
         orderBy: { name: 'asc' },
         include: {
-            leads: { select: { status: true } },
+            leads: { 
+                select: { 
+                    id: true,
+                    fullName: true,
+                    phone: true,
+                    opdDate: true,
+                    status: true
+                } 
+            },
             doctors: true
         }
     });
@@ -30,73 +39,17 @@ export default async function HospitalsManagementPage() {
                         {session.role === "admin" && <AddHospitalModal />}
                     </div>
 
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
-                                <thead className="bg-slate-50 border-b border-slate-100">
-                                    <tr>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">Hospital</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">Doctor / Contact</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-center">Leads Shared</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-center">OPDs Booked</th>
-                                        <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-center">Surgeries Done</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-50">
-                                    {hospitals.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-20 text-center">
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-4xl mb-4">🏥</span>
-                                                    <p className="text-slate-500 font-medium">No partner hospitals found.</p>
-                                                    <p className="text-sm text-slate-400 mt-1">Click Add Hospital to get started.</p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        hospitals.map((hospital) => {
-                                            const totalLeads = hospital.leads.length;
-                                            const opdsBooked = hospital.leads.filter(l => ['OPD_SCHEDULED', 'OPD_DONE'].includes(l.status)).length;
-                                            const surgeries = hospital.leads.filter(l => ['SURGERY_DONE'].includes(l.status)).length;
-                                            
-                                            return (
-                                                <tr key={hospital.id} className="hover:bg-slate-50/50 transition-colors">
-                                                    <td className="px-6 py-4">
-                                                        <p className="font-bold text-slate-900">{hospital.name}</p>
-                                                        <p className="text-sm text-slate-500">{hospital.city}</p>
-                                                        {hospital.address && (
-                                                            <div className="mt-2 text-xs text-slate-600 bg-slate-100 p-2 rounded max-w-xs whitespace-pre-wrap">
-                                                                <span className="font-semibold block mb-1">Address:</span>
-                                                                {hospital.address}
-                                                                {hospital.googleMapsUrl && (
-                                                                    <a href={hospital.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="block mt-1 text-teal-600 hover:underline font-medium">
-                                                                        🗺️ View on Maps
-                                                                    </a>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-6 py-4">
-                                                        <p className="text-sm font-semibold text-slate-700">{hospital.doctors?.[0]?.name || 'No Doctor Listed'}</p>
-                                                        <p className="text-xs text-slate-500">{hospital.email}</p>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-bold border border-blue-100">{totalLeads}</span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-sm font-bold border border-amber-100">{opdsBooked}</span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-center">
-                                                        <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-bold border border-emerald-100">{surgeries}</span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })
-                                    )}
-                                </tbody>
-                            </table>
+                    {hospitals.length === 0 ? (
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-20 text-center">
+                            <div className="flex flex-col items-center">
+                                <span className="text-4xl mb-4">🏥</span>
+                                <p className="text-slate-500 font-medium">No partner hospitals found.</p>
+                                <p className="text-sm text-slate-400 mt-1">Click Add Hospital to get started.</p>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <HospitalDirectory hospitals={hospitals} />
+                    )}
                 </div>
             </div>
         </DashboardShell>
