@@ -6,6 +6,8 @@ import { cleanLeadNotes } from '@/lib/utils';
 
 interface Hospital {
     city?: string;
+    address?: string | null;
+    googleMapsUrl?: string | null;
     doctors?: { name: string, about: string }[];
     id: string;
     name: string;
@@ -138,10 +140,49 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                         <div className="flex items-center gap-3 mt-1">
                             <a href={`tel:${lead.phone}`} className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">📞 {lead.phone}</a>
                             {(() => {
-                                let defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. How can we assist you today?`;
+                                const currentHospital = hospitals.find(h => h.id === lead.hospitalId);
+                                  let defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. How can we assist you today?`;
                                 if (status === 'OPD_SCHEDULED') {
-                                    defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. Just checking in to see if you were able to attend your scheduled OPD consultation? Let us know if you need to reschedule or need any further assistance.`;
-                                } else if (status === 'FOLLOW_UP') {
+                                      const hName = currentHospital?.name || 'our partner hospital';
+                                      const hAddress = currentHospital?.address || 'Hospital Address not provided in directory';
+                                      const hMap = currentHospital?.googleMapsUrl || 'Location map not provided';
+                                      
+                                      const dObj = lead.opdDate ? new Date(lead.opdDate) : new Date();
+                                      const dDate = dObj.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }).replace(/, /g, '-').replace(/\//g, '/');
+                                      const dTime = dObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                                      
+                                      defaultMessage = `Dear ${lead.fullName}, 
+
+Your appointment has been successfully scheduled at ${hName}.
+
+Please find the details below:
+
+Patient Name: ${lead.fullName}
+
+Appointment Date: ${dDate}
+
+Time: ${dTime}
+
+Consultation Fee: Free
+Test Charges: Free
+
+🏥 Hospital Location & Address:
+${hName}
+
+${hAddress}
+
+📍 Google Maps Link: 
+${hMap}
+
+Important Instructions:
+
+Kindly arrive 10-15 minutes prior to your scheduled time for a hassle-free registration process.
+
+Thank you for choosing Healthexpress India. We look forward to assisting You.
+
+Best regards, 
+https://www.healthexpressindia.com/en`;
+                                  } else if (status === 'FOLLOW_UP') {
                                     defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
                                 }
 
