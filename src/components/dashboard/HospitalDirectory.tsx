@@ -46,15 +46,17 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
                         >
                             <div className="flex-1">
                                 <h3 className="text-lg font-bold text-slate-900">{hospital.name}</h3>
-                                <div className="flex items-center gap-2 text-sm text-slate-500 mt-2">
-                                    <MapPin className="w-4 h-4" />
-                                    <span>{hospital.city}</span>
+                                <div className="flex items-start sm:items-center gap-2 text-sm text-slate-500 mt-2 flex-col sm:flex-row">
+                                    <div className="flex items-center gap-1.5 line-clamp-1">
+                                        <MapPin className="w-4 h-4 shrink-0" />
+                                        <span>{hospital.address ? `${hospital.address}, ${hospital.city}` : hospital.city}</span>
+                                    </div>
                                     {hospital.email && (
-                                        <>
-                                            <span className="text-slate-300 mx-1">•</span>
-                                            <Mail className="w-4 h-4" />
+                                        <div className="flex items-center gap-1.5 mt-1 sm:mt-0">
+                                            <span className="text-slate-300 mx-1 hidden sm:inline">•</span>
+                                            <Mail className="w-4 h-4 shrink-0" />
                                             <span>{hospital.email}</span>
-                                        </>
+                                        </div>
                                     )}
                                 </div>
                             </div>
