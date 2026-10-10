@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Activity, AlertTriangle, PhoneCall, Calendar, UserPlus } from 'lucide-react';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
+import { getISTDayRange } from '@/lib/utils';
 import { LeadStatus, Prisma } from '@/generated/prisma';
 import LeadsTable from '@/components/dashboard/LeadsTable';
 import DailyProgressBar from '@/components/dashboard/DailyProgressBar';
@@ -57,8 +58,7 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
     
     
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const { startOfToday, endOfToday } = getISTDayRange();
 
     if (searchParams.quickFilter) {
         if (searchParams.quickFilter === 'uncontacted') {
@@ -174,8 +174,7 @@ export default async function AdminLeadsPage({
 
     try {
         const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const { startOfToday, endOfToday } = getISTDayRange();
         const whereClause = session.role === 'team' ? { assignedUserId: session.adminId } : {};
 
         const results = await Promise.all([

@@ -140,3 +140,28 @@ export function cleanLeadNotes(notes: string | null): string {
         return !junkPrefixes.some(prefix => trimmed.startsWith(prefix));
     }).join('\n').trim();
 }
+
+export function getISTDayRange(date = new Date(), offsetDays = 0) {
+    const adjustedDate = new Date(date);
+    adjustedDate.setDate(adjustedDate.getDate() + offsetDays);
+    
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric', month: 'numeric', day: 'numeric',
+    });
+    const istDateString = formatter.format(adjustedDate);
+    const [month, day, year] = istDateString.split('/').map(Number);
+    
+    const isoStringStart = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}T00:00:00+05:30`;
+    const startOfDay = new Date(isoStringStart);
+    
+    const isoStringEnd = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}T23:59:59.999+05:30`;
+    const endOfDay = new Date(isoStringEnd);
+    
+    return { 
+        startOfToday: startOfDay, 
+        endOfToday: endOfDay,
+        startOfDay,
+        endOfDay
+    };
+}

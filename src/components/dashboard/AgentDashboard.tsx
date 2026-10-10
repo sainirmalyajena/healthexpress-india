@@ -1,6 +1,6 @@
-﻿import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import LeadsTable from './LeadsTable';
-import { LeadStatus } from '@/generated/prisma';
+import { getISTDayRange } from '@/lib/utils';
 
 export default async function AgentDashboard({ userId, hospitals, statuses, teamMembers }: { userId: string, hospitals: any[], statuses: string[], teamMembers: any[] }) {
     
@@ -15,8 +15,7 @@ export default async function AgentDashboard({ userId, hospitals, statuses, team
     });
 
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const { startOfToday, endOfToday } = getISTDayRange();
 
     // Filter leads into buckets
     const uncontacted = leads.filter(l => l.status === 'NEW');

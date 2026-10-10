@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import Link from 'next/link';
 import { Phone, Calendar, Clock, ArrowRight, AlertTriangle } from 'lucide-react';
-import { cleanLeadNotes } from '@/lib/utils';
+import { cleanLeadNotes, getISTDayRange } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,11 +19,12 @@ export default async function TasksPage({ params }: { params: Promise<{ lang: st
     const isTeamMember = session.role === 'TEAM_MEMBER';
     const whereClause = isTeamMember ? { assignedUserId: session.adminId } : {};
 
+    
     const now = new Date();
-    const today = new Date();
-    today.setHours(23, 59, 59, 999);
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
+    const { startOfToday, endOfToday: today } = getISTDayRange();
+    const { startOfDay: startOfYesterday } = getISTDayRange(now, -1);
+    const { endOfDay: endOfTomorrow } = getISTDayRange(now, 1);
+
 
     // 1. Follow-ups
     const followUps = await prisma.lead.findMany({
@@ -36,13 +37,7 @@ export default async function TasksPage({ params }: { params: Promise<{ lang: st
         include: { hospital: true, surgery: true }
     });
 
-    const endOfTomorrow = new Date();
-    endOfTomorrow.setDate(endOfTomorrow.getDate() + 1);
-    endOfTomorrow.setHours(23, 59, 59, 999);
-
-    const startOfYesterday = new Date();
-    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
-    startOfYesterday.setHours(0, 0, 0, 0);
+    
 
     // Get all leads with OPD/IPD recently or soon
     const activeAppointments = await prisma.lead.findMany({
