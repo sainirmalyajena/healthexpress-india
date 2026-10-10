@@ -45,12 +45,13 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
     const [isPending, startTransition] = useTransition();
 
     const [hospitalId, setHospitalId] = useState(lead.hospitalId || '');
+    const [fullName, setFullName] = useState(lead.fullName || '');
     const [originalCost, setOriginalCost] = useState(lead.originalCost || 0);
     const [isEmergency, setIsEmergency] = useState(lead.isEmergency);
     const [hasCard, setHasCard] = useState(lead.hasCard);
     const [status, setStatus] = useState(lead.status);
     const [assignedUserId, setAssignedUserId] = useState(lead.assignedUserId || '');
-    const [notes, setNotes] = useState(cleanLeadNotes(lead.notes) || '');
+    const [notes, setNotes] = useState(cleanLeadNotes(lead.notes ?? null) || '');
     const [error, setError] = useState('');
     const [saving, setSaving] = useState(false);
 
@@ -83,6 +84,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    fullName,
                     status,
                     hospitalId: hospitalId || null,
                     originalCost: Number(originalCost),
@@ -123,7 +125,16 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
                 <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900">Update Lead: {lead.fullName}</h2>
+                        <div className="flex items-center gap-2">
+                            <h2 className="text-lg font-bold text-slate-900">Update Lead:</h2>
+                            <input
+                                type="text"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className="text-lg font-bold text-slate-900 bg-transparent border-b border-dashed border-slate-300 hover:border-slate-400 focus:border-teal-500 focus:outline-none px-1 py-0 w-64"
+                                placeholder="Patient Name"
+                            />
+                        </div>
                         <div className="flex items-center gap-3 mt-1">
                             <a href={`tel:${lead.phone}`} className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">📞 {lead.phone}</a>
                             {(() => {

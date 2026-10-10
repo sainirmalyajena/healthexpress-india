@@ -1,8 +1,9 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { LeadStatus } from '@/generated/prisma';
+import { sendOpdScheduledWhatsApp } from '@/lib/whatsapp';
 
 export async function PATCH(
     request: NextRequest,
@@ -53,7 +54,7 @@ export async function PATCH(
 
         const oldLead = await prisma.lead.findUnique({ where: { id } });
         
-        const dataToUpdate: any = {};
+        const dataToUpdate: any = {}; if (body.fullName !== undefined) dataToUpdate.fullName = body.fullName;
         if (status !== undefined) dataToUpdate.status = status as LeadStatus;
         if (hospitalId !== undefined) dataToUpdate.hospitalId = hospitalId || null;
         if (originalCost !== undefined) dataToUpdate.originalCost = originalCost || null;
@@ -108,9 +109,37 @@ export async function PATCH(
             }
         });
 
+        
         if (logsToCreate.length > 0) {
             await prisma.activityLog.createMany({ data: logsToCreate });
         }
+
+        // --- WhatsApp OPD Automation ---
+        if (updatedLead.status === 'OPD_SCHEDULED' && updatedLead.opdDate && updatedLead.hospital) {
+            const statusChangedToOpd = oldLead && status === 'OPD_SCHEDULED' && oldLead.status !== 'OPD_SCHEDULED';
+            const opdDateChanged = oldLead && opdDate !== undefined && new Date(opdDate).getTime() !== (oldLead.opdDate?.getTime() || 0);
+            
+            if (statusChangedToOpd || opdDateChanged) {
+                const formattedDate = new Intl.DateTimeFormat('en-IN', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                    timeZone: 'Asia/Kolkata'
+                }).format(updatedLead.opdDate);
+
+                const hospitalName = updatedLead.hospital.name;
+                const hospitalCity = updatedLead.hospital.city || 'the hospital';
+
+                await sendOpdScheduledWhatsApp(
+                    updatedLead.phone,
+                    updatedLead.fullName,
+                    hospitalName,
+                    hospitalCity,
+                    formattedDate
+                );
+            }
+        }
+        // --------------------------------
+
 
         revalidatePath('/[lang]/dashboard/leads');
         revalidatePath('/[lang]/dashboard');

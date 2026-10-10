@@ -75,3 +75,22 @@ export async function sendLeadFollowUp(phone: string, patientName: string, surge
 
     return sendWhatsAppMessage(phone, "lead_followup_welcome", "en", components);
 }
+
+// Helper for OPD Scheduled Confirmation
+export async function sendOpdScheduledWhatsApp(phone: string, patientName: string, hospitalName: string, location: string, opdDate: string) {
+    // We assume a template named "opd_appointment_confirmation" exists
+    // with 4 variables in the body: {{1}} for Patient Name, {{2}} for Hospital Name, {{3}} for Location, {{4}} for Date/Time.
+    const components = [
+        {
+            type: "body",
+            parameters: [
+                { type: "text", text: patientName },
+                { type: "text", text: hospitalName },
+                { type: "text", text: location },
+                { type: "text", text: opdDate }
+            ]
+        }
+    ];
+
+    return sendWhatsAppMessage(phone, "opd_appointment_confirmation", "en", components);
+}
