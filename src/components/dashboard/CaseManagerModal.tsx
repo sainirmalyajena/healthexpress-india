@@ -49,6 +49,7 @@ const POPULAR_CITIES = [
     'Thane',
     'Kalyan',
     'Pune',
+    'Ahmedabad',
     'Delhi',
     'Noida',
     'Gurugram',
@@ -72,11 +73,12 @@ function detectInitialCity(leadCity?: string | null, leadNotes?: string | null):
     if (lower.includes('delhi') || lower.includes('defence colony') || lower.includes('greater kailash') || lower.includes('preet vihar')) return 'Delhi';
     if (lower.includes('noida')) return 'Noida';
     if (lower.includes('gurugram') || lower.includes('gurgaon')) return 'Gurugram';
-    if (lower.includes('ghaziabad')) return 'Ghaziabad';
+    if (lower.includes('ghaziabad') || lower.includes('kavi nagar')) return 'Ghaziabad';
     if (lower.includes('meerut')) return 'Meerut';
     if (lower.includes('jaipur')) return 'Jaipur';
     if (lower.includes('lucknow')) return 'Lucknow';
     if (lower.includes('pune') || lower.includes('shivajinagar') || lower.includes('pimpri') || lower.includes('chinchwad')) return 'Pune';
+    if (lower.includes('ahmedabad') || lower.includes('gujarat') || lower.includes('sola')) return 'Ahmedabad';
     return '';
 }
 
@@ -108,6 +110,9 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
             }
             if (search === 'delhi' || search === 'ncr') {
                 return ['delhi', 'new delhi', 'noida', 'gurugram', 'ghaziabad', 'meerut'].includes(hCity);
+            }
+            if (search === 'ahmedabad' || search === 'gujarat') {
+                return ['ahmedabad', 'gujarat'].includes(hCity);
             }
             return false;
         });
