@@ -76,7 +76,7 @@ function detectInitialCity(leadCity?: string | null, leadNotes?: string | null):
     if (lower.includes('meerut')) return 'Meerut';
     if (lower.includes('jaipur')) return 'Jaipur';
     if (lower.includes('lucknow')) return 'Lucknow';
-    if (lower.includes('pune')) return 'Pune';
+    if (lower.includes('pune') || lower.includes('shivajinagar') || lower.includes('pimpri') || lower.includes('chinchwad')) return 'Pune';
     return '';
 }
 
