@@ -242,7 +242,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                                         const formattedPhone = formatWhatsAppPhone(lead.phone);
                                                         let msgText = `Hi ${lead.fullName}, this is HealthExpress India regarding your inquiry for ${lead.surgery?.name || 'medical consultation'}. We have NABH partner hospitals in ${lead.city || 'your city'} with 100% cashless insurance & 0% EMI. Would you like to check the cost estimate or book a ₹0 doctor OPD consultation?`;
 
-                                                        if (lead.status === 'OPD_SCHEDULED') {
+                                                        if (lead.status === 'OPD_SCHEDULED' || lead.status === 'OPD_RESCHEDULE') {
                                                             const hospital = lead.hospital || hospitals.find(h => h.id === lead.hospitalId);
                                                             msgText = generateOpdWhatsAppMessage({
                                                                 patientName: lead.fullName,
@@ -251,6 +251,10 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                                                 googleMapsUrl: hospital?.googleMapsUrl,
                                                                 opdDate: lead.opdDate,
                                                             });
+                                                        } else if (lead.status === 'SURGERY_SUGGESTED') {
+                                                            const hospital = lead.hospital || hospitals.find(h => h.id === lead.hospitalId);
+                                                            const hName = hospital?.name || 'our partner hospital';
+                                                            msgText = `Dear ${lead.fullName}, this is HealthExpress India regarding your consultation at ${hName}. Since surgery has been advised, our care team is here to assist you with 100% cashless insurance approval, doctor follow-ups, and 0% EMI options. When would be a convenient time to discuss your treatment plan?`;
                                                         } else if (lead.status === 'FOLLOW_UP') {
                                                             msgText = `Hi ${lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
                                                         }

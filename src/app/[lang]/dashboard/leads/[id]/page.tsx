@@ -103,7 +103,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                                 let waUrl = `https://wa.me/${formattedPhone}`;
                                                 let btnTitle = "Message on WhatsApp";
 
-                                                if (lead.status === 'OPD_SCHEDULED') {
+                                                if (lead.status === 'OPD_SCHEDULED' || lead.status === 'OPD_RESCHEDULE') {
                                                     const msgText = generateOpdWhatsAppMessage({
                                                         patientName: lead.fullName,
                                                         hospitalName: lead.hospital?.name,
@@ -113,6 +113,11 @@ export default async function LeadDetailPage({ params }: PageProps) {
                                                     });
                                                     waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msgText)}`;
                                                     btnTitle = "Send OPD Appointment Confirmation on WhatsApp";
+                                                } else if (lead.status === 'SURGERY_SUGGESTED') {
+                                                    const hName = lead.hospital?.name || 'our partner hospital';
+                                                    const msgText = `Dear ${lead.fullName}, this is HealthExpress India regarding your consultation at ${hName}. Since surgery has been advised, our care team is here to assist you with 100% cashless insurance approval, doctor follow-ups, and 0% EMI options. When would be a convenient time to discuss your treatment plan?`;
+                                                    waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msgText)}`;
+                                                    btnTitle = "Send Surgery Support message on WhatsApp";
                                                 } else if (lead.status === 'FOLLOW_UP') {
                                                     const msgText = `Hi ${lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
                                                     waUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msgText)}`;

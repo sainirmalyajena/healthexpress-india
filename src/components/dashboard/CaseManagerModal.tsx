@@ -142,7 +142,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                             {(() => {
                                 const currentHospital = hospitals.find(h => h.id === (hospitalId || lead.hospitalId));
                                 let defaultMessage = `Hi ${fullName || lead.fullName}, this is HealthExpress. How can we assist you today?`;
-                                if (status === 'OPD_SCHEDULED') {
+                                if (status === 'OPD_SCHEDULED' || status === 'OPD_RESCHEDULE') {
                                     defaultMessage = generateOpdWhatsAppMessage({
                                         patientName: fullName || lead.fullName,
                                         hospitalName: currentHospital?.name,
@@ -150,6 +150,9 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                         googleMapsUrl: currentHospital?.googleMapsUrl,
                                         opdDate: opdDate || lead.opdDate,
                                     });
+                                } else if (status === 'SURGERY_SUGGESTED') {
+                                    const hName = currentHospital?.name || 'our partner hospital';
+                                    defaultMessage = `Dear ${fullName || lead.fullName}, this is HealthExpress India regarding your consultation at ${hName}. Since surgery has been advised, our care team is here to assist you with 100% cashless insurance approval, doctor follow-ups, and 0% EMI options. When would be a convenient time to discuss your treatment plan?`;
                                 } else if (status === 'FOLLOW_UP') {
                                     defaultMessage = `Hi ${fullName || lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
                                 }
