@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
+import OpdScheduleWidget from '@/components/dashboard/OpdScheduleWidget';
 import { Users, AlertTriangle, PhoneCall, Calendar, Activity, CheckCircle, UserPlus, Stethoscope, ChevronRight, BarChart3, TrendingUp, PhoneOff, Clock, MapPin, Building2 } from 'lucide-react';
 import { Prisma } from '@/generated/prisma';
+import { getISTDayRange } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,14 +19,20 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     }
 
     const now = new Date();
-    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const { startOfToday, endOfToday } = getISTDayRange(now);
+
+    const istFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric', month: 'numeric', day: 'numeric',
+    });
+    const [istMonth, istDay, istYear] = istFormatter.format(now).split('/').map(Number);
+    const todayDateStr = `${istYear}-${istMonth.toString().padStart(2, '0')}-${istDay.toString().padStart(2, '0')}`;
 
     const whereClause: Prisma.LeadWhereInput = session.role === 'team' ? { assignedUserId: session.adminId } : {};
     
     // Run all KPI queries in parallel for massive performance boost
     const [
-        activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, 
+        activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, totalOpdsTillDate,
         surgeriesScheduled, totalInquiries, opdScheduledCount, surgeryDoneCount, urgentLeads,
         dnpLeads, totalFollowUps, todaysOpdList, opdDoneCount, surgerySuggestedCount
     ] = await Promise.all([
@@ -38,6 +46,15 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
         }),
         prisma.lead.count({
             where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } }
+        }),
+        prisma.lead.count({
+            where: {
+                ...whereClause,
+                OR: [
+                    { opdDate: { not: null } },
+                    { status: { in: ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE', 'OPD_RESCHEDULE'] } }
+                ]
+            }
         }),
         prisma.lead.count({
             where: { ...whereClause, status: 'SURGERY_SCHEDULED' }
@@ -60,8 +77,8 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
         prisma.lead.findMany({
             where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } },
             orderBy: { opdDate: 'asc' },
-            take: 8,
-            include: { assignedUser: true, hospital: true }
+            take: 50,
+            include: { assignedUser: true, hospital: true, surgery: true }
         }),
         prisma.lead.count({ where: { ...whereClause, status: 'OPD_DONE' } }),
         prisma.lead.count({ where: { ...whereClause, status: 'SURGERY_SUGGESTED' } })
@@ -142,102 +159,101 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                     </Link>
                 </div>
 
-                {/* Primary Bento Box Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                {/* Primary KPI Grid (6 High-Impact Metric Cards) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     
-                    {/* LEFT COLUMN: Actionable KPIs (Spans 8 cols) */}
-                    <div className="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=overdue`} className="group relative overflow-hidden bg-gradient-to-br from-red-500 to-red-600 p-6 rounded-3xl shadow-sm border border-red-400/50 hover:shadow-md transition-all">
-                            <div className="relative z-10 text-white">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><AlertTriangle className="w-6 h-6 text-white" /></div>
-                                    <ChevronRight className="w-5 h-5 text-red-200 group-hover:translate-x-1 transition-transform" />
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-black mb-1">{overdueFollowUps}</h3>
-                                <p className="font-semibold text-red-50 tracking-wide text-sm">Overdue Follow-ups</p>
+                    {/* 1. Today's OPDs Booked */}
+                    <Link href={`/${lang}/dashboard/leads?quickFilter=today_opds`} className="group relative overflow-hidden bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 rounded-3xl shadow-sm border border-indigo-500/50 hover:shadow-md transition-all">
+                        <div className="relative z-10 text-white">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Calendar className="w-6 h-6 text-white" /></div>
+                                <span className="text-[10px] uppercase font-black tracking-wider px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm">Today</span>
                             </div>
-                            <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-red-400 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                        </Link>
-
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=today_followups`} className="group relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-500 p-6 rounded-3xl shadow-sm border border-amber-300/50 hover:shadow-md transition-all">
-                            <div className="relative z-10 text-white">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><PhoneCall className="w-6 h-6 text-white" /></div>
-                                    <ChevronRight className="w-5 h-5 text-amber-100 group-hover:translate-x-1 transition-transform" />
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysFollowUps}</h3>
-                                <p className="font-semibold text-amber-50 tracking-wide text-sm">Today's Scheduled Calls</p>
-                            </div>
-                            <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-300 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
-                        </Link>
-
-                        <Link href={`/${lang}/dashboard/leads?quickFilter=today_opds`} className="group relative overflow-hidden bg-gradient-to-br from-indigo-500 to-indigo-600 p-6 rounded-3xl shadow-sm border border-indigo-400/50 hover:shadow-md transition-all">
-                            <div className="relative z-10 text-white">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Calendar className="w-6 h-6 text-white" /></div>
-                                    <ChevronRight className="w-5 h-5 text-indigo-200 group-hover:translate-x-1 transition-transform" />
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysOpds}</h3>
-                                <p className="font-semibold text-indigo-50 tracking-wide text-sm">OPDs Arriving Today</p>
-                            </div>
-                        </Link>
-
-                        <Link href={`/${lang}/dashboard/leads?status=NEW`} className="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-3xl shadow-sm border border-blue-400/50 hover:shadow-md transition-all">
-                            <div className="relative z-10 text-white">
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><UserPlus className="w-6 h-6 text-white" /></div>
-                                    <ChevronRight className="w-5 h-5 text-blue-200 group-hover:translate-x-1 transition-transform" />
-                                </div>
-                                <h3 className="text-4xl md:text-5xl font-black mb-1">{newLeads}</h3>
-                                <p className="font-semibold text-blue-50 tracking-wide text-sm">New / Uncontacted Leads</p>
-                            </div>
-                        </Link>
-                    </div>
-
-                    {/* RIGHT COLUMN: Today's OPD Schedule (Spans 4 cols) */}
-                    <div className="md:col-span-4 bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
-                        <div className="flex items-center justify-between mb-5">
-                            <div className="flex items-center gap-2">
-                                <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl"><Calendar className="w-5 h-5" /></div>
-                                <h2 className="text-lg font-bold text-slate-800">Today's OPD Schedule</h2>
-                            </div>
-                            <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">{todaysOpds} total</span>
+                            <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysOpds}</h3>
+                            <p className="font-bold text-indigo-100 tracking-wide text-sm">OPDs Booked Today</p>
+                            <p className="text-xs text-indigo-200/80 mt-0.5">Scheduled for today (IST)</p>
                         </div>
-                        
-                        {todaysOpdList.length === 0 ? (
-                            <div className="flex-1 flex flex-col items-center justify-center text-slate-400 py-8">
-                                <Calendar className="w-10 h-10 mb-3 opacity-20" />
-                                <p className="text-sm font-medium">No OPDs scheduled today</p>
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-500 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    </Link>
+
+                    {/* 2. Total OPDs Booked Till Date */}
+                    <Link href={`/${lang}/dashboard/leads?status=OPD_SCHEDULED`} className="group relative overflow-hidden bg-gradient-to-br from-teal-600 to-emerald-700 p-6 rounded-3xl shadow-sm border border-teal-500/50 hover:shadow-md transition-all">
+                        <div className="relative z-10 text-white">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Stethoscope className="w-6 h-6 text-white" /></div>
+                                <span className="text-[10px] uppercase font-black tracking-wider px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm">All Time</span>
                             </div>
-                        ) : (
-                            <div className="flex-1 space-y-3 overflow-y-auto">
-                                {todaysOpdList.map((lead, idx) => (
-                                    <Link key={lead.id} href={`/${lang}/dashboard/leads/${lead.id}`} className="group block p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all">
-                                        <div className="flex items-start justify-between mb-1.5">
-                                            <p className="font-bold text-slate-800 text-sm truncate max-w-[140px]">{lead.fullName}</p>
-                                            <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded-full whitespace-nowrap">
-                                                {lead.opdDate ? new Date(lead.opdDate).toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: true }) : 'TBD'}
-                                            </span>
-                                        </div>
-                                        <div className="flex items-center gap-3 text-xs text-slate-500">
-                                            <span className="flex items-center gap-1">
-                                                <Building2 className="w-3 h-3" />
-                                                {lead.hospital?.name || 'No hospital'}
-                                            </span>
-                                            <span className="flex items-center gap-1">
-                                                <PhoneCall className="w-3 h-3" />
-                                                {lead.phone}
-                                            </span>
-                                        </div>
-                                        {session.role !== 'team' && lead.assignedUser && (
-                                            <p className="text-[10px] text-slate-400 mt-1 font-medium">Assigned: {lead.assignedUser.name}</p>
-                                        )}
-                                    </Link>
-                                ))}
+                            <h3 className="text-4xl md:text-5xl font-black mb-1">{totalOpdsTillDate}</h3>
+                            <p className="font-bold text-teal-100 tracking-wide text-sm">Total OPDs Booked Till Date</p>
+                            <p className="text-xs text-teal-200/80 mt-0.5">All-time OPD consultations</p>
+                        </div>
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    </Link>
+
+                    {/* 3. Overdue Follow-ups */}
+                    <Link href={`/${lang}/dashboard/leads?quickFilter=overdue`} className="group relative overflow-hidden bg-gradient-to-br from-red-500 to-red-600 p-6 rounded-3xl shadow-sm border border-red-400/50 hover:shadow-md transition-all">
+                        <div className="relative z-10 text-white">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><AlertTriangle className="w-6 h-6 text-white" /></div>
+                                <ChevronRight className="w-5 h-5 text-red-200 group-hover:translate-x-1 transition-transform" />
                             </div>
-                        )}
-                    </div>
+                            <h3 className="text-4xl md:text-5xl font-black mb-1">{overdueFollowUps}</h3>
+                            <p className="font-bold text-red-50 tracking-wide text-sm">Overdue Follow-ups</p>
+                            <p className="text-xs text-red-200/80 mt-0.5">Urgent calls pending</p>
+                        </div>
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-red-400 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    </Link>
+
+                    {/* 4. Today's Scheduled Calls */}
+                    <Link href={`/${lang}/dashboard/leads?quickFilter=today_followups`} className="group relative overflow-hidden bg-gradient-to-br from-amber-500 to-amber-600 p-6 rounded-3xl shadow-sm border border-amber-400/50 hover:shadow-md transition-all">
+                        <div className="relative z-10 text-white">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><PhoneCall className="w-6 h-6 text-white" /></div>
+                                <ChevronRight className="w-5 h-5 text-amber-100 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                            <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysFollowUps}</h3>
+                            <p className="font-bold text-amber-50 tracking-wide text-sm">Today's Scheduled Calls</p>
+                            <p className="text-xs text-amber-200/80 mt-0.5">Follow-ups set for today</p>
+                        </div>
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-400 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    </Link>
+
+                    {/* 5. New / Uncontacted Leads */}
+                    <Link href={`/${lang}/dashboard/leads?status=NEW`} className="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 p-6 rounded-3xl shadow-sm border border-blue-400/50 hover:shadow-md transition-all">
+                        <div className="relative z-10 text-white">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><UserPlus className="w-6 h-6 text-white" /></div>
+                                <ChevronRight className="w-5 h-5 text-blue-200 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                            <h3 className="text-4xl md:text-5xl font-black mb-1">{newLeads}</h3>
+                            <p className="font-bold text-blue-50 tracking-wide text-sm">New / Fresh Leads</p>
+                            <p className="text-xs text-blue-200/80 mt-0.5">Awaiting initial outreach</p>
+                        </div>
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-400 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    </Link>
+
+                    {/* 6. Surgeries Scheduled */}
+                    <Link href={`/${lang}/dashboard/leads?status=SURGERY_SCHEDULED`} className="group relative overflow-hidden bg-gradient-to-br from-purple-600 to-indigo-600 p-6 rounded-3xl shadow-sm border border-purple-400/50 hover:shadow-md transition-all">
+                        <div className="relative z-10 text-white">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm"><Activity className="w-6 h-6 text-white" /></div>
+                                <ChevronRight className="w-5 h-5 text-purple-200 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                            <h3 className="text-4xl md:text-5xl font-black mb-1">{surgeriesScheduled}</h3>
+                            <p className="font-bold text-purple-100 tracking-wide text-sm">Surgeries Scheduled</p>
+                            <p className="text-xs text-purple-200/80 mt-0.5">High conversion pipeline</p>
+                        </div>
+                        <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-purple-500 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+                    </Link>
                 </div>
+
+                {/* Interactive OPD Schedule & Status Manager (Pick Any Specific Date) */}
+                <OpdScheduleWidget
+                    initialLeads={todaysOpdList}
+                    initialDateStr={todayDateStr}
+                    userRole={session.role}
+                    lang={lang}
+                />
 
                 {/* Secondary Grid (Bottom Row) */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
