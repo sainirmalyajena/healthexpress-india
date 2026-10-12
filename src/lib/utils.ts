@@ -165,3 +165,82 @@ export function getISTDayRange(date = new Date(), offsetDays = 0) {
         endOfDay
     };
 }
+
+export function formatWhatsAppPhone(phone: string): string {
+    const clean = phone.replace(/[^0-9]/g, '');
+    if (clean.length === 10) return `91${clean}`;
+    return clean;
+}
+
+export function generateOpdWhatsAppMessage({
+    patientName,
+    hospitalName,
+    hospitalAddress,
+    googleMapsUrl,
+    opdDate,
+}: {
+    patientName: string;
+    hospitalName?: string | null;
+    hospitalAddress?: string | null;
+    googleMapsUrl?: string | null;
+    opdDate?: Date | string | null;
+}): string {
+    const hName = hospitalName || 'our partner hospital';
+    const hAddress = hospitalAddress || 'Address will be shared shortly';
+    const hMap = googleMapsUrl || 'https://www.healthexpressindia.com';
+
+    let dateStr = 'Scheduled Date';
+    let timeStr = 'Scheduled Time';
+
+    if (opdDate) {
+        const d = new Date(opdDate);
+        if (!isNaN(d.getTime())) {
+            const weekday = new Intl.DateTimeFormat('en-IN', { weekday: 'long', timeZone: 'Asia/Kolkata' }).format(d);
+            const day = new Intl.DateTimeFormat('en-IN', { day: '2-digit', timeZone: 'Asia/Kolkata' }).format(d);
+            const month = new Intl.DateTimeFormat('en-IN', { month: '2-digit', timeZone: 'Asia/Kolkata' }).format(d);
+            const year = new Intl.DateTimeFormat('en-IN', { year: 'numeric', timeZone: 'Asia/Kolkata' }).format(d);
+            dateStr = `${weekday}-${day}/${month}/${year}`;
+            
+            timeStr = new Intl.DateTimeFormat('en-IN', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Kolkata'
+            }).format(d).replace(/\s+/g, '').toUpperCase();
+        }
+    }
+
+    return `Dear ${patientName}, 
+
+Your appointment has been successfully scheduled at ${hName}.
+
+Please find the details below:
+
+Patient Name: ${patientName}
+
+Appointment Date: ${dateStr}
+
+Time: ${timeStr}
+
+Consultation Fee: Free
+Test Charges: Free
+
+🏥 Hospital Location & Address:
+${hName}
+
+${hAddress}
+
+📍 Google Maps Link: 
+${hMap}
+
+Important Instructions:
+
+Kindly arrive 10–15 minutes prior to your scheduled time for a hassle-free registration process.
+
+
+Thank you for choosing Healthexpress India. We look forward to assisting You.
+
+Best regards, 
+https://www.healthexpressindia.com/en`;
+}
+

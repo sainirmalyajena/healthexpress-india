@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getStatusColor } from '@/lib/utils';
+import { getStatusColor, formatWhatsAppPhone, generateOpdWhatsAppMessage } from '@/lib/utils';
 import LeadStatusSelect from './LeadStatusSelect';
 import CaseManagerModal from './CaseManagerModal';
 
@@ -19,6 +19,8 @@ interface Lead {
     } | null;
     hospital?: {
         name: string;
+        address?: string | null;
+        googleMapsUrl?: string | null;
     } | null;
     hospitalId: string | null;
     revenue: number | null;
@@ -42,7 +44,7 @@ interface LeadsTableProps {
     userRole?: string;
     leads: Lead[];
     statuses: string[];
-    hospitals: { id: string, name: string, discountPercent: number }[];
+    hospitals: { id: string, name: string, discountPercent: number, address?: string | null, googleMapsUrl?: string | null }[];
     teamMembers: { id: string, name: string }[];
 }
 
@@ -237,11 +239,23 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                                           Added: {new Date(lead.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
                                                       </div>
                                                     {(() => {
-                                                        const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
-                                                        const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
-                                                        const msg = encodeURIComponent(
-                                                            `Hi ${lead.fullName}, this is HealthExpress India regarding your inquiry for ${lead.surgery?.name || 'medical consultation'}. We have NABH partner hospitals in ${lead.city || 'your city'} with 100% cashless insurance & 0% EMI. Would you like to check the cost estimate or book a â‚¹0 doctor OPD consultation?`
-                                                        );
+                                                        const formattedPhone = formatWhatsAppPhone(lead.phone);
+                                                        let msgText = `Hi ${lead.fullName}, this is HealthExpress India regarding your inquiry for ${lead.surgery?.name || 'medical consultation'}. We have NABH partner hospitals in ${lead.city || 'your city'} with 100% cashless insurance & 0% EMI. Would you like to check the cost estimate or book a ₹0 doctor OPD consultation?`;
+
+                                                        if (lead.status === 'OPD_SCHEDULED') {
+                                                            const hospital = lead.hospital || hospitals.find(h => h.id === lead.hospitalId);
+                                                            msgText = generateOpdWhatsAppMessage({
+                                                                patientName: lead.fullName,
+                                                                hospitalName: hospital?.name,
+                                                                hospitalAddress: hospital?.address,
+                                                                googleMapsUrl: hospital?.googleMapsUrl,
+                                                                opdDate: lead.opdDate,
+                                                            });
+                                                        } else if (lead.status === 'FOLLOW_UP') {
+                                                            msgText = `Hi ${lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
+                                                        }
+
+                                                        const msg = encodeURIComponent(msgText);
                                                         return (
                                                             <a 
                                                                 href={`https://wa.me/${formattedPhone}?text=${msg}`}

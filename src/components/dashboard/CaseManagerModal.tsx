@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { cleanLeadNotes } from '@/lib/utils';
+import { cleanLeadNotes, formatWhatsAppPhone, generateOpdWhatsAppMessage } from '@/lib/utils';
 
 interface Hospital {
     city?: string;
@@ -140,54 +140,23 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                         <div className="flex items-center gap-3 mt-1">
                             <a href={`tel:${lead.phone}`} className="text-sm text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1">📞 {lead.phone}</a>
                             {(() => {
-                                const currentHospital = hospitals.find(h => h.id === lead.hospitalId);
-                                  let defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. How can we assist you today?`;
+                                const currentHospital = hospitals.find(h => h.id === (hospitalId || lead.hospitalId));
+                                let defaultMessage = `Hi ${fullName || lead.fullName}, this is HealthExpress. How can we assist you today?`;
                                 if (status === 'OPD_SCHEDULED') {
-                                      const hName = currentHospital?.name || 'our partner hospital';
-                                      const hAddress = currentHospital?.address || 'Hospital Address not provided in directory';
-                                      const hMap = currentHospital?.googleMapsUrl || 'Location map not provided';
-                                      
-                                      const dObj = lead.opdDate ? new Date(lead.opdDate) : new Date();
-                                      const dDate = dObj.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }).replace(/, /g, '-').replace(/\//g, '/');
-                                      const dTime = dObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-                                      
-                                      defaultMessage = `Dear ${lead.fullName}, 
-
-Your appointment has been successfully scheduled at ${hName}.
-
-Please find the details below:
-
-Patient Name: ${lead.fullName}
-
-Appointment Date: ${dDate}
-
-Time: ${dTime}
-
-Consultation Fee: Free
-Test Charges: Free
-
-🏥 Hospital Location & Address:
-${hName}
-
-${hAddress}
-
-📍 Google Maps Link: 
-${hMap}
-
-Important Instructions:
-
-Kindly arrive 10-15 minutes prior to your scheduled time for a hassle-free registration process.
-
-Thank you for choosing Healthexpress India. We look forward to assisting You.
-
-Best regards, 
-https://www.healthexpressindia.com/en`;
-                                  } else if (status === 'FOLLOW_UP') {
-                                    defaultMessage = `Hi ${lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
+                                    defaultMessage = generateOpdWhatsAppMessage({
+                                        patientName: fullName || lead.fullName,
+                                        hospitalName: currentHospital?.name,
+                                        hospitalAddress: currentHospital?.address,
+                                        googleMapsUrl: currentHospital?.googleMapsUrl,
+                                        opdDate: opdDate || lead.opdDate,
+                                    });
+                                } else if (status === 'FOLLOW_UP') {
+                                    defaultMessage = `Hi ${fullName || lead.fullName}, this is HealthExpress. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`;
                                 }
 
                                 const encodedMessage = encodeURIComponent(defaultMessage);
-                                const waUrl = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+                                const formattedPhone = formatWhatsAppPhone(lead.phone);
+                                const waUrl = `https://wa.me/${formattedPhone}?text=${encodedMessage}`;
 
                                 return (
                                     <a 
