@@ -55,7 +55,10 @@ const POPULAR_CITIES = [
     'Gurugram',
     'Ghaziabad',
     'Meerut',
+    'Ambala',
     'Jaipur',
+    'Jodhpur',
+    'Sikar',
     'Lucknow'
 ];
 
@@ -75,7 +78,10 @@ function detectInitialCity(leadCity?: string | null, leadNotes?: string | null):
     if (lower.includes('gurugram') || lower.includes('gurgaon')) return 'Gurugram';
     if (lower.includes('ghaziabad') || lower.includes('kavi nagar')) return 'Ghaziabad';
     if (lower.includes('meerut')) return 'Meerut';
+    if (lower.includes('ambala') || lower.includes('haryana')) return 'Ambala';
     if (lower.includes('jaipur')) return 'Jaipur';
+    if (lower.includes('jodhpur')) return 'Jodhpur';
+    if (lower.includes('sikar') || lower.includes('mansa')) return 'Sikar';
     if (lower.includes('lucknow')) return 'Lucknow';
     if (lower.includes('pune') || lower.includes('shivajinagar') || lower.includes('pimpri') || lower.includes('chinchwad')) return 'Pune';
     if (lower.includes('ahmedabad') || lower.includes('gujarat') || lower.includes('sola')) return 'Ahmedabad';
