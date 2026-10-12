@@ -187,7 +187,7 @@ export function generateOpdWhatsAppMessage({
 }): string {
     const hName = hospitalName || 'our partner hospital';
     const hAddress = hospitalAddress || 'Address will be shared shortly';
-    const hMap = googleMapsUrl || 'https://www.healthexpressindia.com';
+    const hMap = googleMapsUrl || (hospitalAddress ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((hospitalName ? hospitalName + ', ' : '') + hospitalAddress)}` : 'https://www.healthexpressindia.com');
 
     let dateStr = 'Scheduled Date';
     let timeStr = 'Scheduled Time';
