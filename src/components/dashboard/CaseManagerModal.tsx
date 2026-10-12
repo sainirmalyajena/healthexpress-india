@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { cleanLeadNotes, formatWhatsAppPhone, generateOpdWhatsAppMessage } from '@/lib/utils';
 
@@ -18,6 +18,7 @@ interface Lead {
     id: string;
     fullName: string;
     phone: string;
+    city?: string | null;
     status: string;
     hospitalId: string | null;
     originalCost: number | null;
@@ -42,11 +43,82 @@ interface CaseManagerModalProps {
     onClose: () => void;
 }
 
+const POPULAR_CITIES = [
+    'Mumbai',
+    'Navi Mumbai',
+    'Thane',
+    'Kalyan',
+    'Pune',
+    'Delhi',
+    'Noida',
+    'Gurugram',
+    'Ghaziabad',
+    'Meerut',
+    'Jaipur',
+    'Lucknow'
+];
+
+function detectInitialCity(leadCity?: string | null, leadNotes?: string | null): string {
+    if (leadCity && leadCity.trim()) {
+        const cleaned = leadCity.trim();
+        return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+    }
+    if (!leadNotes) return '';
+    const lower = leadNotes.toLowerCase();
+    if (lower.includes('vashi') || lower.includes('navi_mumbai') || lower.includes('navi mumbai')) return 'Navi Mumbai';
+    if (lower.includes('kalyan')) return 'Kalyan';
+    if (lower.includes('thane')) return 'Thane';
+    if (lower.includes('ghatkopar') || lower.includes('jogeshwari') || lower.includes('dadar') || lower.includes('mumbai')) return 'Mumbai';
+    if (lower.includes('delhi') || lower.includes('defence colony') || lower.includes('greater kailash') || lower.includes('preet vihar')) return 'Delhi';
+    if (lower.includes('noida')) return 'Noida';
+    if (lower.includes('gurugram') || lower.includes('gurgaon')) return 'Gurugram';
+    if (lower.includes('ghaziabad')) return 'Ghaziabad';
+    if (lower.includes('meerut')) return 'Meerut';
+    if (lower.includes('jaipur')) return 'Jaipur';
+    if (lower.includes('lucknow')) return 'Lucknow';
+    if (lower.includes('pune')) return 'Pune';
+    return '';
+}
+
 export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose }: CaseManagerModalProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
-    const [hospitalId, setHospitalId] = useState(lead.hospitalId || '');
+        const [hospitalId, setHospitalId] = useState(lead.hospitalId || '');
+    const [city, setCity] = useState(detectInitialCity(lead.city, lead.notes));
+
+    // Dynamically filter hospitals based on patient location
+    const filteredHospitals = useMemo(() => {
+        if (!city || !city.trim() || city.trim().toLowerCase() === 'all') {
+            return hospitals;
+        }
+        const search = city.trim().toLowerCase();
+
+        const matched = hospitals.filter(h => {
+            const hCity = (h.city || '').toLowerCase();
+            const hName = (h.name || '').toLowerCase();
+            const hAddress = (h.address || '').toLowerCase();
+
+            if (hCity.includes(search) || search.includes(hCity)) return true;
+            if (hName.includes(search)) return true;
+            if (hAddress.includes(search)) return true;
+
+            if (search === 'mumbai') {
+                return ['mumbai', 'navi mumbai', 'thane', 'kalyan'].includes(hCity);
+            }
+            if (search === 'delhi' || search === 'ncr') {
+                return ['delhi', 'new delhi', 'noida', 'gurugram', 'ghaziabad', 'meerut'].includes(hCity);
+            }
+            return false;
+        });
+
+        if (hospitalId && !matched.some(h => h.id === hospitalId)) {
+            const current = hospitals.find(h => h.id === hospitalId);
+            if (current) return [current, ...matched];
+        }
+
+        return matched;
+    }, [hospitals, city, hospitalId]);
     const [fullName, setFullName] = useState(lead.fullName || '');
     const [originalCost, setOriginalCost] = useState(lead.originalCost || 0);
     const [isEmergency, setIsEmergency] = useState(lead.isEmergency);
@@ -73,6 +145,12 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
     const [followUpDate, setFollowUpDate] = useState(formatDateTimeForInput(lead.followUpDate));
 
     const handleSave = async () => {
+        if (['OPD_SCHEDULED', 'OPD_RESCHEDULE'].includes(status)) {
+            if (!city.trim()) {
+                setError('Patient Location / City is required when booking an OPD.');
+                return;
+            }
+        }
         const noFollowUpNeeded = ['NEW', 'LOST', 'CLOSED'].includes(status);
         if (!noFollowUpNeeded && !followUpDate) {
             setError('A Follow-up Date and Time is mandatory when status is ' + status.replace('_', ' ') + '.');
@@ -87,6 +165,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     fullName,
+                    city: city.trim(),
                     status,
                     hospitalId: hospitalId || null,
                     originalCost: Number(originalCost),
@@ -186,14 +265,14 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                         </div>
                     )}
 
-                    {/* Status & Hospital */}
+                    {/* Status & Patient Location */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">Status</label>
                             <select
                                 value={status}
                                 onChange={e => setStatus(e.target.value)}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                             >
                                 <option value="NEW">New</option>
                                 <option value="CONTACTED">Contacted</option>
@@ -216,34 +295,100 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1">Assign Hospital</label>
-                            <select
-                                value={hospitalId}
-                                onChange={e => setHospitalId(e.target.value)}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
-                            >
-                                <option value="">-- Select Hospital --</option>
-                                {hospitals.map(h => (
-                                    <option key={h.id} value={h.id}>{h.name}</option>
+                            <div className="flex items-center justify-between mb-1">
+                                <label className="block text-sm font-bold text-slate-700">
+                                    Patient Location / City {['OPD_SCHEDULED', 'OPD_RESCHEDULE'].includes(status) && <span className="text-red-500">*</span>}
+                                </label>
+                                {city && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setCity('')}
+                                        className="text-[11px] text-teal-600 hover:text-teal-800 font-medium underline"
+                                    >
+                                        Show all cities
+                                    </button>
+                                )}
+                            </div>
+                            <input
+                                type="text"
+                                value={city}
+                                onChange={e => setCity(e.target.value)}
+                                placeholder="e.g. Mumbai, Pune, Delhi..."
+                                list="city-suggestions"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                            />
+                            <datalist id="city-suggestions">
+                                {POPULAR_CITIES.map(c => (
+                                    <option key={c} value={c} />
                                 ))}
-                            </select>
-                            
+                            </datalist>
                         </div>
                     </div>
 
-                    {/* Assignment */}
-                    <div className="mb-4">
-                        <label className="block text-sm font-bold text-slate-700 mb-1">Assigned To</label>
-                        <select
-                            value={assignedUserId}
-                            onChange={e => setAssignedUserId(e.target.value)}
-                            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
-                        >
-                            <option value="">-- Unassigned --</option>
-                            {(teamMembers || []).map(t => (
-                                <option key={t.id} value={t.id}>{t.name}</option>
-                            ))}
-                        </select>
+                    {/* Hospital & Assigned To */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <div className="flex items-center justify-between mb-1">
+                                <label className="block text-sm font-bold text-slate-700">Assign Hospital</label>
+                                {city.trim() && (
+                                    <span className="text-[11px] text-slate-500 font-medium bg-slate-100 px-1.5 py-0.5 rounded">
+                                        {filteredHospitals.length} in {city}
+                                    </span>
+                                )}
+                            </div>
+                            <select
+                                value={hospitalId}
+                                onChange={e => setHospitalId(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                            >
+                                <option value="">-- Select Hospital --</option>
+                                {filteredHospitals.length === 0 ? (
+                                    <option value="" disabled>No partner hospital found in {city}</option>
+                                ) : (
+                                    (() => {
+                                        const groups = {};
+                                        for (const h of filteredHospitals) {
+                                            const c = h.city || 'Other';
+                                            if (!groups[c]) groups[c] = [];
+                                            groups[c].push(h);
+                                        }
+                                        const groupKeys = Object.keys(groups).sort();
+                                        
+                                        if (groupKeys.length === 1) {
+                                            return groups[groupKeys[0]].map(h => (
+                                                <option key={h.id} value={h.id}>{h.name}</option>
+                                            ));
+                                        }
+                                        
+                                        return groupKeys.map(c => (
+                                            <optgroup key={c} label={`📍 ${c}`}>
+                                                {groups[c].map(h => (
+                                                    <option key={h.id} value={h.id}>{h.name}</option>
+                                                ))}
+                                            </optgroup>
+                                        ));
+                                    })()
+                                )}
+                            </select>
+                            {filteredHospitals.length === 0 && city.trim() && (
+                                <p className="text-xs text-amber-600 mt-1">
+                                    No hospital in {city}. <button type="button" onClick={() => setCity('')} className="underline font-bold">View all hospitals</button>
+                                </p>
+                            )}
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Assigned To</label>
+                            <select
+                                value={assignedUserId}
+                                onChange={e => setAssignedUserId(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                            >
+                                <option value="">-- Unassigned --</option>
+                                {(teamMembers || []).map(t => (
+                                    <option key={t.id} value={t.id}>{t.name}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
                     {/* Dates */}

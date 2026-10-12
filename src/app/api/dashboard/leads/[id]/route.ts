@@ -54,7 +54,9 @@ export async function PATCH(
 
         const oldLead = await prisma.lead.findUnique({ where: { id } });
         
-        const dataToUpdate: any = {}; if (body.fullName !== undefined) dataToUpdate.fullName = body.fullName;
+        const dataToUpdate: any = {}; 
+        if (body.fullName !== undefined) dataToUpdate.fullName = body.fullName;
+        if (body.city !== undefined) dataToUpdate.city = body.city;
         if (status !== undefined) dataToUpdate.status = status as LeadStatus;
         if (hospitalId !== undefined) dataToUpdate.hospitalId = hospitalId || null;
         if (originalCost !== undefined) dataToUpdate.originalCost = originalCost || null;
