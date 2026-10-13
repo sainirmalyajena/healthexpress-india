@@ -48,6 +48,24 @@ h1, h2, h3, h4, h5, h6 {
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html, body {
+  touch-action: manipulation;
+}
+
+/* ── Prevent Mobile Auto-Zoom on Input / Select / Textarea Focus (iOS Safari & Chrome) ── */
+@media screen and (max-width: 768px) {
+  input,
+  select,
+  textarea,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    font-size: 16px !important;
+  }
 }
 
 /* Defer rendering of off-screen sections — major LCP improvement */

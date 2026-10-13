@@ -213,9 +213,9 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-2 sm:p-4">
             <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
-                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
                     <div>
                         <div className="flex items-center gap-2">
                             <h2 className="text-lg font-bold text-slate-900">Update Lead:</h2>
@@ -223,7 +223,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 type="text"
                                 value={fullName}
                                 onChange={(e) => setFullName(e.target.value)}
-                                className="text-lg font-bold text-slate-900 bg-transparent border-b border-dashed border-slate-300 hover:border-slate-400 focus:border-teal-500 focus:outline-none px-1 py-0 w-64"
+                                className="text-base sm:text-lg font-bold text-slate-900 bg-transparent border-b border-dashed border-slate-300 hover:border-slate-400 focus:border-teal-500 focus:outline-none px-1 py-0 w-36 sm:w-64 max-w-full"
                                 placeholder="Patient Name"
                             />
                         </div>
@@ -269,7 +269,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     <button onClick={onClose} className="text-slate-400 hover:text-slate-600 p-2 text-xl">✕</button>
                 </div>
 
-                <div className="p-6 overflow-y-auto space-y-6 flex-1">
+                <div className="p-4 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6 flex-1">
                     {error && (
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
                             âš ï¸ {error}
@@ -403,14 +403,14 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     </div>
 
                     {/* Dates */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date {!['NEW', 'LOST', 'CLOSED'].includes(status) && <span className="text-red-500">*</span>}</label>
                             <input
                                 type="datetime-local"
                                 value={followUpDate}
                                 onChange={e => setFollowUpDate(e.target.value)}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                             />
                         </div>
                         <div>
@@ -419,7 +419,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                 type="datetime-local"
                                 value={opdDate}
                                 onChange={e => setOpdDate(e.target.value)}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                             />
                         </div>
                         {(status === 'SURGERY_SCHEDULED' || status === 'TENTATIVE_IPD_DATE') && (
@@ -429,7 +429,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                     type="datetime-local"
                                     value={ipdDate}
                                     onChange={e => setIpdDate(e.target.value)}
-                                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                                    className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                                     required
                                 />
                             </div>
@@ -437,14 +437,14 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     </div>
 
                     {/* Cost & Economics */}
-                    <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-1">Quoted Cost (₹)</label>
                             <input
                                 type="number"
                                 value={originalCost}
                                 onChange={e => setOriginalCost(Number(e.target.value))}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                             />
                         </div>
                         <div className="flex gap-4 items-end">
@@ -466,13 +466,13 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                             value={notes}
                             onChange={e => setNotes(e.target.value)}
                             rows={4}
-                            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
                             placeholder="Add details about follow-ups, patient questions, etc."
                         ></textarea>
                     </div>
                 </div>
 
-                <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
+                <div className="px-4 py-3 sm:px-6 sm:py-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
                     <button onClick={onClose} className="px-4 py-2 text-sm font-bold text-slate-600 hover:text-slate-900">Cancel</button>
                     <button
                         onClick={handleSave}

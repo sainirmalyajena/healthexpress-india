@@ -44,7 +44,7 @@ export default function LeadStatusSelect({ leadId, currentStatus, statuses, onUp
         <select
             value={status}
             onChange={handleChange}
-            className="text-xs font-semibold rounded-full px-3 py-1 bg-slate-100 border-none cursor-pointer hover:bg-slate-200 transition-colors"
+            className="text-base sm:text-xs font-semibold rounded-full px-3 py-1 bg-slate-100 border-none cursor-pointer hover:bg-slate-200 transition-colors"
         >
             {statuses.map((s) => (
                 <option key={s} value={s}>

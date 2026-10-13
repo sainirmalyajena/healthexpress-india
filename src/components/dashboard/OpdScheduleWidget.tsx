@@ -221,7 +221,7 @@ export default function OpdScheduleWidget({
                             type="date"
                             value={selectedDate}
                             onChange={(e) => e.target.value && handleDateChange(e.target.value)}
-                            className="px-2 py-1 text-xs font-bold text-slate-700 bg-transparent border-none focus:outline-none focus:ring-0 cursor-pointer"
+                            className="px-2 py-1 text-base sm:text-xs font-bold text-slate-700 bg-transparent border-none focus:outline-none focus:ring-0 cursor-pointer"
                         />
 
                         <button
@@ -268,7 +268,7 @@ export default function OpdScheduleWidget({
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="text-xs font-bold bg-white text-slate-700 border border-slate-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+                        className="text-base sm:text-xs font-bold bg-white text-slate-700 border border-slate-200 rounded-xl px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
                     >
                         <option value="ALL">All ({leads.length})</option>
                         {OPD_STATUS_OPTIONS.map((opt) => {
@@ -389,7 +389,7 @@ export default function OpdScheduleWidget({
                                             value={lead.status}
                                             disabled={updatingId === lead.id}
                                             onChange={(e) => handleStatusChange(lead.id, e.target.value)}
-                                            className={`text-xs font-bold rounded-xl px-2.5 py-1.5 border cursor-pointer transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 ${currentStatusOpt.color}`}
+                                            className={`text-base sm:text-xs font-bold rounded-xl px-2.5 py-1.5 border cursor-pointer transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 ${currentStatusOpt.color}`}
                                         >
                                             {OPD_STATUS_OPTIONS.map((opt) => (
                                                 <option key={opt.value} value={opt.value}>

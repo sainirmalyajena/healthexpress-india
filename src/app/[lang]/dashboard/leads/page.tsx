@@ -231,7 +231,7 @@ const { leads, total, totalPages } = data;
                                     name="query"
                                     placeholder="Phone, Name, or ID"
                                     defaultValue={searchParamsData.query || ''}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>
 
@@ -240,7 +240,7 @@ const { leads, total, totalPages } = data;
                                 <select
                                     name="status"
                                     defaultValue={searchParamsData.status || ''}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 >
                                     <option value="">All Statuses</option>
                                     {statuses.map((status) => (
@@ -254,7 +254,7 @@ const { leads, total, totalPages } = data;
                                 <select
                                     name="surgery"
                                     defaultValue={searchParamsData.surgery || ''}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 >
                                     <option value="">All Surgeries</option>
                                     {data.surgeries.map((surgery) => (
@@ -270,7 +270,7 @@ const { leads, total, totalPages } = data;
                                     <select
                                         name="assignedUserId"
                                         defaultValue={searchParamsData.assignedUserId || ''}
-                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                     >
                                         <option value="">All Members</option>
                                         <option value="unassigned">-- Unassigned --</option>
@@ -288,7 +288,7 @@ const { leads, total, totalPages } = data;
                                     name="city"
                                     defaultValue={searchParamsData.city || ''}
                                     placeholder="e.g. Pune"
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>
 
@@ -298,7 +298,7 @@ const { leads, total, totalPages } = data;
                                     type="date"
                                     name="opdDate"
                                     defaultValue={searchParamsData.opdDate || ''}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>
 
@@ -308,7 +308,7 @@ const { leads, total, totalPages } = data;
                                     type="date"
                                     name="followUpDate"
                                     defaultValue={searchParamsData.followUpDate || ''}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>
 
@@ -318,7 +318,7 @@ const { leads, total, totalPages } = data;
                                     type="date"
                                     name="ipdDate"
                                     defaultValue={searchParamsData.ipdDate || ''}
-                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50"
                                 />
                             </div>
 

@@ -76,7 +76,7 @@ export default function AddLeadModal({ surgeries }: { surgeries: { id: string, n
                                 required
                                 value={formData.fullName}
                                 onChange={e => setFormData({...formData, fullName: e.target.value})}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
                                 placeholder="Patient Name"
                             />
                         </div>
@@ -87,7 +87,7 @@ export default function AddLeadModal({ surgeries }: { surgeries: { id: string, n
                                 required
                                 value={formData.phone}
                                 onChange={e => setFormData({...formData, phone: e.target.value})}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
                                 placeholder="e.g. +919876543210"
                             />
                         </div>
@@ -98,7 +98,7 @@ export default function AddLeadModal({ surgeries }: { surgeries: { id: string, n
                                 required
                                 value={formData.city}
                                 onChange={e => setFormData({...formData, city: e.target.value})}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
                                 placeholder="e.g. Mumbai"
                             />
                         </div>
@@ -107,7 +107,7 @@ export default function AddLeadModal({ surgeries }: { surgeries: { id: string, n
                             <select 
                                 value={formData.surgeryId}
                                 onChange={e => setFormData({...formData, surgeryId: e.target.value})}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
                             >
                                 {surgeries.map(s => (
                                     <option key={s.id} value={s.id}>{s.name}</option>
@@ -119,7 +119,7 @@ export default function AddLeadModal({ surgeries }: { surgeries: { id: string, n
                             <textarea 
                                 value={formData.description}
                                 onChange={e => setFormData({...formData, description: e.target.value})}
-                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none"
                                 placeholder="Any details from the phone call..."
                                 rows={2}
                             />
