@@ -36,6 +36,7 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
     const [distanceError, setDistanceError] = useState('');
     const [loadingDistance, setLoadingDistance] = useState(false);
     const [distanceCalculated, setDistanceCalculated] = useState(false);
+    const [placeName, setPlaceName] = useState<string | null>(null);
 
     // Filter hospitals by search query (name, city, address)
     const filteredHospitals = useMemo(() => {
@@ -76,6 +77,7 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
                 setDistanceError(data.error || 'Something went wrong.');
             } else {
                 setDistances(data.distances);
+                setPlaceName(data.place || null);
                 setDistanceCalculated(true);
             }
         } catch {
@@ -88,6 +90,7 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
     const clearDistance = () => {
         setPincode('');
         setDistances({});
+        setPlaceName(null);
         setDistanceCalculated(false);
         setDistanceError('');
     };
@@ -154,9 +157,13 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
                     </p>
                 )}
                 {distanceCalculated && (
-                    <p className="mt-2 text-sm text-teal-600 font-medium flex items-center gap-1.5">
-                        <Navigation className="w-3.5 h-3.5" />
-                        Showing distances from pincode <strong>{pincode}</strong> — sorted nearest first
+                    <p className="mt-2 text-sm text-teal-600 font-medium flex items-center gap-1.5 flex-wrap">
+                        <Navigation className="w-3.5 h-3.5 shrink-0" />
+                        <span>
+                            Showing distances from pincode <strong>{pincode}</strong>
+                            {placeName && <span className="text-slate-600 font-normal"> ({placeName})</span>}
+                            {' '}— sorted nearest first
+                        </span>
                     </p>
                 )}
             </div>
