@@ -110,7 +110,13 @@ function parseDateSafely(val?: string | null): string | null {
     return null;
 }
 
-export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose }: CaseManagerModalProps) {
+export default function CaseManagerModal({
+    lead,
+    hospitals = [],
+    teamMembers = [],
+    onClose,
+    onUpdate
+}: CaseManagerModalProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
 
@@ -229,10 +235,12 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
             }
 
             if (response.ok) {
-                if (onUpdate) {
+                if (typeof onUpdate === 'function') {
                     try {
-                        const chosenHospital = hospitals.find(h => h.id === hospitalId);
-                        const chosenUser = teamMembers.find(t => t.id === assignedUserId);
+                        const safeHospitals = Array.isArray(hospitals) ? hospitals : [];
+                        const safeTeam = Array.isArray(teamMembers) ? teamMembers : [];
+                        const chosenHospital = safeHospitals.find(h => h.id === hospitalId);
+                        const chosenUser = safeTeam.find(t => t.id === assignedUserId);
                         onUpdate(lead.id, {
                             fullName,
                             city: city.trim(),
