@@ -5,6 +5,28 @@ import { prisma } from '@/lib/prisma';
 import { LeadStatus } from '@/generated/prisma';
 import { sendOpdScheduledWhatsApp } from '@/lib/whatsapp';
 
+function parseDateSafely(val: any): Date | null {
+    if (!val) return null;
+    if (val instanceof Date) return isNaN(val.getTime()) ? null : val;
+    if (typeof val === 'string') {
+        const trimmed = val.trim();
+        if (!trimmed) return null;
+        const d = new Date(trimmed);
+        if (!isNaN(d.getTime())) return d;
+        const match = trimmed.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:[T\s](\d{1,2}):(\d{2}))?/);
+        if (match) {
+            const day = parseInt(match[1], 10);
+            const month = parseInt(match[2], 10) - 1;
+            const year = parseInt(match[3], 10);
+            const hours = match[4] ? parseInt(match[4], 10) : 0;
+            const minutes = match[5] ? parseInt(match[5], 10) : 0;
+            const parsed = new Date(year, month, day, hours, minutes);
+            if (!isNaN(parsed.getTime())) return parsed;
+        }
+    }
+    return null;
+}
+
 export async function PATCH(
     request: NextRequest,
     props: { params: Promise<{ id: string }> }
@@ -65,9 +87,9 @@ export async function PATCH(
         if (isEmergency !== undefined) dataToUpdate.isEmergency = isEmergency;
         if (hasCard !== undefined) dataToUpdate.hasCard = hasCard;
         if (notes !== undefined) dataToUpdate.notes = notes || null;
-        if (opdDate !== undefined) dataToUpdate.opdDate = opdDate ? new Date(opdDate) : null;
-        if (ipdDate !== undefined) dataToUpdate.ipdDate = ipdDate ? new Date(ipdDate) : null;
-        if (followUpDate !== undefined) dataToUpdate.followUpDate = followUpDate ? new Date(followUpDate) : null;
+        if (opdDate !== undefined) dataToUpdate.opdDate = parseDateSafely(opdDate);
+        if (ipdDate !== undefined) dataToUpdate.ipdDate = parseDateSafely(ipdDate);
+        if (followUpDate !== undefined) dataToUpdate.followUpDate = parseDateSafely(followUpDate);
         if (assignedUserId !== undefined) dataToUpdate.assignedUserId = assignedUserId || null;
 
         const logsToCreate: any[] = [];
@@ -98,7 +120,7 @@ export async function PATCH(
                 userId: session.adminId,
                 leadId: id,
                 actionType: 'NOTE_ADDED',
-                details: JSON.stringify({ note: notes.substring(0, 1000) })
+                details: JSON.stringify({ note: String(notes || '').substring(0, 1000) })
             });
         }
 
@@ -131,13 +153,17 @@ export async function PATCH(
                 const hospitalName = updatedLead.hospital.name;
                 const hospitalCity = updatedLead.hospital.city || 'the hospital';
 
-                await sendOpdScheduledWhatsApp(
-                    updatedLead.phone,
-                    updatedLead.fullName,
-                    hospitalName,
-                    hospitalCity,
-                    formattedDate
-                );
+                try {
+                    await sendOpdScheduledWhatsApp(
+                        updatedLead.phone,
+                        updatedLead.fullName,
+                        hospitalName,
+                        hospitalCity,
+                        formattedDate
+                    );
+                } catch (waErr) {
+                    console.warn('WhatsApp notification skipped/failed:', waErr);
+                }
             }
         }
         // --------------------------------

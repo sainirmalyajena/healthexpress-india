@@ -88,6 +88,28 @@ function detectInitialCity(leadCity?: string | null, leadNotes?: string | null):
     return '';
 }
 
+function parseDateSafely(val?: string | null): string | null {
+    if (!val || !val.trim()) return null;
+    const trimmed = val.trim();
+    let d = new Date(trimmed);
+    if (!isNaN(d.getTime())) {
+        return d.toISOString();
+    }
+    const match = trimmed.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:[T\s](\d{1,2}):(\d{2}))?/);
+    if (match) {
+        const day = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1;
+        const year = parseInt(match[3], 10);
+        const hours = match[4] ? parseInt(match[4], 10) : 0;
+        const minutes = match[5] ? parseInt(match[5], 10) : 0;
+        d = new Date(year, month, day, hours, minutes);
+        if (!isNaN(d.getTime())) {
+            return d.toISOString();
+        }
+    }
+    return null;
+}
+
 export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose }: CaseManagerModalProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
@@ -149,7 +171,12 @@ export default function CaseManagerModal({ lead, hospitals, teamMembers, onClose
     const formatDateTimeForInput = (dateObj?: Date | string | null) => {
         if (!dateObj) return '';
         const d = new Date(dateObj);
-        return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16);
+        if (isNaN(d.getTime())) return '';
+        try {
+            return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0,16);
+        } catch {
+            return '';
+        }
     };
 const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
     const [ipdDate, setIpdDate] = useState(formatDateTimeForInput(lead.ipdDate));
@@ -171,6 +198,10 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
         setSaving(true);
         setError('');
         try {
+            const opdIso = parseDateSafely(opdDate);
+            const ipdIso = parseDateSafely(ipdDate);
+            const followUpIso = parseDateSafely(followUpDate);
+
             const response = await fetch(`/api/dashboard/leads/${lead.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
@@ -183,39 +214,47 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     isEmergency,
                     hasCard,
                     notes,
-                    opdDate: opdDate ? new Date(opdDate).toISOString() : null,
-                    ipdDate: ipdDate ? new Date(ipdDate).toISOString() : null,
-                    followUpDate: followUpDate ? new Date(followUpDate).toISOString() : null,
+                    opdDate: opdIso,
+                    ipdDate: ipdIso,
+                    followUpDate: followUpIso,
                     assignedUserId: assignedUserId || null
                 }),
             });
 
-            const data = await response.json();
+            let data: any = {};
+            try {
+                data = await response.json();
+            } catch {
+                // Ignore non-json body
+            }
 
             if (response.ok) {
                 if (onUpdate) {
-                    const chosenHospital = hospitals.find(h => h.id === hospitalId);
-                    const chosenUser = teamMembers.find(t => t.id === assignedUserId);
-                    onUpdate(lead.id, {
-                        fullName,
-                        city: city.trim(),
-                        status,
-                        hospitalId: hospitalId || null,
-                        hospital: chosenHospital ? { name: chosenHospital.name, address: chosenHospital.address, googleMapsUrl: chosenHospital.googleMapsUrl } : lead.hospital,
-                        assignedUserId: assignedUserId || null,
-                        assignedUser: chosenUser ? { name: chosenUser.name } : lead.assignedUser,
-                        originalCost: Number(originalCost),
-                        isEmergency,
-                        hasCard,
-                        notes,
-                        opdDate: opdDate ? new Date(opdDate).toISOString() : null,
-                        ipdDate: ipdDate ? new Date(ipdDate).toISOString() : null,
-                        followUpDate: followUpDate ? new Date(followUpDate).toISOString() : null,
-                    });
+                    try {
+                        const chosenHospital = hospitals.find(h => h.id === hospitalId);
+                        const chosenUser = teamMembers.find(t => t.id === assignedUserId);
+                        onUpdate(lead.id, {
+                            fullName,
+                            city: city.trim(),
+                            status,
+                            hospitalId: hospitalId || null,
+                            hospital: chosenHospital ? { name: chosenHospital.name, address: chosenHospital.address, googleMapsUrl: chosenHospital.googleMapsUrl } : lead.hospital,
+                            assignedUserId: assignedUserId || null,
+                            assignedUser: chosenUser ? { name: chosenUser.name } : lead.assignedUser,
+                            originalCost: Number(originalCost),
+                            isEmergency,
+                            hasCard,
+                            notes,
+                            opdDate: opdIso,
+                            ipdDate: ipdIso,
+                            followUpDate: followUpIso,
+                        });
+                    } catch (updateErr) {
+                        console.warn('onUpdate callback warning:', updateErr);
+                    }
                 }
                 onClose();
                 setSaving(false);
-                // Silent background refresh so data is updated next time user navigates
                 startTransition(() => {
                     router.refresh();
                 });
@@ -223,9 +262,9 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
             } else {
                 setError(data.error || `Save failed (${response.status})`);
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Failed to update case', err);
-            setError('Network error — could not reach server');
+            setError(err?.message || 'Could not update lead. Please try again.');
         }
         setSaving(false);
     };
@@ -290,7 +329,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                 <div className="p-4 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6 flex-1">
                     {error && (
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
-                            âš ï¸ {error}
+                            ⚠️  {error}
                         </div>
                     )}
 
