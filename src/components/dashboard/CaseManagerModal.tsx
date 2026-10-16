@@ -195,11 +195,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                 return;
             }
         }
-        const noFollowUpNeeded = ['NEW', 'LOST', 'CLOSED'].includes(status);
-        if (!noFollowUpNeeded && !followUpDate) {
-            setError('A Follow-up Date and Time is mandatory when status is ' + status.replace('_', ' ') + '.');
-            return;
-        }
+// Follow-up Date is optional across all stages
 
         setSaving(true);
         setError('');
@@ -470,7 +466,7 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                     {/* Dates */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date {!['NEW', 'LOST', 'CLOSED'].includes(status) && <span className="text-red-500">*</span>}</label>
+                            <label className="block text-sm font-bold text-slate-700 mb-1">Follow-up Date</label>
                             <input
                                 type="datetime-local"
                                 value={followUpDate}
@@ -489,13 +485,12 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                         </div>
                         {(status === 'SURGERY_SCHEDULED' || status === 'TENTATIVE_IPD_DATE') && (
                             <div className="col-span-2">
-                                <label className="block text-sm font-bold text-slate-700 mb-1">IPD Date <span className="text-red-500">*</span></label>
+                                <label className="block text-sm font-bold text-slate-700 mb-1">IPD Date</label>
                                 <input
                                     type="datetime-local"
                                     value={ipdDate}
                                     onChange={e => setIpdDate(e.target.value)}
                                     className="w-full border border-slate-200 rounded-lg px-3 py-2 text-base sm:text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none"
-                                    required
                                 />
                             </div>
                         )}

@@ -17,8 +17,17 @@ export function middleware(request: NextRequest) {
     const hostname = request.headers.get('x-forwarded-host') || request.headers.get('host') || ''
     const pathname = url.pathname
 
-    // Handle legacy .html paths during transition
-    if (pathname.endsWith('.html')) {
+    // 0. Static assets (.pdf, images, documents, etc.) should never have locale prefix or be rewritten
+    if (pathname.match(/\.(pdf|png|jpg|jpeg|gif|webp|svg|ico|xml|txt|webmanifest|json)$/i)) {
+        const cleanPath = pathname.replace(/^\/[a-z]{2}\//, '/');
+        if (cleanPath !== pathname) {
+            return NextResponse.redirect(new URL(cleanPath, request.url));
+        }
+        return NextResponse.next();
+    }
+
+    // Handle legacy .html paths during transition (except /documents/)
+    if (pathname.endsWith('.html') && !pathname.startsWith('/documents/')) {
         const newPath = pathname.replace(/\.html$/, '') || '/';
         return NextResponse.redirect(new URL(newPath, request.url));
     }
@@ -47,7 +56,7 @@ export function middleware(request: NextRequest) {
             if (
                 pathname.startsWith('/_next/') ||
                 pathname.startsWith('/api/') ||
-                pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico|xml|txt)$/)
+                pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico|xml|txt|pdf|webmanifest)$/i)
             ) {
                 return
             }
@@ -85,7 +94,7 @@ export function middleware(request: NextRequest) {
         if (
             pathname.startsWith('/api/') ||
             pathname.startsWith('/_next/') ||
-            pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico|xml|txt)$/)
+            pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico|xml|txt|pdf|webmanifest)$/i)
         ) {
             return
         }
