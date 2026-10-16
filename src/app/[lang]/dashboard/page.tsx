@@ -4,7 +4,7 @@ import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import OpdScheduleWidget from '@/components/dashboard/OpdScheduleWidget';
-import TeamLeaderboard from '@/components/dashboard/TeamLeaderboard';
+import TeamLeaderboard, { CoordinatorStats } from '@/components/dashboard/TeamLeaderboard';
 import { Users, AlertTriangle, PhoneCall, Calendar, Activity, CheckCircle, UserPlus, Stethoscope, ChevronRight, BarChart3, TrendingUp, PhoneOff, Clock, MapPin, Building2 } from 'lucide-react';
 import { Prisma } from '@/generated/prisma';
 import { getISTDayRange, getISTPeriodRanges, formatWhatsAppPhone, generateOpdWhatsAppMessage } from '@/lib/utils';
@@ -88,22 +88,68 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     const opdConversionRate = totalInquiries ? Math.round((opdScheduledCount / totalInquiries) * 100) : 0;
     const surgeryConversionRate = opdScheduledCount ? Math.round((surgeryDoneCount / opdScheduledCount) * 100) : 0;
 
-    // Team Leaderboard (Only for Admin)
-    let teamPerformance: { name: string; todaysBookings: number; totalActive: number; initials: string; }[] = [];
+    // Team Leaderboard & Workload (For Admin)
+    let teamStats: CoordinatorStats[] = [];
     if (session.role !== 'team') {
         const users = await prisma.user.findMany({
             where: { role: 'team' },
             include: {
                 assignedLeads: {
-                    select: { status: true, opdDate: true }
+                    select: {
+                        id: true,
+                        status: true,
+                        opdDate: true,
+                        followUpDate: true,
+                        revenue: true,
+                        discountedCost: true
+                    }
                 }
             }
         });
-        teamPerformance = users.map(user => {
-            const todaysBookings = user.assignedLeads.filter(l => l.status === 'OPD_SCHEDULED' && l.opdDate && l.opdDate >= startOfToday && l.opdDate <= endOfToday).length;
-            const totalActive = user.assignedLeads.filter(l => !['CLOSED', 'LOST'].includes(l.status)).length;
-            return { name: user.name, todaysBookings, totalActive, initials: user.name.slice(0, 2).toUpperCase() };
-        }).sort((a, b) => b.todaysBookings - a.todaysBookings || b.totalActive - a.totalActive).slice(0, 4);
+
+        teamStats = users.map(user => {
+            const leads = user.assignedLeads || [];
+            const activeLeads = leads.filter(l => !['CLOSED', 'LOST'].includes(l.status)).length;
+            
+            const todayOpds = leads.filter(l => 
+                ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'].includes(l.status) &&
+                l.opdDate && l.opdDate >= startOfToday && l.opdDate <= endOfToday
+            ).length;
+
+            const weekOpds = leads.filter(l => 
+                ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'].includes(l.status) &&
+                l.opdDate && l.opdDate >= startOfWeek && l.opdDate <= endOfToday
+            ).length;
+
+            const monthOpds = leads.filter(l => 
+                ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'].includes(l.status) &&
+                l.opdDate && l.opdDate >= startOfMonth && l.opdDate <= endOfToday
+            ).length;
+
+            const surgeriesDone = leads.filter(l => l.status === 'SURGERY_DONE').length;
+            const surgeryRevenue = leads.filter(l => l.status === 'SURGERY_DONE').reduce((sum, l) => sum + (l.revenue || l.discountedCost || 0), 0);
+            
+            const overdueFollowUps = leads.filter(l => 
+                !['CLOSED', 'LOST', 'SURGERY_DONE'].includes(l.status) &&
+                l.followUpDate && l.followUpDate < now
+            ).length;
+
+            const onTimeRate = activeLeads > 0 ? Math.max(0, Math.round(((activeLeads - overdueFollowUps) / activeLeads) * 100)) : 100;
+
+            return {
+                id: user.id,
+                name: user.name,
+                initials: user.name ? user.name.slice(0, 2).toUpperCase() : 'CO',
+                todayOpds,
+                weekOpds,
+                monthOpds,
+                surgeriesDone,
+                surgeryRevenue,
+                activeLeads,
+                overdueFollowUps,
+                onTimeRate
+            };
+        });
     }
 
     return (

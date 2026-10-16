@@ -11,12 +11,13 @@ export function generateReferenceId(): string {
     return `HE-${timestamp}-${random}`;
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount?: number | null): string {
+    const num = typeof amount === 'number' && !isNaN(amount) ? amount : 0;
     return new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
         maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(num);
 }
 
 export function formatDate(date: Date | string): string {
@@ -189,8 +190,9 @@ export function getISTPeriodRanges() {
     };
 }
 
-export function formatWhatsAppPhone(phone: string): string {
-    const clean = phone.replace(/[^0-9]/g, '');
+export function formatWhatsAppPhone(phone?: string | null): string {
+    if (!phone) return '';
+    const clean = String(phone).replace(/[^0-9]/g, '');
     if (clean.length === 10) return `91${clean}`;
     return clean;
 }

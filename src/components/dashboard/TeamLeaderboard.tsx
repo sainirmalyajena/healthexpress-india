@@ -25,26 +25,29 @@ interface TeamLeaderboardProps {
     lang: string;
 }
 
-export default function TeamLeaderboard({ teamStats: initialStats, userRole, lang }: TeamLeaderboardProps) {
+export default function TeamLeaderboard({ teamStats: initialStats = [], userRole = 'admin', lang = 'en' }: TeamLeaderboardProps) {
     const router = useRouter();
-    const [teamStats, setTeamStats] = useState<CoordinatorStats[]>(initialStats);
+    const safeStats = Array.isArray(initialStats) ? initialStats : [];
+    const [teamStats, setTeamStats] = useState<CoordinatorStats[]>(safeStats);
     const [timeframe, setTimeframe] = useState<'today' | 'week' | 'month'>('today');
     const [showRebalanceModal, setShowRebalanceModal] = useState(false);
     const [isRebalancing, setIsRebalancing] = useState(false);
     const [rebalanceResult, setRebalanceResult] = useState<string | null>(null);
 
+    const currentStats = Array.isArray(teamStats) ? teamStats : safeStats;
+
     // Sort coordinators based on chosen timeframe OPDs, then surgeries, then active leads
-    const sortedTeam = [...teamStats].sort((a, b) => {
-        const opdA = timeframe === 'today' ? a.todayOpds : timeframe === 'week' ? a.weekOpds : a.monthOpds;
-        const opdB = timeframe === 'today' ? b.todayOpds : timeframe === 'week' ? b.weekOpds : b.monthOpds;
+    const sortedTeam = [...currentStats].sort((a, b) => {
+        const opdA = timeframe === 'today' ? (a.todayOpds || 0) : timeframe === 'week' ? (a.weekOpds || 0) : (a.monthOpds || 0);
+        const opdB = timeframe === 'today' ? (b.todayOpds || 0) : timeframe === 'week' ? (b.weekOpds || 0) : (b.monthOpds || 0);
         if (opdB !== opdA) return opdB - opdA;
-        if (b.surgeriesDone !== a.surgeriesDone) return b.surgeriesDone - a.surgeriesDone;
-        return b.activeLeads - a.activeLeads;
+        if ((b.surgeriesDone || 0) !== (a.surgeriesDone || 0)) return (b.surgeriesDone || 0) - (a.surgeriesDone || 0);
+        return (b.activeLeads || 0) - (a.activeLeads || 0);
     });
 
-    const totalActiveLeads = teamStats.reduce((sum, c) => sum + c.activeLeads, 0);
-    const avgLeadsPerCoord = teamStats.length > 0 ? Math.round(totalActiveLeads / teamStats.length) : 0;
-    const hasImbalance = teamStats.some(c => c.activeLeads > avgLeadsPerCoord * 1.5 && c.activeLeads > 25);
+    const totalActiveLeads = currentStats.reduce((sum, c) => sum + (c.activeLeads || 0), 0);
+    const avgLeadsPerCoord = currentStats.length > 0 ? Math.round(totalActiveLeads / currentStats.length) : 0;
+    const hasImbalance = currentStats.some(c => (c.activeLeads || 0) > avgLeadsPerCoord * 1.5 && (c.activeLeads || 0) > 25);
 
     const handleRebalance = async () => {
         setIsRebalancing(true);
