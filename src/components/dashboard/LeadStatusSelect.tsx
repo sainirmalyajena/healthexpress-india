@@ -1,7 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState, startTransition } from 'react';
+import { useState, useEffect } from 'react';
 
 interface LeadStatusSelectProps {
     leadId: string;
@@ -11,40 +10,53 @@ interface LeadStatusSelectProps {
 }
 
 export default function LeadStatusSelect({ leadId, currentStatus, statuses, onUpdate }: LeadStatusSelectProps) {
-    const router = useRouter();
     const [status, setStatus] = useState(currentStatus);
+    const [isUpdating, setIsUpdating] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    useEffect(() => {
+        setStatus(currentStatus);
+    }, [currentStatus]);
+
+    const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newStatus = e.target.value;
-        if (!newStatus) return;
+        if (!newStatus || newStatus === status) return;
 
-        // 1. INSTANT Optimistic UI Update (0ms)
+        const previousStatus = status;
+
+        // 1. Instant 0ms Optimistic Update in UI
         setStatus(newStatus);
         if (onUpdate) onUpdate(newStatus);
+        setIsUpdating(true);
 
-        // 2. FIRE AND FORGET - Do not wait for the 7s Tokyo database round-trip!
-        fetch(`/api/dashboard/leads/${leadId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: newStatus }),
-        }).then(() => {
-            // Update Next.js cache so the timeline and page data reflect the new status immediately
-            startTransition(() => {
-                router.refresh();
+        // 2. Background async save without blocking UI or causing full-page refresh
+        try {
+            const res = await fetch(`/api/dashboard/leads/${leadId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus }),
             });
-        }).catch((err) => {
+            if (!res.ok) {
+                throw new Error(`Server returned status ${res.status}`);
+            }
+        } catch (err) {
             console.error("Failed to update status in background", err);
             // Revert on failure
-            setStatus(currentStatus);
-            if (onUpdate) onUpdate(currentStatus);
-        });
+            setStatus(previousStatus);
+            if (onUpdate) onUpdate(previousStatus);
+            alert('Could not update status. Please check your internet connection and try again.');
+        } finally {
+            setIsUpdating(false);
+        }
     };
 
     return (
         <select
             value={status}
             onChange={handleChange}
-            className="text-base sm:text-xs font-semibold rounded-full px-3 py-1 bg-slate-100 border-none cursor-pointer hover:bg-slate-200 transition-colors"
+            disabled={isUpdating}
+            className={`text-base sm:text-xs font-semibold rounded-full px-3 py-1 bg-slate-100 border-none cursor-pointer hover:bg-slate-200 transition-all ${
+                isUpdating ? 'opacity-60 cursor-wait' : ''
+            }`}
         >
             {statuses.map((s) => (
                 <option key={s} value={s}>

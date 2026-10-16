@@ -60,9 +60,8 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
     const [isBulkAssigning, setIsBulkAssigning] = useState(false);
     const [callingLeadId, setCallingLeadId] = useState<string | null>(null);
 
-    const handleAiCall = async (lead: Lead) => {
-        if (!window.confirm('🤖 Trigger Bland AI Voice Call to ' + lead.fullName + ' (' + lead.phone + ')?\n\n⚠️ COST NOTICE: Bland AI charges ~$0.09 (₹7.50) per minute from your Bland balance.\nYour current account balance is ~$1.96 (~15-20 minutes total).\n\nSarah (AI Voice Receptionist) will dial the patient, inquire about their "' + (lead.surgery?.name || 'medical consultation') + '", and attempt to book an appointment automatically.\n\nDo you want to proceed?')) return;
-        
+    const handleDelete = async (id: string) => {
+        if (!window.confirm('Are you sure you want to delete this lead?')) return;
         try {
             const res = await fetch(`/api/dashboard/leads/${id}`, { method: 'DELETE' });
             if (res.ok) {
@@ -218,7 +217,7 @@ export default function LeadsTable({ leads, statuses, hospitals, teamMembers, us
                                 </tr>
                             ) : (
                                 localLeads.map((lead) => (
-                                    <tr key={lead.id} className={`transition-colors ${selectedLeads.includes(lead.id) ? 'bg-teal-50/30' : 'hover:bg-slate-50'}`}>
+                                    <tr key={lead.id} style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 72px' }} className={`transition-colors ${selectedLeads.includes(lead.id) ? 'bg-teal-50/30' : 'hover:bg-slate-50'}`}>
                                         <td className="px-4 py-3">
                                             <input 
                                                 type="checkbox" 

@@ -193,8 +193,26 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
             const data = await response.json();
 
             if (response.ok) {
-                // Close immediately — don't wait for router.refresh() which causes 3-5 min delay.
-                // Instead, set a success flag and let the page refresh silently in background.
+                if (onUpdate) {
+                    const chosenHospital = hospitals.find(h => h.id === hospitalId);
+                    const chosenUser = teamMembers.find(t => t.id === assignedUserId);
+                    onUpdate(lead.id, {
+                        fullName,
+                        city: city.trim(),
+                        status,
+                        hospitalId: hospitalId || null,
+                        hospital: chosenHospital ? { name: chosenHospital.name, address: chosenHospital.address, googleMapsUrl: chosenHospital.googleMapsUrl } : lead.hospital,
+                        assignedUserId: assignedUserId || null,
+                        assignedUser: chosenUser ? { name: chosenUser.name } : lead.assignedUser,
+                        originalCost: Number(originalCost),
+                        isEmergency,
+                        hasCard,
+                        notes,
+                        opdDate: opdDate ? new Date(opdDate).toISOString() : null,
+                        ipdDate: ipdDate ? new Date(ipdDate).toISOString() : null,
+                        followUpDate: followUpDate ? new Date(followUpDate).toISOString() : null,
+                    });
+                }
                 onClose();
                 setSaving(false);
                 // Silent background refresh so data is updated next time user navigates

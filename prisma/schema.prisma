@@ -124,6 +124,12 @@ model Lead {
   @@index([createdAt])
   @@index([city])
   @@index([assignedUserId])
+  @@index([phone])
+  @@index([opdDate])
+  @@index([followUpDate])
+  @@index([status, opdDate])
+  @@index([status, followUpDate])
+  @@index([assignedUserId, status])
 }
 
 model Document {
