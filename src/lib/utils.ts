@@ -166,6 +166,29 @@ export function getISTDayRange(date = new Date(), offsetDays = 0) {
     };
 }
 
+export function getISTPeriodRanges() {
+    const { startOfToday, endOfToday } = getISTDayRange();
+    
+    // Start of Week (last 7 days in IST)
+    const startOfWeek = new Date(startOfToday);
+    startOfWeek.setDate(startOfWeek.getDate() - 6);
+    
+    // Start of Month (1st of current month in IST)
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric', month: 'numeric'
+    });
+    const [month, year] = formatter.format(new Date()).split('/').map(Number);
+    const startOfMonth = new Date(`${year}-${month.toString().padStart(2, '0')}-01T00:00:00+05:30`);
+    
+    return {
+        startOfToday,
+        endOfToday,
+        startOfWeek,
+        startOfMonth
+    };
+}
+
 export function formatWhatsAppPhone(phone: string): string {
     const clean = phone.replace(/[^0-9]/g, '');
     if (clean.length === 10) return `91${clean}`;

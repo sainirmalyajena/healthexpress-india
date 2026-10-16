@@ -4,9 +4,10 @@ import { getAdminSession } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import OpdScheduleWidget from '@/components/dashboard/OpdScheduleWidget';
+import TeamLeaderboard from '@/components/dashboard/TeamLeaderboard';
 import { Users, AlertTriangle, PhoneCall, Calendar, Activity, CheckCircle, UserPlus, Stethoscope, ChevronRight, BarChart3, TrendingUp, PhoneOff, Clock, MapPin, Building2 } from 'lucide-react';
 import { Prisma } from '@/generated/prisma';
-import { getISTDayRange } from '@/lib/utils';
+import { getISTDayRange, getISTPeriodRanges, formatWhatsAppPhone, generateOpdWhatsAppMessage } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +20,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     }
 
     const now = new Date();
-    const { startOfToday, endOfToday } = getISTDayRange(now);
+    const { startOfToday, endOfToday, startOfWeek, startOfMonth } = getISTPeriodRanges();
 
     const istFormatter = new Intl.DateTimeFormat('en-US', {
         timeZone: 'Asia/Kolkata',
@@ -67,10 +68,10 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
             where: { ...whereClause, status: 'SURGERY_DONE' }
         }),
         prisma.lead.findMany({
-            where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { lt: now } },
-            take: 5,
-            orderBy: { followUpDate: 'asc' },
-            include: { assignedUser: true, hospital: true }
+            where: { ...whereClause, status: { notIn: ['OPD_DONE', 'SURGERY_DONE', 'SURGERY_SCHEDULED', 'CLOSED', 'LOST'] }, followUpDate: { not: null, lte: endOfToday } },
+            take: 6,
+            orderBy: { followUpDate: 'desc' },
+            include: { assignedUser: true, hospital: true, surgery: { select: { name: true } } }
         }),
         prisma.lead.count({ where: { ...whereClause, status: 'DNP' } }),
         prisma.lead.count({ where: { ...whereClause, status: 'FOLLOW_UP' } }),
@@ -256,82 +257,108 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                 />
 
                 {/* Secondary Grid (Bottom Row) */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     
-                    {/* Urgent Leads Mini-Table */}
-                    <div className={`bg-white rounded-3xl shadow-sm border border-slate-200 p-6 ${session.role !== 'team' ? 'md:col-span-8' : 'md:col-span-12'}`}>
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-2">
-                                <div className="p-2 bg-red-100 text-red-600 rounded-xl"><AlertTriangle className="w-5 h-5" /></div>
-                                <h2 className="text-lg font-bold text-slate-800">Urgent Follow-ups</h2>
+                    {/* Actionable Follow-ups Queue */}
+                    <div className={`bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col ${session.role !== 'team' ? 'lg:col-span-7' : 'lg:col-span-12'}`}>
+                        <div className="flex items-center justify-between mb-5">
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2.5 bg-rose-50 text-rose-600 rounded-2xl border border-rose-100">
+                                    <Clock className="w-5 h-5" />
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-bold text-slate-900 leading-tight">Calling Action Queue</h2>
+                                    <p className="text-xs text-slate-500">Scheduled follow-ups needing immediate call</p>
+                                </div>
                             </div>
-                            <Link href={`/${lang}/dashboard/leads?quickFilter=overdue`} className="text-sm text-teal-600 font-semibold hover:text-teal-700">View All</Link>
+                            <Link href={`/${lang}/dashboard/leads?quickFilter=today_followups`} className="text-xs font-bold text-teal-600 hover:text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-xl transition">
+                                View All Due →
+                            </Link>
                         </div>
                         
                         {urgentLeads.length === 0 ? (
-                            <div className="text-center py-12 text-slate-400">
-                                <CheckCircle className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                <p>You are all caught up!</p>
+                            <div className="text-center py-12 text-slate-400 my-auto">
+                                <CheckCircle className="w-12 h-12 mx-auto mb-3 opacity-20 text-teal-600" />
+                                <p className="font-semibold text-slate-600">All follow-ups completed!</p>
+                                <p className="text-xs text-slate-400 mt-1">No pending calls due right now.</p>
                             </div>
                         ) : (
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm text-left">
-                                    <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-y border-slate-100">
+                                    <thead className="text-xs text-slate-400 uppercase bg-slate-50/80 border-y border-slate-100">
                                         <tr>
-                                            <th className="px-4 py-3 font-semibold rounded-tl-lg">Patient</th>
-                                            <th className="px-4 py-3 font-semibold">Phone</th>
-                                            <th className="px-4 py-3 font-semibold">Follow-up Time</th>
-                                            {session.role !== 'team' && <th className="px-4 py-3 font-semibold">Assigned To</th>}
-                                            <th className="px-4 py-3 font-semibold rounded-tr-lg">Action</th>
+                                            <th className="px-3.5 py-3 font-bold rounded-tl-xl">Patient</th>
+                                            <th className="px-3.5 py-3 font-bold">Treatment & City</th>
+                                            <th className="px-3.5 py-3 font-bold">Scheduled Time</th>
+                                            {session.role !== 'team' && <th className="px-3.5 py-3 font-bold">Assigned</th>}
+                                            <th className="px-3.5 py-3 font-bold text-right rounded-tr-xl">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {urgentLeads.map((lead, idx) => (
-                                            <tr key={lead.id} className={`border-b border-slate-100 hover:bg-slate-50 ${idx === urgentLeads.length -1 ? 'border-b-0' : ''}`}>
-                                                <td className="px-4 py-3 font-bold text-slate-800">{lead.fullName}</td>
-                                                <td className="px-4 py-3 text-slate-600">{lead.phone}</td>
-                                                <td className="px-4 py-3 text-red-600 font-semibold">{lead.followUpDate ? new Date(lead.followUpDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : 'N/A'}</td>
-                                                {session.role !== 'team' && <td className="px-4 py-3 text-slate-600">{lead.assignedUser?.name || 'Unassigned'}</td>}
-                                                <td className="px-4 py-3">
-                                                    <a href={`tel:${lead.phone}`} className="px-3 py-1.5 bg-teal-50 text-teal-700 rounded-lg font-semibold hover:bg-teal-100 transition-colors">Call</a>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                    <tbody className="divide-y divide-slate-100">
+                                        {urgentLeads.map((lead) => {
+                                            const formattedPhone = formatWhatsAppPhone(lead.phone);
+                                            const waMsg = encodeURIComponent(`Hi ${lead.fullName}, this is HealthExpress regarding your inquiry for ${lead.surgery?.name || 'medical consultation'}. We are reaching out for your scheduled follow-up. Please let us know a good time to speak.`);
+                                            
+                                            return (
+                                                <tr key={lead.id} className="hover:bg-slate-50/80 transition-colors">
+                                                    <td className="px-3.5 py-3.5">
+                                                        <p className="font-bold text-slate-900">{lead.fullName}</p>
+                                                        <a href={`tel:${lead.phone}`} className="text-xs text-teal-600 hover:underline font-medium">📞 {lead.phone}</a>
+                                                    </td>
+                                                    <td className="px-3.5 py-3.5">
+                                                        <span className="inline-block px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold rounded-md">
+                                                            {lead.surgery?.name || 'Consultation'}
+                                                        </span>
+                                                        {lead.city && (
+                                                            <p className="text-[11px] text-slate-400 mt-0.5">{lead.city}</p>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-3.5 py-3.5">
+                                                        <span className="text-xs font-bold text-rose-600 block">
+                                                            {lead.followUpDate ? new Date(lead.followUpDate).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : 'N/A'}
+                                                        </span>
+                                                    </td>
+                                                    {session.role !== 'team' && (
+                                                        <td className="px-3.5 py-3.5 text-xs text-slate-600 font-medium">
+                                                            {lead.assignedUser?.name || <span className="text-slate-400 italic">Unassigned</span>}
+                                                        </td>
+                                                    )}
+                                                    <td className="px-3.5 py-3.5 text-right whitespace-nowrap">
+                                                        <div className="flex items-center justify-end gap-1.5">
+                                                            <a
+                                                                href={`tel:${lead.phone}`}
+                                                                className="px-2.5 py-1 bg-teal-50 text-teal-700 border border-teal-200 rounded-lg text-xs font-bold hover:bg-teal-100 transition-colors inline-flex items-center gap-1"
+                                                            >
+                                                                📞 Call
+                                                            </a>
+                                                            <a
+                                                                href={`https://wa.me/${formattedPhone}?text=${waMsg}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition-colors inline-flex items-center gap-1"
+                                                                title="Send WhatsApp Follow-up"
+                                                            >
+                                                                💬 WA
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
                         )}
                     </div>
 
-                    {/* Team Leaderboard */}
+                    {/* High-Impact Team Leaderboard & Workload Balancer */}
                     {session.role !== 'team' && (
-                        <div className="md:col-span-4 bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col">
-                            <div className="flex items-center justify-between mb-6">
-                                <div className="flex items-center gap-2">
-                                    <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl"><BarChart3 className="w-5 h-5" /></div>
-                                    <h2 className="text-lg font-bold text-slate-800">Team Performance</h2>
-                                </div>
-                            </div>
-                            
-                            <div className="space-y-4">
-                                {teamPerformance.map((member, i) => (
-                                    <div key={member.name} className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${i === 0 ? 'bg-amber-100 text-amber-700 border-2 border-amber-200' : 'bg-slate-200 text-slate-600'}`}>
-                                                {member.initials}
-                                            </div>
-                                            <div>
-                                                <p className="font-bold text-slate-800 text-sm">{member.name}</p>
-                                                <p className="text-xs text-slate-500">{member.totalActive} active leads</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-xl font-black text-indigo-600">{member.todaysBookings}</p>
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Today OPDs</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                        <div className="lg:col-span-5 flex flex-col">
+                            <TeamLeaderboard
+                                teamStats={teamStats}
+                                userRole={session.role}
+                                lang={lang}
+                            />
                         </div>
                     )}
                     
