@@ -23,7 +23,13 @@ export default async function HospitalsManagementPage() {
                     status: true
                 } 
             },
-            doctors: true
+            doctors: {
+                select: {
+                    id: true,
+                    name: true,
+                    about: true,
+                }
+            }
         }
     });
 
