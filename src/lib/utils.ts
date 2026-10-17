@@ -269,3 +269,241 @@ Best regards,
 https://www.healthexpressindia.com/en`;
 }
 
+export function generatePostOpdFollowUpMessage({
+    patientName,
+    hospitalName,
+    surgeryName,
+}: {
+    patientName: string;
+    hospitalName?: string | null;
+    surgeryName?: string | null;
+}): string {
+    const hName = hospitalName || 'our partner hospital';
+    const sName = surgeryName ? ` regarding your ${surgeryName}` : '';
+
+    return `Dear ${patientName},
+
+We hope your consultation with the doctor at ${hName}${sName} went smoothly! 🏥
+
+Our medical care team is following up to check on your visit:
+1️⃣ Did the doctor recommend any medication, diagnostic tests, or a procedure?
+2️⃣ Would you like us to help you with 100% cashless insurance approval, test discounts, or a second opinion?
+3️⃣ Do you have any questions or need doctor follow-up assistance?
+
+Please reply to this message or call us anytime. We are here to support your full recovery.
+
+Warm regards,
+HealthExpress India Care Team
+📞 93078-61041
+🌐 https://www.healthexpressindia.com/en`;
+}
+
+export function generateSurgerySuggestedWhatsAppMessage({
+    patientName,
+    hospitalName,
+    surgeryName,
+}: {
+    patientName: string;
+    hospitalName?: string | null;
+    surgeryName?: string | null;
+}): string {
+    const hName = hospitalName || 'our partner hospital';
+    const sName = surgeryName ? ` for ${surgeryName}` : '';
+
+    return `Dear ${patientName},
+
+This is HealthExpress India following up on your consultation at ${hName}.
+
+Since surgery${sName} has been advised by the doctor, our dedicated care team is here to coordinate everything for you:
+✅ 100% Cashless Health Insurance pre-authorization & paperwork
+✅ 0% Interest EMI & flexible financing options
+✅ Dedicated Care Coordinator for hospital admission & discharge
+✅ Free cab pick-up & drop on the day of surgery
+
+When would be a convenient time for a quick 2-minute call to discuss your treatment plan and cost estimate?
+
+Warm regards,
+HealthExpress India Care Team
+📞 93078-61041
+🌐 https://www.healthexpressindia.com/en`;
+}
+
+export function generateRnrPostOpdWhatsAppMessage({
+    patientName,
+    hospitalName,
+}: {
+    patientName: string;
+    hospitalName?: string | null;
+}): string {
+    const hName = hospitalName || 'our partner hospital';
+
+    return `Dear ${patientName},
+
+We tried connecting with you following your scheduled consultation at ${hName}.
+
+Please let us know a convenient time to speak, or reply to this message with an update on your doctor consultation. Our team is here to assist with any prescribed tests, medicines, or next steps.
+
+Wishing you good health,
+HealthExpress India Care Team
+📞 93078-61041`;
+}
+
+export function generateMedicalManagementWhatsAppMessage({
+    patientName,
+    hospitalName,
+}: {
+    patientName: string;
+    hospitalName?: string | null;
+}): string {
+    const hName = hospitalName || 'our partner hospital';
+
+    return `Dear ${patientName},
+
+We hope you are recovering well with the medication and treatment advised during your visit to ${hName}. 💊
+
+If you need any assistance with medicine delivery, follow-up review with the doctor, or further guidance, feel free to reach out to us.
+
+Wishing you a fast and smooth recovery!
+
+Warm regards,
+HealthExpress India Care Team
+📞 93078-61041`;
+}
+
+export function generateGeneralFollowUpWhatsAppMessage({
+    patientName,
+    surgeryName,
+    city,
+}: {
+    patientName: string;
+    surgeryName?: string | null;
+    city?: string | null;
+}): string {
+    const sName = surgeryName ? ` for ${surgeryName}` : ' medical consultation';
+    const cName = city ? ` in ${city}` : '';
+
+    return `Hi ${patientName},
+
+This is HealthExpress India following up on your inquiry${sName}. We have top NABH-accredited partner hospitals${cName} with ₹0 Free OPD consultations, 100% cashless insurance coverage, and 0% EMI.
+
+Please let us know a good time to connect, or reply here if you have any questions.
+
+Best regards,
+HealthExpress India Care Team
+📞 93078-61041`;
+}
+
+export function getSmartLeadWhatsAppDetails({
+    patientName,
+    phone,
+    status,
+    opdDate,
+    hospitalName,
+    hospitalAddress,
+    googleMapsUrl,
+    surgeryName,
+    city,
+}: {
+    patientName: string;
+    phone?: string | null;
+    status?: string | null;
+    opdDate?: Date | string | null;
+    hospitalName?: string | null;
+    hospitalAddress?: string | null;
+    googleMapsUrl?: string | null;
+    surgeryName?: string | null;
+    city?: string | null;
+}): {
+    messageText: string;
+    encodedUrl: string;
+    buttonTitle: string;
+    actionLabel: string;
+    isPostOpd: boolean;
+} {
+    const formattedPhone = formatWhatsAppPhone(phone);
+    const leadStatus = status || 'NEW';
+
+    let isOpdTimePassed = false;
+    if (opdDate) {
+        const d = new Date(opdDate);
+        if (!isNaN(d.getTime())) {
+            isOpdTimePassed = d.getTime() <= Date.now();
+        }
+    }
+
+    let messageText = '';
+    let buttonTitle = 'Message on WhatsApp';
+    let actionLabel = 'WhatsApp';
+    let isPostOpd = false;
+
+    // 1. Explicit Post-OPD Done / RNR / Medical Management
+    if (leadStatus === 'OPD_DONE') {
+        messageText = generatePostOpdFollowUpMessage({ patientName, hospitalName, surgeryName });
+        buttonTitle = 'Send Post-OPD Consultation Follow-up on WhatsApp';
+        actionLabel = 'Post-OPD Follow-up';
+        isPostOpd = true;
+    } else if (leadStatus === 'RNR_POST_OPD') {
+        messageText = generateRnrPostOpdWhatsAppMessage({ patientName, hospitalName });
+        buttonTitle = 'Send Post-OPD RNR Follow-up on WhatsApp';
+        actionLabel = 'RNR Follow-up';
+        isPostOpd = true;
+    } else if (leadStatus === 'SURGERY_SUGGESTED' || leadStatus === 'TENTATIVE_IPD_DATE' || leadStatus === 'PRE_AUTHORIZATION_RAISED') {
+        messageText = generateSurgerySuggestedWhatsAppMessage({ patientName, hospitalName, surgeryName });
+        buttonTitle = 'Send Surgery & Cashless Insurance Support on WhatsApp';
+        actionLabel = 'Surgery Follow-up';
+        isPostOpd = true;
+    } else if (leadStatus === 'MEDICAL_MANAGEMENT') {
+        messageText = generateMedicalManagementWhatsAppMessage({ patientName, hospitalName });
+        buttonTitle = 'Send Medical Management Follow-up on WhatsApp';
+        actionLabel = 'Follow-up';
+        isPostOpd = true;
+    } else if (leadStatus === 'OPD_SCHEDULED' || leadStatus === 'OPD_RESCHEDULE') {
+        if (isOpdTimePassed) {
+            // THE OPD TIME IS DONE! Appointment was in the past, send follow-up instead of pre-arrival confirmation.
+            messageText = generatePostOpdFollowUpMessage({ patientName, hospitalName, surgeryName });
+            buttonTitle = 'OPD time completed — Send Post-OPD Follow-up on WhatsApp';
+            actionLabel = 'Post-OPD Follow-up';
+            isPostOpd = true;
+        } else {
+            // OPD appointment is in the future: send booking confirmation & directions
+            messageText = generateOpdWhatsAppMessage({
+                patientName,
+                hospitalName,
+                hospitalAddress,
+                googleMapsUrl,
+                opdDate,
+            });
+            buttonTitle = 'Send OPD Appointment Confirmation & Map Directions on WhatsApp';
+            actionLabel = 'OPD Confirmation';
+            isPostOpd = false;
+        }
+    } else if (leadStatus === 'FOLLOW_UP') {
+        if (isOpdTimePassed && hospitalName) {
+            messageText = generatePostOpdFollowUpMessage({ patientName, hospitalName, surgeryName });
+            buttonTitle = 'Send Post-OPD Follow-up on WhatsApp';
+            actionLabel = 'Post-OPD Follow-up';
+            isPostOpd = true;
+        } else {
+            messageText = generateGeneralFollowUpWhatsAppMessage({ patientName, surgeryName, city });
+            buttonTitle = 'Send Follow-up Message on WhatsApp';
+            actionLabel = 'Follow-up';
+            isPostOpd = false;
+        }
+    } else {
+        messageText = `Hi ${patientName}, this is HealthExpress India regarding your inquiry for ${surgeryName || 'medical consultation'}. We have NABH partner hospitals in ${city || 'your city'} with 100% cashless insurance & 0% EMI. Would you like to check the cost estimate or book a ₹0 doctor OPD consultation?`;
+        buttonTitle = 'Send Consultation Welcome Message on WhatsApp';
+        actionLabel = 'WhatsApp';
+        isPostOpd = false;
+    }
+
+    const encodedUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(messageText)}`;
+
+    return {
+        messageText,
+        encodedUrl,
+        buttonTitle,
+        actionLabel,
+        isPostOpd,
+    };
+}
+

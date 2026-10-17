@@ -10,7 +10,10 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        // Find OPDs scheduled for tomorrow
+        const now = new Date();
+        const results: any[] = [];
+
+        // 1. Find OPDs scheduled for tomorrow (Pre-OPD reminder)
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         tomorrow.setHours(0, 0, 0, 0);
@@ -18,7 +21,7 @@ export async function GET(req: NextRequest) {
         const endOfTomorrow = new Date(tomorrow);
         endOfTomorrow.setHours(23, 59, 59, 999);
 
-        const opds = await prisma.lead.findMany({
+        const opdsTomorrow = await prisma.lead.findMany({
             where: {
                 opdDate: { gte: tomorrow, lte: endOfTomorrow },
                 status: 'OPD_SCHEDULED',
@@ -26,33 +29,69 @@ export async function GET(req: NextRequest) {
             include: { hospital: true }
         });
 
-        const results = [];
-
-        for (const lead of opds) {
+        for (const lead of opdsTomorrow) {
             const hospitalName = lead.hospital?.name || 'our partner hospital';
-            // Note: Since we are using WhatsApp API, we need to send an approved template message if outside the 24h window.
-            // For now, we will send a standard text message. If it fails due to the 24h rule, you'll need to create a Meta Template.
             const message = `Hi ${lead.fullName},\n\nThis is a friendly reminder from HealthExpress India for your consultation at *${hospitalName}* tomorrow.\n\nPlease try to arrive 15 minutes early. If you need directions or need to reschedule, please reply to this message.`;
 
             try {
-                // Remove spaces, + and non-numeric characters from phone
                 const phoneForWhatsapp = lead.phone.replace(/[^0-9]/g, '');
-                
-                // Add country code if missing (assuming India +91)
                 const finalPhone = phoneForWhatsapp.length === 10 ? `91${phoneForWhatsapp}` : phoneForWhatsapp;
                 
                 await whatsappService.sendTextMessage(finalPhone, message);
-                results.push({ leadId: lead.id, phone: finalPhone, status: 'success' });
+                results.push({ leadId: lead.id, phone: finalPhone, type: 'pre_opd_reminder', status: 'success' });
             } catch (err: any) {
-                console.error(`Failed to send OPD reminder to ${lead.id}`, err);
-                results.push({ leadId: lead.id, status: 'error', error: err.message });
+                console.error(`Failed to send pre-OPD reminder to ${lead.id}`, err);
+                results.push({ leadId: lead.id, type: 'pre_opd_reminder', status: 'error', error: err.message });
             }
         }
 
-        return NextResponse.json({ success: true, processed: opds.length, results });
+        // 2. Find OPDs completed today whose time is done (Post-OPD follow-up)
+        // Checks appointments scheduled before now that haven't been sent follow-up yet
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const completedOpds = await prisma.lead.findMany({
+            where: {
+                opdDate: { gte: startOfToday, lte: now },
+                status: { in: ['OPD_SCHEDULED', 'OPD_DONE', 'RNR_POST_OPD'] },
+                followUpNotified: false,
+            },
+            include: { hospital: true, surgery: true },
+            take: 50
+        });
+
+        for (const lead of completedOpds) {
+            const hospitalName = lead.hospital?.name || 'our partner hospital';
+            const surgeryName = lead.surgery?.name ? ` regarding your ${lead.surgery.name}` : '';
+            const followUpMessage = `Dear ${lead.fullName},\n\nWe hope your consultation with the doctor at *${hospitalName}*${surgeryName} went smoothly today! 🏥\n\nOur medical care team is following up to assist you:\n1️⃣ Did the doctor recommend any medication, diagnostic tests, or surgery?\n2️⃣ Do you need any help with 100% cashless insurance approval or test discounts?\n3️⃣ Do you have any questions or doctor follow-up needs?\n\nPlease reply to this message or call us anytime at 93078-61041. Wishing you good health!\n\nWarm regards,\nHealthExpress India Care Team`;
+
+            try {
+                const phoneForWhatsapp = lead.phone.replace(/[^0-9]/g, '');
+                const finalPhone = phoneForWhatsapp.length === 10 ? `91${phoneForWhatsapp}` : phoneForWhatsapp;
+
+                await whatsappService.sendTextMessage(finalPhone, followUpMessage);
+                
+                // Mark followUpNotified so it doesn't duplicate
+                await prisma.lead.update({
+                    where: { id: lead.id },
+                    data: { followUpNotified: true }
+                });
+
+                results.push({ leadId: lead.id, phone: finalPhone, type: 'post_opd_followup', status: 'success' });
+            } catch (err: any) {
+                console.error(`Failed to send post-OPD follow-up to ${lead.id}`, err);
+                results.push({ leadId: lead.id, type: 'post_opd_followup', status: 'error', error: err.message });
+            }
+        }
+
+        return NextResponse.json({ 
+            success: true, 
+            tomorrowReminders: opdsTomorrow.length,
+            completedFollowUps: completedOpds.length,
+            results 
+        });
     } catch (error: any) {
         console.error('Cron job error:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
-

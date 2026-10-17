@@ -4,7 +4,7 @@ import { useState, useTransition, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Calendar, PhoneCall, Building2, MessageCircle, Clock, ChevronLeft, ChevronRight, CheckCircle2, RefreshCw, AlertCircle, Sparkles } from 'lucide-react';
-import { formatWhatsAppPhone, generateOpdWhatsAppMessage } from '@/lib/utils';
+import { formatWhatsAppPhone, generateOpdWhatsAppMessage, getSmartLeadWhatsAppDetails } from '@/lib/utils';
 
 interface OpdLead {
     id: string;
@@ -324,15 +324,18 @@ export default function OpdScheduleWidget({
                               })
                             : 'TBD';
 
-                        // WhatsApp Message & Link
-                        const wpMessage = generateOpdWhatsAppMessage({
+                        // WhatsApp Message & Link (Smart: auto-switches to Post-OPD follow-up if time is passed or status is done)
+                        const waDetails = getSmartLeadWhatsAppDetails({
                             patientName: lead.fullName,
+                            phone: lead.phone,
+                            status: lead.status,
+                            opdDate: lead.opdDate,
                             hospitalName: lead.hospital?.name,
                             hospitalAddress: lead.hospital?.address,
                             googleMapsUrl: lead.hospital?.googleMapsUrl,
-                            opdDate: lead.opdDate,
+                            surgeryName: lead.surgery?.name,
+                            city: lead.city,
                         });
-                        const wpUrl = `https://wa.me/${formatWhatsAppPhone(lead.phone)}?text=${encodeURIComponent(wpMessage)}`;
 
                         return (
                             <div
@@ -404,16 +407,20 @@ export default function OpdScheduleWidget({
                                         )}
                                     </div>
 
-                                    {/* Quick WhatsApp Confirmation Button */}
+                                    {/* Quick WhatsApp Button (Auto-switches to Post-OPD Follow-up once OPD time is done!) */}
                                     <a
-                                        href={wpUrl}
+                                        href={waDetails.encodedUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-xl transition-colors border border-emerald-200 flex items-center gap-1 px-2.5 text-xs font-bold shadow-sm"
-                                        title="Send WhatsApp OPD Confirmation"
+                                        className={`p-1.5 rounded-xl transition-colors border flex items-center gap-1 px-2.5 text-xs font-bold shadow-sm ${
+                                            waDetails.isPostOpd 
+                                                ? 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200' 
+                                                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border-emerald-200'
+                                        }`}
+                                        title={waDetails.buttonTitle}
                                     >
-                                        <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
-                                        <span className="hidden sm:inline">WhatsApp</span>
+                                        <MessageCircle className={`w-3.5 h-3.5 ${waDetails.isPostOpd ? 'text-blue-600' : 'text-emerald-600'}`} />
+                                        <span className="hidden sm:inline">{waDetails.actionLabel}</span>
                                     </a>
 
                                     {/* Direct Phone Call Button */}
