@@ -1,0 +1,22 @@
+[
+  {
+    "id": "emp_yamini_01",
+    "employeeId": "HEI-EMP-0128",
+    "name": "Ms. Yamini",
+    "designation": "Business Development Manager (BDM)",
+    "department": "Business Development & Partnerships",
+    "annualCtc": 620000,
+    "monthlyGross": 51667,
+    "monthlyBasic": 23250,
+    "monthlyHra": 12917,
+    "monthlyMedical": 3500,
+    "monthlySpecial": 12000,
+    "pfDeduction": 1800,
+    "netTakeHome": 49867,
+    "dateOfJoining": "2026-01-27",
+    "relievingDate": "2026-08-31",
+    "workMode": "Remote / Work From Home",
+    "status": "RELIEVED",
+    "createdAt": "2026-01-20T10:00:00.000Z"
+  }
+]
