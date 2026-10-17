@@ -44,6 +44,7 @@ model Hospital {
   address         String?
   googleMapsUrl   String?
   specialties     String[]
+  insurancePartners String[] @default([])
   discountPercent Float    @default(0)
   email           String   @unique
   passwordHash    String?

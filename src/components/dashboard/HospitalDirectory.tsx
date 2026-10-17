@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import { ChevronDown, ChevronUp, MapPin, Mail, Phone, Calendar, User, Search, Navigation, Loader2, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, MapPin, Mail, Phone, Calendar, User, Search, Navigation, Loader2, X, ShieldCheck } from 'lucide-react';
 import { getStatusColor } from '@/lib/utils';
 
 interface Lead {
@@ -22,6 +22,8 @@ interface HospitalData {
     pincode: string | null;
     latitude: number | null;
     longitude: number | null;
+    insurancePartners?: string[];
+    specialties?: string[];
     doctors: { name: string; about: string | null }[];
     leads: Lead[];
 }
@@ -38,14 +40,15 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
     const [distanceCalculated, setDistanceCalculated] = useState(false);
     const [placeName, setPlaceName] = useState<string | null>(null);
 
-    // Filter hospitals by search query (name, city, address)
+    // Filter hospitals by search query (name, city, address, or insurance partners)
     const filteredHospitals = useMemo(() => {
         const q = searchQuery.trim().toLowerCase();
         if (!q) return hospitals;
         return hospitals.filter(h =>
             h.name.toLowerCase().includes(q) ||
             (h.city ?? '').toLowerCase().includes(q) ||
-            (h.address ?? '').toLowerCase().includes(q)
+            (h.address ?? '').toLowerCase().includes(q) ||
+            (h.insurancePartners ?? []).some(ins => ins.toLowerCase().includes(q))
         );
     }, [hospitals, searchQuery]);
 
@@ -231,6 +234,12 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
                                     </div>
 
                                     <div className="flex flex-wrap items-center gap-3">
+                                        {hospital.insurancePartners && hospital.insurancePartners.length > 0 && (
+                                            <div className="flex flex-col items-center px-4 py-1.5 bg-blue-50 rounded-lg border border-blue-100 min-w-[90px]">
+                                                <span className="text-[10px] font-bold text-blue-500 uppercase">TPAs / Insurers</span>
+                                                <span className="text-lg font-black text-blue-700">{hospital.insurancePartners.length}</span>
+                                            </div>
+                                        )}
                                         <div className="flex flex-col items-center px-4 py-1.5 bg-slate-50 rounded-lg border border-slate-100 min-w-[90px]">
                                             <span className="text-[10px] font-bold text-slate-400 uppercase">Leads</span>
                                             <span className="text-lg font-black text-slate-700">{totalLeads}</span>
@@ -259,7 +268,7 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
                                                     <p className="text-slate-600 whitespace-pre-wrap">{hospital.address}</p>
                                                     {hospital.googleMapsUrl && (
                                                         <a href={hospital.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline font-medium mt-3 inline-block text-xs">
-                                                            View on Google Maps →
+                                                             View on Google Maps →
                                                         </a>
                                                     )}
                                                     {hospital.pincode && (
@@ -275,6 +284,36 @@ export default function HospitalDirectory({ hospitals }: { hospitals: HospitalDa
                                                 </div>
                                             )}
                                         </div>
+
+                                        {/* Empanelled Insurance & TPA Partners */}
+                                        {hospital.insurancePartners && hospital.insurancePartners.length > 0 && (
+                                            <div className="bg-white rounded-xl border border-slate-200 p-5 mb-6 shadow-sm">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-slate-100 gap-2">
+                                                    <div className="flex items-center gap-2">
+                                                        <ShieldCheck className="w-5 h-5 text-blue-600" />
+                                                        <h4 className="text-sm font-bold text-slate-800">
+                                                            Empanelled Insurance Companies & TPAs
+                                                        </h4>
+                                                        <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                                            {hospital.insurancePartners.length} Approved
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 w-fit">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Cashless Facility Available
+                                                    </span>
+                                                </div>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                                    {hospital.insurancePartners.map((tpa, idx) => (
+                                                        <div key={idx} className="flex items-center gap-2 text-xs text-slate-700 bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-2 hover:bg-blue-50/50 hover:border-blue-200 transition-colors">
+                                                            <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0">
+                                                                {idx + 1}
+                                                            </span>
+                                                            <span className="font-medium truncate">{tpa}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
 
                                         {/* OPD Patients Table */}
                                         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">

@@ -36,7 +36,7 @@ export default async function LeadDetailPage({ params }: PageProps) {
     const { id } = await params;
     const [lead, hospitals, teamMembers] = await Promise.all([
         getLeadDetail(id),
-        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true, address: true, googleMapsUrl: true }}),
+        prisma.hospital.findMany({ select: { id: true, name: true, discountPercent: true, city: true, address: true, googleMapsUrl: true, insurancePartners: true }}),
         prisma.user.findMany({ select: { id: true, name: true, email: true }, orderBy: { name: 'asc' } })
     ]);
 

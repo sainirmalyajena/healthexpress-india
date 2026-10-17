@@ -8,6 +8,7 @@ interface Hospital {
     city?: string;
     address?: string | null;
     googleMapsUrl?: string | null;
+    insurancePartners?: string[];
     doctors?: { name: string, about: string }[];
     id: string;
     name: string;
@@ -442,6 +443,29 @@ const [opdDate, setOpdDate] = useState(formatDateTimeForInput(lead.opdDate));
                                     })()
                                 )}
                             </select>
+                            {(() => {
+                                const selectedHosp = hospitals.find(h => h.id === hospitalId);
+                                if (!selectedHosp?.insurancePartners || selectedHosp.insurancePartners.length === 0) return null;
+                                return (
+                                    <div className="mt-2.5 p-2.5 bg-blue-50/80 border border-blue-200/80 rounded-xl text-xs">
+                                        <div className="flex items-center justify-between font-bold text-blue-900 mb-1.5">
+                                            <span className="flex items-center gap-1.5">
+                                                🛡️ {selectedHosp.insurancePartners.length} Insurance / TPA Partners
+                                            </span>
+                                            <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                                                Cashless Available
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto pr-1">
+                                            {selectedHosp.insurancePartners.map((tpa, idx) => (
+                                                <span key={idx} className="bg-white border border-blue-200/70 text-slate-700 px-2 py-0.5 rounded text-[11px] font-medium shadow-2xs">
+                                                    {tpa}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                             {filteredHospitals.length === 0 && city.trim() && (
                                 <p className="text-xs text-amber-600 mt-1">
                                     No hospital in {city}. <button type="button" onClick={() => setCity('')} className="underline font-bold">View all hospitals</button>
