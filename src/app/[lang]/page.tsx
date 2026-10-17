@@ -64,7 +64,12 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  const dict = await getDictionary(lang as Locale);
+  let dict;
+  try {
+    dict = await getDictionary((lang as Locale) || 'en');
+  } catch {
+    dict = await getDictionary('en');
+  }
 
   const faqs = [
     {
