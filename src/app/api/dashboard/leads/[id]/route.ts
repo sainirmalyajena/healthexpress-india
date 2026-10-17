@@ -106,6 +106,16 @@ export async function PATCH(
             }
         }
 
+        const opdDateChanged = oldLead && opdDate !== undefined && parseDateSafely(opdDate)?.getTime() !== oldLead.opdDate?.getTime();
+        if (opdDateChanged && (status === oldLead?.status || status === undefined)) {
+            logsToCreate.push({
+                userId: session.adminId,
+                leadId: id,
+                actionType: 'STATUS_CHANGED',
+                details: JSON.stringify({ action: 'OPD_SCHEDULED', opdDate: parseDateSafely(opdDate) })
+            });
+        }
+
         if (oldLead && assignedUserId !== undefined && assignedUserId !== oldLead.assignedUserId) {
             logsToCreate.push({
                 userId: session.adminId,

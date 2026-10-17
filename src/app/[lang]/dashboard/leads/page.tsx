@@ -76,7 +76,28 @@ async function getLeads(searchParams: SearchParams, userId: string, role: string
             where.status = { notIn: ['CLOSED', 'LOST'] };
             where.followUpDate = { gte: startOfToday, lte: endOfToday };
         } else if (searchParams.quickFilter === 'today_opds') {
-            where.opdDate = { gte: startOfToday, lte: endOfToday };
+            const opdLogs = await prisma.activityLog.findMany({
+                where: {
+                    actionType: 'STATUS_CHANGED',
+                    OR: [
+                        { details: { contains: 'OPD_SCHEDULED' } },
+                        { details: { contains: 'OPD_RESCHEDULE' } }
+                    ],
+                    createdAt: { gte: startOfToday, lte: endOfToday }
+                },
+                select: { leadId: true }
+            });
+            const bookedLeadIds = opdLogs.map(l => l.leadId).filter(Boolean) as string[];
+
+            where.OR = [
+                { id: { in: bookedLeadIds } },
+                {
+                    status: { in: ['OPD_SCHEDULED', 'OPD_RESCHEDULE', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'] },
+                    updatedAt: { gte: startOfToday, lte: endOfToday },
+                    opdDate: { not: null }
+                }
+            ];
+            where.status = { notIn: ['CLOSED', 'LOST'] };
         } else if (searchParams.quickFilter === 'today_surgeries') {
             where.status = 'SURGERY_SCHEDULED';
             // Assuming surgery date is stored somewhere. Wait, Lead doesn't have surgeryDate!

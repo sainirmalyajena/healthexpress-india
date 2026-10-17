@@ -31,6 +31,36 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
 
     const whereClause: Prisma.LeadWhereInput = session.role === 'team' ? { assignedUserId: session.adminId } : {};
     
+    // Find all leads whose OPD was booked/scheduled today by the team
+    const opdLogsToday = await prisma.activityLog.findMany({
+        where: {
+            actionType: 'STATUS_CHANGED',
+            OR: [
+                { details: { contains: 'OPD_SCHEDULED' } },
+                { details: { contains: 'OPD_RESCHEDULE' } }
+            ],
+            createdAt: { gte: startOfToday, lte: endOfToday },
+            ...(session.role === 'team' ? { userId: session.adminId } : {})
+        },
+        select: { leadId: true }
+    });
+    const bookedLeadIdsToday = opdLogsToday.map(l => l.leadId).filter(Boolean) as string[];
+
+    const todaysOpdsBookedCountPromise = prisma.lead.count({
+        where: {
+            ...whereClause,
+            status: { notIn: ['CLOSED', 'LOST'] },
+            OR: [
+                { id: { in: bookedLeadIdsToday } },
+                {
+                    status: { in: ['OPD_SCHEDULED', 'OPD_RESCHEDULE', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'] },
+                    updatedAt: { gte: startOfToday, lte: endOfToday },
+                    opdDate: { not: null }
+                }
+            ]
+        }
+    });
+
     // Run all KPI queries in parallel for massive performance boost
     const [
         activeLeads, newLeads, overdueFollowUps, todaysFollowUps, todaysOpds, totalOpdsTillDate,
@@ -45,9 +75,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
         prisma.lead.count({
             where: { ...whereClause, status: { notIn: ['CLOSED', 'LOST'] }, followUpDate: { gte: startOfToday, lte: endOfToday } }
         }),
-        prisma.lead.count({
-            where: { ...whereClause, opdDate: { gte: startOfToday, lte: endOfToday } }
-        }),
+        todaysOpdsBookedCountPromise,
         prisma.lead.count({
             where: {
                 ...whereClause,
@@ -91,6 +119,23 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
     // Team Leaderboard & Workload (For Admin)
     let teamStats: CoordinatorStats[] = [];
     if (session.role !== 'team') {
+        const opdLogsByTeam = await prisma.activityLog.findMany({
+            where: {
+                actionType: 'STATUS_CHANGED',
+                OR: [
+                    { details: { contains: 'OPD_SCHEDULED' } },
+                    { details: { contains: 'OPD_RESCHEDULE' } }
+                ],
+                createdAt: { gte: startOfToday, lte: endOfToday }
+            },
+            select: { userId: true, leadId: true }
+        });
+        const teamOpdMap: Record<string, Set<string>> = {};
+        opdLogsByTeam.forEach(log => {
+            if (!teamOpdMap[log.userId]) teamOpdMap[log.userId] = new Set();
+            if (log.leadId) teamOpdMap[log.userId].add(log.leadId);
+        });
+
         const users = await prisma.user.findMany({
             where: { role: 'team' },
             include: {
@@ -99,6 +144,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                         id: true,
                         status: true,
                         opdDate: true,
+                        updatedAt: true,
                         followUpDate: true,
                         revenue: true,
                         discountedCost: true
@@ -110,10 +156,12 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
         teamStats = users.map(user => {
             const leads = user.assignedLeads || [];
             const activeLeads = leads.filter(l => !['CLOSED', 'LOST'].includes(l.status)).length;
+            const userBookedLeadIds = teamOpdMap[user.id] || new Set();
             
             const todayOpds = leads.filter(l => 
-                ['OPD_SCHEDULED', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'].includes(l.status) &&
-                l.opdDate && l.opdDate >= startOfToday && l.opdDate <= endOfToday
+                ['OPD_SCHEDULED', 'OPD_RESCHEDULE', 'OPD_DONE', 'SURGERY_SUGGESTED', 'SURGERY_SCHEDULED', 'SURGERY_DONE'].includes(l.status) &&
+                l.opdDate &&
+                (userBookedLeadIds.has(l.id) || (l.updatedAt && l.updatedAt >= startOfToday && l.updatedAt <= endOfToday))
             ).length;
 
             const weekOpds = leads.filter(l => 
@@ -218,7 +266,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ lang
                             </div>
                             <h3 className="text-4xl md:text-5xl font-black mb-1">{todaysOpds}</h3>
                             <p className="font-bold text-indigo-100 tracking-wide text-sm">OPDs Booked Today</p>
-                            <p className="text-xs text-indigo-200/80 mt-0.5">Scheduled for today (IST)</p>
+                            <p className="text-xs text-indigo-200/80 mt-0.5">Booked by team today (IST)</p>
                         </div>
                         <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-indigo-500 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
                     </Link>
